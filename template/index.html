@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NAME | Blue-Collar Service Marketplace</title>
+    <title>CREWZ | Blue-Collar Service Marketplace</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,21 +20,21 @@
           <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center">
             <div class="w-4 h-4 rounded-full bg-primary"></div>
           </div>
-          <span class="font-semibold text-lg tracking-tight text-heading">NAME</span>
+          <span class="font-semibold text-lg tracking-tight text-heading">CREWZ</span>
         </div>
         <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium text-textGrey">
-          <a href="#services" class="hover:text-heading">Services</a>
-          <a href="#how-it-works" class="hover:text-heading">How It Works</a>
-          <a href="#workers" class="hover:text-heading">For Workers</a>
-          <a href="#pricing" class="hover:text-heading">Pricing</a>
-          <a href="#about" class="hover:text-heading">About</a>
-          <a href="#contact" class="hover:text-heading">Contact</a>
+          <a href="#services" class="interactive-link">Services</a>
+          <a href="#how-it-works" class="interactive-link">How It Works</a>
+          <a href="#workers" class="interactive-link">For Workers</a>
+          <a href="#pricing" class="interactive-link">Pricing</a>
+          <a href="#about" class="interactive-link">About</a>
+          <a href="#contact" class="interactive-link">Contact</a>
         </nav>
         <div class="hidden lg:flex items-center space-x-4">
-          <a href="login.html" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold hover:bg-primary/5 transition-colors">
+          <a href="/login" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
             Login
           </a>
-          <a href="signup.html" class="px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-glass hover:shadow-lg transition-all">
+          <a href="/get-started" class="px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-glass">
             Get Started
           </a>
         </div>
@@ -46,17 +46,17 @@
       </div>
   <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0 absolute left-0 right-0 top-full overflow-hidden transform-gpu transition-transform duration-200">
         <div class="px-6 py-4 space-y-4 text-textGrey font-medium">
-          <a href="#services" class="block">Services</a>
-          <a href="#how-it-works" class="block">How It Works</a>
-          <a href="#workers" class="block">For Workers</a>
-          <a href="#pricing" class="block">Pricing</a>
-          <a href="#about" class="block">About</a>
-          <a href="#contact" class="block">Contact</a>
+          <a href="#services" class="block interactive-link">Services</a>
+          <a href="#how-it-works" class="block interactive-link">How It Works</a>
+          <a href="#workers" class="block interactive-link">For Workers</a>
+          <a href="#pricing" class="block interactive-link">Pricing</a>
+          <a href="#about" class="block interactive-link">About</a>
+          <a href="#contact" class="block interactive-link">Contact</a>
           <div class="flex space-x-3 pt-2">
-            <a href="login.html" class="flex-1 px-5 py-2 rounded-xl border border-primary text-primary font-semibold text-center hover:bg-primary/5 transition-colors">
+            <a href="/login" class="flex-1 px-5 py-2 rounded-xl border border-primary text-primary font-semibold text-center">
               Login
             </a>
-            <a href="signup.html" class="flex-1 px-5 py-2 rounded-xl bg-primary text-white font-semibold text-center hover:shadow-lg transition-all">
+            <a href="/get-started" class="flex-1 px-5 py-2 rounded-xl bg-primary text-white font-semibold text-center">
               Get Started
             </a>
           </div>
@@ -175,6 +175,40 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-12 lg:py-16 brand-partners">
+        <div class="max-w-[85vw] mx-auto px-6 lg:px-12 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center gap-3 text-sm uppercase tracking-[0.35em] text-textGrey">
+              <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary/10 text-primary font-semibold">✦</span>
+              Collaborated With
+            </div>
+            <p class="text-textGrey/80 text-sm max-w-xl">Facility operators, housing collectives, retail clusters, and construction majors trust our vetted crews.</p>
+          </div>
+          <div class="brand-marquee">
+            <span class="brand-fade left"></span>
+            <span class="brand-fade right"></span>
+            <div class="brand-track">
+              <div class="brand-pill">MetroWorks</div>
+              <div class="brand-pill">UrbanNest</div>
+              <div class="brand-pill">Gridstone Realty</div>
+              <div class="brand-pill">VoltWorks</div>
+              <div class="brand-pill">HyperMart</div>
+              <div class="brand-pill">Nova Clinics</div>
+              <div class="brand-pill">Helio Logistics</div>
+              <div class="brand-pill">BuildRight Infra</div>
+              <div class="brand-pill">MetroWorks</div>
+              <div class="brand-pill">UrbanNest</div>
+              <div class="brand-pill">Gridstone Realty</div>
+              <div class="brand-pill">VoltWorks</div>
+              <div class="brand-pill">HyperMart</div>
+              <div class="brand-pill">Nova Clinics</div>
+              <div class="brand-pill">Helio Logistics</div>
+              <div class="brand-pill">BuildRight Infra</div>
             </div>
           </div>
         </div>
@@ -523,43 +557,225 @@
       </section>
 
       <!-- Testimonials -->
-      <section class="py-24 bg-white" id="testimonials">
-        <div class="max-w-6xl mx-auto px-6">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
-            <div>
-              <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Testimonials</p>
-              <h2 class="text-4xl font-semibold mt-3">Consistently high follow-up ratings.</h2>
+      <section class="py-24 bg-white relative overflow-hidden" id="testimonials">
+        <div class="absolute inset-x-0 -top-32 h-64 bg-gradient-to-br from-primary/5 via-transparent to-emerald-100/30 blur-3xl pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto px-6 relative">
+          <div class="space-y-14">
+            <div class="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] items-start">
+              <div class="space-y-8">
+                <div>
+                  <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Testimonials</p>
+                  <h2 class="text-4xl font-semibold mt-4">Consistently high follow-up ratings.</h2>
+                  <p class="text-textGrey mt-4">Live dispatch, service verification, and real-time payouts keep both customers and partners advocating for WorkHub.</p>
+                </div>
+                <div class="flex items-center gap-4 flex-wrap">
+                  <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-sm">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z" />
+                    </svg>
+                    Rated 4.9/5
+                  </div>
+                  <span class="text-textGrey text-sm">2,100+ on-site feedback loops closed monthly.</span>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <a href="#app" class="btn-primary px-6 py-4 rounded-2xl text-center text-sm font-semibold">Explore the app</a>
+                  <button class="btn-secondary px-6 py-4 rounded-2xl text-sm font-semibold">Share your experience</button>
+                </div>
+                <p class="text-xs text-textGrey uppercase tracking-[0.35em]">Verified by WorkHub TrustOps</p>
+              </div>
+
+              <div class="rounded-3xl bg-white/80 backdrop-blur border border-black/5 p-8 shadow-[0px_25px_60px_rgba(15,23,42,0.08)] space-y-6">
+                <div>
+                  <p class="text-xs uppercase tracking-[0.35em] text-textGrey">Reliability snapshot</p>
+                  <p class="text-2xl font-semibold text-heading mt-2">Where performance meets predictability.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="testimonial-metric">
+                    <p class="text-3xl font-semibold text-heading">42 mins</p>
+                    <p class="text-sm text-textGrey">Avg. resolution time</p>
+                  </div>
+                  <div class="testimonial-metric">
+                    <p class="text-3xl font-semibold text-heading">98%</p>
+                    <p class="text-sm text-textGrey">Repeat bookings</p>
+                  </div>
+                  <div class="testimonial-metric">
+                    <p class="text-3xl font-semibold text-heading">12k+</p>
+                    <p class="text-sm text-textGrey">Worker payouts / mo</p>
+                  </div>
+                  <div class="testimonial-metric">
+                    <p class="text-3xl font-semibold text-heading">28</p>
+                    <p class="text-sm text-textGrey">Cities covered</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="text-textGrey mt-4 md:mt-0">Rated 4.9 out of 5 based on service follow-ups.</p>
-          </div>
-          <div class="overflow-hidden relative">
-            <div class="flex gap-6 testimonial-track" id="testimonialTrack">
-              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
-                <p class="text-lg text-textGrey">
-                  "NAME got an electrician to my warehouse within an hour. Billing was transparent and every detail was logged in-app."
-                </p>
-                <div>
-                  <p class="text-heading font-semibold">Rhea Kapur</p>
-                  <p class="text-sm text-textGrey">Emergency Electrical Fix</p>
-                </div>
-              </div>
-              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
-                <p class="text-lg text-textGrey">
-                  "I handle AC maintenance for multiple sites. NAME's workers arrive prepared with the requested parts and leave the job documented."
-                </p>
-                <div>
-                  <p class="text-heading font-semibold">Nikhil Rao</p>
-                  <p class="text-sm text-textGrey">AC Overhaul</p>
-                </div>
-              </div>
-              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
-                <p class="text-lg text-textGrey">
-                  "As a worker partner, I get same-day payouts into my wallet. The app keeps routes efficient and customers verified."
-                </p>
-                <div>
-                  <p class="text-heading font-semibold">Prakash Menon</p>
-                  <p class="text-sm text-textGrey">Logistics Support</p>
-                </div>
+
+            <div class="testimonial-marquee">
+              <span class="testimonial-fade left"></span>
+              <span class="testimonial-fade right"></span>
+              <div class="testimonial-track" id="testimonialTrack">
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">RK</div>
+                      <div>
+                        <p class="text-heading font-semibold">Rhea Kapur</p>
+                        <p class="text-sm text-textGrey">Ops Lead · NorthGrid Warehousing</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Emergency fix</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“WorkHub pushed an electrician in under an hour and mirrored every update inside the ticket. Finance loved the transparent log.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>5.0</span>
+                    </div>
+                    <span class="text-textGrey">Resolution 45 mins</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">NR</div>
+                      <div>
+                        <p class="text-heading font-semibold">Nikhil Rao</p>
+                        <p class="text-sm text-textGrey">Facilities Head · AeroVista</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">HVAC rollout</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“Technicians reached with the requested spares, logged diagnostics, and closed approvals on-site. My city managers track everything in one place.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>4.9</span>
+                    </div>
+                    <span class="text-textGrey">20+ units serviced</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">PM</div>
+                      <div>
+                        <p class="text-heading font-semibold">Prakash Menon</p>
+                        <p class="text-sm text-textGrey">Partner Driver · South Loop</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Logistics</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“Routes drop straight into my phone, KYC is pre-cleared, and payouts hit the wallet the same evening. It feels like a real partner program.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>5.0</span>
+                    </div>
+                    <span class="text-textGrey">Same-day payout</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">SS</div>
+                      <div>
+                        <p class="text-heading font-semibold">Sanjana Shah</p>
+                        <p class="text-sm text-textGrey">Community Manager · UrbanStay</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Turnaround</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“We cleared 48 apartment tickets over a weekend with zero escalations. The live updates and photos made resident comms effortless.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>4.8</span>
+                    </div>
+                    <span class="text-textGrey">48 jobs / 2 days</span>
+                  </div>
+                </article>
+
+                <!-- Duplicate set for seamless marquee -->
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">RK</div>
+                      <div>
+                        <p class="text-heading font-semibold">Rhea Kapur</p>
+                        <p class="text-sm text-textGrey">Ops Lead · NorthGrid Warehousing</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Emergency fix</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“WorkHub pushed an electrician in under an hour and mirrored every update inside the ticket. Finance loved the transparent log.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>5.0</span>
+                    </div>
+                    <span class="text-textGrey">Resolution 45 mins</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">NR</div>
+                      <div>
+                        <p class="text-heading font-semibold">Nikhil Rao</p>
+                        <p class="text-sm text-textGrey">Facilities Head · AeroVista</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">HVAC rollout</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“Technicians reached with the requested spares, logged diagnostics, and closed approvals on-site. My city managers track everything in one place.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>4.9</span>
+                    </div>
+                    <span class="text-textGrey">20+ units serviced</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">PM</div>
+                      <div>
+                        <p class="text-heading font-semibold">Prakash Menon</p>
+                        <p class="text-sm text-textGrey">Partner Driver · South Loop</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Logistics</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“Routes drop straight into my phone, KYC is pre-cleared, and payouts hit the wallet the same evening. It feels like a real partner program.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>5.0</span>
+                    </div>
+                    <span class="text-textGrey">Same-day payout</span>
+                  </div>
+                </article>
+                <article class="testimonial-card">
+                  <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="testimonial-avatar">SS</div>
+                      <div>
+                        <p class="text-heading font-semibold">Sanjana Shah</p>
+                        <p class="text-sm text-textGrey">Community Manager · UrbanStay</p>
+                      </div>
+                    </div>
+                    <span class="testimonial-badge">Turnaround</span>
+                  </div>
+                  <p class="text-lg text-heading/90 leading-relaxed">“We cleared 48 apartment tickets over a weekend with zero escalations. The live updates and photos made resident comms effortless.”</p>
+                  <div class="flex items-center justify-between text-sm mt-6">
+                    <div class="flex items-center gap-1 text-amber-500">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 6.91H22l-5.45 3.96 2.08 6.63L12 15.77 5.37 19.5l2.08-6.63L2 8.91h7.61z"/></svg>
+                      <span>4.8</span>
+                    </div>
+                    <span class="text-textGrey">48 jobs / 2 days</span>
+                  </div>
+                </article>
               </div>
             </div>
           </div>
@@ -810,7 +1026,41 @@
             <h2 class="text-4xl font-semibold">Clear answers before you book.</h2>
           </div>
           <div id="faqList" class="space-y-4">
-            <!-- FAQs inserted via JS -->
+            <!-- Static FAQs added for now (native <details> for accessibility) -->
+            <details class="bg-white rounded-2xl p-5 border border-black/5" open>
+              <summary class="text-lg font-semibold cursor-pointer">How do I book a service?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Choose a service, enter your location, pick a time slot, and confirm payment. You will receive booking details and a live ETA for the assigned professional.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">What are the prices and what's included?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Each service card shows a starting price. Final pricing depends on scope, materials, and location. Taxes and any additional parts are shown before checkout.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">Can I reschedule or cancel a booking?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Yes — you can reschedule or cancel from your booking page. Cancellation policies vary by service; any applicable refunds or fees are displayed during cancellation.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">Are workers ID-verified and insured?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>All professionals on our platform undergo ID verification and basic background checks. For specific services, additional insurance or certifications may be listed on the service card.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">What payment methods do you accept?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>We accept major credit/debit cards and UPI. Payments are captured securely and released to the worker after you confirm job completion, subject to the service's payout terms.</p>
+              </div>
+            </details>
           </div>
         </div>
       </section>
@@ -825,7 +1075,7 @@
           <p class="text-lg text-black/80">
             NAME keeps both customers and workers in sync with real-time operations, verified profiles, and instant payouts.
           </p>
-          <a href="signup.html" class="inline-block px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass hover:shadow-xl transition-all">
+          <a href="/get-started" class="inline-block px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass">
             Get Started
           </a>
         </div>
