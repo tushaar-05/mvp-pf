@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceHub | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-active {
+            background-color: rgba(79, 70, 229, 0.05);
+            border-left: 3px solid #4F46E5;
+        }
+        .stat-card, .gig-card, .provider-card, .service-card, .address-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover, .gig-card:hover, .provider-card:hover, .service-card:hover, .address-card:hover {
+            transform: translateY(-2px);
+        }
+        .status-new {
+            background-color: #F8FAFC;
+            color: #475569;
+            border: 1px solid #E2E8F0;
+        }
+        .status-waiting {
+            background-color: #FFFBEB;
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+        .status-assigned {
+            background-color: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+        .status-progress {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+            border: 1px solid #A5B4FC;
+        }
+        .status-completed {
+            background-color: #F0FDF4;
+            color: #15803D;
+            border: 1px solid #86EFAC;
+        }
+        .status-cancelled {
+            background-color: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FCA5A5;
+        }
+        .timeline-item:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 32px;
+            bottom: -24px;
+            width: 1px;
+            background-color: #E5E7EB;
+        }
+        .scroll-container {
+            scrollbar-width: thin;
+            scrollbar-color: #CBD5E1 #F1F5F9;
+        }
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 3px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: #CBD5E1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex h-screen">
+    <!-- Left Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center mr-2">
+                    <span class="text-white font-bold text-sm">SH</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">ServiceHub</span>
+            </div>
+        </div>
+        
+        <nav class="flex-1 p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 sidebar-active text-indigo-700 font-medium rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        My Gigs
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Gig
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Payments
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-gray-600 text-sm font-medium">JD</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">John Doe</p>
+                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex-1 overflow-y-auto">
+        <!-- Header Section -->
+        <div class="bg-white border-b border-gray-200 px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Your Dashboard</h1>
+                    <p class="text-gray-600 mt-1">Track your gigs, updates, and service activity.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search gigs or categories..." 
+                            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64 transition-colors"
+                        >
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span class="text-gray-600 text-sm font-medium">JD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-8 py-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-1">12</h3>
+                    <p class="text-gray-600">Active Gigs</p>
+                    <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-indigo-600 w-3/4"></div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-1">7</h3>
+                    <p class="text-gray-600">In-Progress Services</p>
+                    <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-2/3"></div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-1">42</h3>
+                    <p class="text-gray-600">Completed Gigs</p>
+                    <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-green-500 w-full"></div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-1">3</h3>
+                    <p class="text-gray-600">Pending Approvals</p>
+                    <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-amber-500 w-1/4"></div>
+                    </div>
+                </div>
+            </div>
+
+           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Stats + Active Gigs -->
+    <div class="lg:col-span-2 space-y-8">
+        <!-- Stats Cards (unchanged) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">12</h3>
+                <p class="text-gray-600">Active Gigs</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-600 w-3/4"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">7</h3>
+                <p class="text-gray-600">In-Progress Services</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 w-2/3"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">42</h3>
+                <p class="text-gray-600">Completed Gigs</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 w-full"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">3</h3>
+                <p class="text-gray-600">Pending Approvals</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-amber-500 w-1/4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Gigs Section (unchanged) -->
+        <div class="gig-section bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">Your Active Gigs</h2>
+                <div class="flex space-x-2">
+                    <button class="filter-btn active px-3 py-1 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg" data-filter="all">All</button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="new">New</button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="in-progress">In Progress</button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="completed">Completed</button>
+                </div>
+            </div>
+            <div class="divide-y divide-gray-200">
+                <div class="gig-item p-6" data-status="new">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <h3 class="text-lg font-medium text-gray-900 mr-3">AC not cooling properly</h3>
+                                <span class="status-new text-xs font-medium px-2.5 py-0.5 rounded-full">New</span>
+                            </div>
+                            <p class="text-gray-600 mb-3">AC blowing warm air, needs refrigerant recharge</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="mr-4">AC Service</span>
+                                <span>Posted: 2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="view-btn px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View</button>
+                            <button class="edit-btn px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gig-item p-6" data-status="assigned">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <h3 class="text-lg font-medium text-gray-900 mr-3">Kitchen sink leakage</h3>
+                                <span class="status-assigned text-xs font-medium px-2.5 py-0.5 rounded-full">Assigned</span>
+                            </div>
+                            <p class="text-gray-600 mb-3">Water leaking from under sink cabinet</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="mr-4">Plumbing</span>
+                                <span>Posted: 1 day ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="view-btn px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View</button>
+                            <button class="edit-btn px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gig-item p-6" data-status="progress">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <h3 class="text-lg font-medium text-gray-900 mr-3">Electrical wiring issue</h3>
+                                <span class="status-progress text-xs font-medium px-2.5 py-0.5 rounded-full">In Progress</span>
+                            </div>
+                            <p class="text-gray-600 mb-3">Frequent circuit breaker trips in living room</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="mr-4">Electrical</span>
+                                <span>Posted: 3 days ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="view-btn px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View</button>
+                            <button class="edit-btn px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gig-item p-6" data-status="waiting">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <h3 class="text-lg font-medium text-gray-900 mr-3">Bedroom painting</h3>
+                                <span class="status-waiting text-xs font-medium px-2.5 py-0.5 rounded-full">Waiting</span>
+                            </div>
+                            <p class="text-gray-600 mb-3">Interior painting for master bedroom</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="mr-4">Painting</span>
+                                <span>Posted: 5 days ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="view-btn px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View</button>
+                            <button class="edit-btn px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200">
+                <button class="w-full py-2.5 text-sm font-medium text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors">View All Gigs</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Recent Activity + Expanded Support -->
+    <div class="space-y-8">
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-6">
+                    <div class="timeline-item relative pl-8">
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                        </div>
+                        <p class="text-sm text-gray-900 mb-1">Your gig 'AC not cooling' was viewed by 4 providers.</p>
+                        <span class="text-xs text-gray-500">2 hours ago</span>
+                    </div>
+                    <div class="timeline-item relative pl-8">
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                        </div>
+                        <p class="text-sm text-gray-900 mb-1">Rahul Sharma sent a quote for your plumbing gig.</p>
+                        <span class="text-xs text-gray-500">5 hours ago</span>
+                    </div>
+                    <div class="timeline-item relative pl-8">
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                        </div>
+                        <p class="text-sm text-gray-900 mb-1">Service provider completed the electrical repair gig.</p>
+                        <span class="text-xs text-gray-500">1 day ago</span>
+                    </div>
+                    <div class="timeline-item relative pl-8">
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                        </div>
+                        <p class="text-sm text-gray-900 mb-1">Payment received for kitchen plumbing work.</p>
+                        <span class="text-xs text-gray-500">2 days ago</span>
+                    </div>
+                    <div class="timeline-item relative pl-8">
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                        </div>
+                        <p class="text-sm text-gray-900 mb-1">New service provider joined in your area.</p>
+                        <span class="text-xs text-gray-500">3 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expanded Support Section -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-3">Need Assistance?</h2>
+                <p class="text-gray-600 mb-6">Our support team is ready to help you with any questions, gig issues, payments, or technical problems. We're just a click away!</p>
+                <div class="space-y-4">
+                    <button class="w-full py-3 text-sm font-semibold text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.444-.983 2.67-2.31 2.946l-.001.001-.002.002-.006.004-.02.01a8.28 8.28 0 01-2.35.337h-.01c-.386 0-.77-.02-1.15-.06-.36-.035-.713-.094-1.055-.175a8.37 8.37 0 01-1.417-.473l-.002-.001-.001-.001C8.93 11.67 8.4 10.445 8.228 9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm5.536-3.014a9.953 9.953 0 011.605 1.013 1 1 0 010 1.57 9.953 9.953 0 01-1.605 1.013 1 1 0 01-.894-1.773 7.96 7.96 0 000-.816 1 1 0 01.894-1.773zM4.536 9.973a1 1 0 01.894-1.773 9.953 9.953 0 011.605-1.013 1 1 0 010 1.57A9.953 9.953 0 015.43 10.97a1 1 0 01-.894-1.773z"></path>
+                        </svg>
+                        View Help Center & FAQs
+                    </button>
+                    <button class="w-full py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Contact Support Team
+                    </button>
+                </div>
+                <div class="mt-6 text-center text-xs text-gray-500">
+                    Response time: Usually within 2 hours
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize GSAP animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register ScrollTrigger plugin
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Sidebar fade-in animation
+            gsap.from('.fixed', {
+                opacity: 0,
+                x: -20,
+                duration: 0.6,
+                ease: "power2.out"
+            });
+            
+            // Header fade-in animation
+            gsap.from('.bg-white.border-b', {
+                opacity: 0,
+                y: -10,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+            
+            // Stats cards stagger animation
+            gsap.from('.stat-card', {
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power2.out"
+            });
+            
+            // Gig items animation on scroll
+            gsap.from('.gig-item', {
+                opacity: 0,
+                y: 15,
+                duration: 0.5,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.gig-section',
+                    start: 'top 85%'
+                }
+            });
+            
+            // Provider cards animation
+            gsap.from('.provider-card', {
+                opacity: 0,
+                y: 15,
+                duration: 0.5,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.provider-card',
+                    start: 'top 90%'
+                }
+            });
+            
+            // Service cards animation
+            gsap.from('.service-card', {
+                opacity: 0,
+                x: 20,
+                duration: 0.5,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.service-card',
+                    start: 'top 90%'
+                }
+            });
+            
+            // Timeline items animation
+            gsap.from('.timeline-item', {
+                opacity: 0,
+                x: -10,
+                duration: 0.5,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.timeline-item',
+                    start: 'top 90%'
+                }
+            });
+            
+            // Address cards animation
+            gsap.from('.address-card', {
+                opacity: 0,
+                y: 10,
+                duration: 0.5,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.address-card',
+                    start: 'top 90%'
+                }
+            });
+            
+            // Initialize interactive functionality
+            initializeDashboardFunctionality();
+        });
+        
+        // Dashboard Interactive Functionality
+        function initializeDashboardFunctionality() {
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const gigItems = document.querySelectorAll('.gig-item');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                gigItems.forEach(item => {
+                    const title = item.querySelector('h3').textContent.toLowerCase();
+                    const description = item.querySelector('p').textContent.toLowerCase();
+                    const category = item.querySelector('span:last-child').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Status filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'text-indigo-700', 'bg-indigo-50');
+                        btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active', 'text-indigo-700', 'bg-indigo-50');
+                    this.classList.remove('text-gray-600', 'hover:bg-gray-100');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    gigItems.forEach(item => {
+                        if (filter === 'all') {
+                            item.style.display = 'block';
+                        } else {
+                            const status = item.getAttribute('data-status');
+                            if (status === filter) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Card hover animations with GSAP
+            const cards = document.querySelectorAll('.stat-card, .gig-card, .provider-card, .service-card, .address-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    gsap.to(this, {
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    gsap.to(this, {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+            });
+            
+            // View and Edit button functionality
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const editButtons = document.querySelectorAll('.edit-btn');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const gigTitle = this.closest('.gig-item').querySelector('h3').textContent;
+                    alert(`Viewing details for: ${gigTitle}`);
+                });
+            });
+            
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const gigTitle = this.closest('.gig-item').querySelector('h3').textContent;
+                    alert(`Editing gig: ${gigTitle}`);
+                });
+            });
+            
+            // Set as default address functionality
+            const setDefaultButtons = document.querySelectorAll('.address-card button');
+            
+            setDefaultButtons.forEach(button => {
+                if (button.textContent === 'Set as Default') {
+                    button.addEventListener('click', function() {
+                        const addressCard = this.closest('.address-card');
+                        const addressTitle = addressCard.querySelector('h3').textContent;
+                        
+                        // Remove default from all addresses
+                        document.querySelectorAll('.address-card span').forEach(span => {
+                            if (span.textContent === 'Default') {
+                                span.remove();
+                                const parent = span.parentElement;
+                                const setDefaultBtn = document.createElement('button');
+                                setDefaultBtn.className = 'text-xs text-indigo-700 hover:text-indigo-900';
+                                setDefaultBtn.textContent = 'Set as Default';
+                                parent.appendChild(setDefaultBtn);
+                                
+                                // Re-add event listener to the new button
+                                setDefaultBtn.addEventListener('click', function() {
+                                    const card = this.closest('.address-card');
+                                    const title = card.querySelector('h3').textContent;
+                                    setAsDefault(card, title);
+                                });
+                            }
+                        });
+                        
+                        // Set this address as default
+                        setAsDefault(addressCard, addressTitle);
+                    });
+                }
+            });
+            
+            function setAsDefault(card, title) {
+                const button = card.querySelector('button');
+                button.remove();
+                
+                const defaultBadge = document.createElement('span');
+                defaultBadge.className = 'text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-1 rounded';
+                defaultBadge.textContent = 'Default';
+                
+                card.querySelector('.flex.justify-between.items-start').appendChild(defaultBadge);
+                
+                // Show confirmation (in a real app, this would update via API)
+                console.log(`Set ${title} as default address`);
+            }
+            
+            // Create Gig buttons in recommended services
+            const createGigButtons = document.querySelectorAll('.service-card button');
+            
+            createGigButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const serviceName = this.closest('.service-card').querySelector('h3').textContent;
+                    alert(`Creating new gig for: ${serviceName}`);
+                    // In a real app, this would redirect to the gig creation form with the service pre-selected
+                });
+            });
+            
+            // View Profile buttons for service providers
+            const viewProfileButtons = document.querySelectorAll('.provider-card button');
+            
+            viewProfileButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const providerName = this.closest('.provider-card').querySelector('h3').textContent;
+                    alert(`Viewing profile of: ${providerName}`);
+                    // In a real app, this would open a modal or redirect to the provider's profile page
+                });
+            });
+            
+            // Support buttons
+            const faqButton = document.querySelector('.bg-indigo-50');
+            const contactButton = document.querySelector('.bg-indigo-600');
+            
+            faqButton.addEventListener('click', function() {
+                alert('Redirecting to FAQs page');
+                // In a real app, this would redirect to the FAQs section
+            });
+            
+            contactButton.addEventListener('click', function() {
+                alert('Opening support contact form');
+                // In a real app, this would open a contact form or redirect to support
+            });
+        }
+    </script>
+</body>
+</html>

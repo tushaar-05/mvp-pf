@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crewz - Blue Collar Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2D5BFF",
+                        darkBlue: "#1E2A47",
+                        lightBlue: "#EDF3FF",
+                        accent: "#20C997",
+                        greyBg: "#F8F9FB",
+                        textGrey: "#4A4F59",
+                        heading: "#0F1115",
+                        serviceBg: "#F0F5FF",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        glass: "0 20px 45px rgba(17, 24, 39, 0.15)",
+                        card: "0 4px 20px rgba(45, 91, 255, 0.08)",
+                        cardHover: "0 12px 30px rgba(45, 91, 255, 0.15)",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-greyBg font-sans">
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <div class="w-64 bg-white shadow-card fixed h-full">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-darkBlue">Crewz</h1>
+                <p class="text-textGrey text-sm mt-1">Blue Collar Platform</p>
+            </div>
+            
+            <nav class="mt-8 px-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-primary text-white shadow-card transition-all">
+                    <span>📊</span>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-textGrey hover:bg-lightBlue hover:text-primary transition-all">
+                    <span>🔧</span>
+                    <span class="font-medium">My Gigs</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-textGrey hover:bg-lightBlue hover:text-primary transition-all">
+                    <span>➕</span>
+                    <span class="font-medium">Create New Gig</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-textGrey hover:bg-lightBlue hover:text-primary transition-all">
+                    <span>💬</span>
+                    <span class="font-medium">Messages</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-textGrey hover:bg-lightBlue hover:text-primary transition-all">
+                    <span>💰</span>
+                    <span class="font-medium">Payments</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-textGrey hover:bg-lightBlue hover:text-primary transition-all">
+                    <span>⚙️</span>
+                    <span class="font-medium">Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-64 p-6">
+            <!-- Top Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-textGrey text-sm">Active Gigs</p>
+                            <h3 class="text-3xl font-bold text-primary mt-2">12</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-lightBlue flex items-center justify-center">
+                            <span class="text-primary text-xl">📈</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-textGrey text-sm">In-Progress Gigs</p>
+                            <h3 class="text-3xl font-bold text-accent mt-2">8</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
+                            <span class="text-accent text-xl">🔄</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-textGrey text-sm">Completed Gigs</p>
+                            <h3 class="text-3xl font-bold text-green-600 mt-2">24</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                            <span class="text-green-600 text-xl">✅</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-8">
+                    <!-- Active Gigs Section -->
+                    <div class="bg-white rounded-xl shadow-card p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold text-heading">Your Active Gigs</h2>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <button class="px-4 py-2 rounded-full bg-primary text-white text-sm font-medium shadow-card transition-all">
+                                All
+                            </button>
+                            <button class="px-4 py-2 rounded-full bg-gray-100 text-textGrey text-sm font-medium hover:bg-gray-200 transition-all">
+                                New
+                            </button>
+                            <button class="px-4 py-2 rounded-full bg-gray-100 text-textGrey text-sm font-medium hover:bg-gray-200 transition-all">
+                                In Progress
+                            </button>
+                            <button class="px-4 py-2 rounded-full bg-gray-100 text-textGrey text-sm font-medium hover:bg-gray-200 transition-all">
+                                Completed
+                            </button>
+                        </div>
+
+                        <!-- Gig Cards -->
+                        <div class="space-y-4">
+                            <!-- Gig Card 1 -->
+                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-cardHover transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-heading">Electrical Wiring Installation</h3>
+                                    <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">New</span>
+                                </div>
+                                <div class="flex items-center text-sm text-textGrey mb-2">
+                                    <span class="bg-serviceBg px-2 py-1 rounded-md">Electrical</span>
+                                    <span class="mx-2">•</span>
+                                    <span>2024-01-15</span>
+                                </div>
+                                <p class="text-textGrey text-sm mb-4">Complete wiring for new residential building with modern safety standards</p>
+                                <button class="w-full bg-lightBlue text-primary font-medium py-2 px-4 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                            
+                            <!-- Gig Card 2 -->
+                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-cardHover transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-heading">Plumbing Repair - Kitchen</h3>
+                                    <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">In Progress</span>
+                                </div>
+                                <div class="flex items-center text-sm text-textGrey mb-2">
+                                    <span class="bg-serviceBg px-2 py-1 rounded-md">Plumbing</span>
+                                    <span class="mx-2">•</span>
+                                    <span>2024-01-10</span>
+                                </div>
+                                <p class="text-textGrey text-sm mb-4">Fix leaking pipes under kitchen sink and replace damaged fixtures</p>
+                                <button class="w-full bg-lightBlue text-primary font-medium py-2 px-4 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                            
+                            <!-- Gig Card 3 -->
+                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-cardHover transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-heading">HVAC System Maintenance</h3>
+                                    <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">Completed</span>
+                                </div>
+                                <div class="flex items-center text-sm text-textGrey mb-2">
+                                    <span class="bg-serviceBg px-2 py-1 rounded-md">HVAC</span>
+                                    <span class="mx-2">•</span>
+                                    <span>2024-01-05</span>
+                                </div>
+                                <p class="text-textGrey text-sm mb-4">Regular maintenance for office building AC units and filter replacement</p>
+                                <button class="w-full bg-lightBlue text-primary font-medium py-2 px-4 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-8">
+                    <!-- Recent Activity Section -->
+                    <div class="bg-white rounded-xl shadow-card p-6">
+                        <h2 class="text-xl font-semibold text-heading mb-6">Recent Activity</h2>
+                        
+                        <div class="space-y-4">
+                            <!-- Activity Item 1 -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-lightBlue flex items-center justify-center text-primary mt-1">
+                                    ⚡
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-heading font-medium">New gig assigned: Electrical Wiring</p>
+                                    <p class="text-textGrey text-sm">2h ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity Item 2 -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-lightBlue flex items-center justify-center text-primary mt-1">
+                                    💬
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-heading font-medium">Message from client: Plumbing emergency</p>
+                                    <p class="text-textGrey text-sm">4h ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity Item 3 -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-lightBlue flex items-center justify-center text-primary mt-1">
+                                    💰
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-heading font-medium">Payment received: $450.00</p>
+                                    <p class="text-textGrey text-sm">1d ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity Item 4 -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-lightBlue flex items-center justify-center text-primary mt-1">
+                                    ✅
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-heading font-medium">Gig completed: HVAC Maintenance</p>
+                                    <p class="text-textGrey text-sm">2d ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saved Locations Section -->
+                    <div class="bg-white rounded-xl shadow-card p-6">
+                        <h2 class="text-xl font-semibold text-heading mb-6">Saved Locations</h2>
+                        
+                        <div class="space-y-4 mb-6">
+                            <!-- Location 1 -->
+                            <div class="border border-gray-200 rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-medium text-heading">123 Main Street</h3>
+                                        <p class="text-textGrey text-sm">Apt 4B, New York, NY 10001</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full bg-primary text-white text-xs font-medium">Home</span>
+                                </div>
+                                <div class="flex space-x-2 mt-3">
+                                    <button class="flex-1 bg-lightBlue text-primary font-medium py-2 px-3 rounded-lg text-sm hover:bg-primary hover:text-white transition-colors">
+                                        Set Default
+                                    </button>
+                                    <button class="flex-1 bg-red-50 text-red-600 font-medium py-2 px-3 rounded-lg text-sm hover:bg-red-100 transition-colors">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Location 2 -->
+                            <div class="border border-gray-200 rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-medium text-heading">456 Work Avenue</h3>
+                                        <p class="text-textGrey text-sm">Floor 3, New York, NY 10002</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full bg-gray-200 text-textGrey text-xs font-medium">Work</span>
+                                </div>
+                                <div class="flex space-x-2 mt-3">
+                                    <button class="flex-1 bg-lightBlue text-primary font-medium py-2 px-3 rounded-lg text-sm hover:bg-primary hover:text-white transition-colors">
+                                        Set Default
+                                    </button>
+                                    <button class="flex-1 bg-red-50 text-red-600 font-medium py-2 px-3 rounded-lg text-sm hover:bg-red-100 transition-colors">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-primary text-white font-medium py-3 px-4 rounded-lg hover:bg-darkBlue transition-colors flex items-center justify-center">
+                            <span class="mr-2">+</span>
+                            Add New Address
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden" id="addressModal">
+        <div class="bg-white rounded-xl shadow-glass w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold text-heading">Add New Address</h3>
+                    <button class="text-textGrey hover:text-heading" onclick="closeModal()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-textGrey text-sm font-medium mb-2">Address Line 1</label>
+                        <input type="text" class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Street address">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-textGrey text-sm font-medium mb-2">Address Line 2</label>
+                        <input type="text" class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Apt, suite, unit, etc.">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-textGrey text-sm font-medium mb-2">City</label>
+                            <input type="text" class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="City">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-textGrey text-sm font-medium mb-2">State</label>
+                            <input type="text" class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="State">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-textGrey text-sm font-medium mb-2">Pincode</label>
+                        <input type="text" class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Postal code">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-textGrey text-sm font-medium mb-2">Label</label>
+                        <select class="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option>Home</option>
+                            <option>Work</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" class="flex-1 bg-gray-200 text-textGrey font-medium py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors" onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 bg-primary text-white font-medium py-3 px-4 rounded-lg hover:bg-darkBlue transition-colors">
+                            Save Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('addressModal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('addressModal').classList.add('hidden');
+        }
+        
+        // Add event listener to Add New Address button
+        document.addEventListener('DOMContentLoaded', function() {
+            const addButton = document.querySelector('button:contains("Add New Address")');
+            if (addButton) {
+                addButton.addEventListener('click', openModal);
+            }
+        });
+    </script>
+</body>
+</html>
