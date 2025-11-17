@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NAME | Blue-Collar Service Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/cursor/style.css" />
+  </head>
+  <body class="bg-white text-heading">
+    <header class="fixed top-0 inset-x-0 z-50 glass-nav">
+      <div class="max-w-[80vw] mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-primary"></div>
+          </div>
+          <span class="font-semibold text-lg tracking-tight text-heading">NAME</span>
+        </div>
+        <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium text-textGrey">
+          <a href="#services" class="hover:text-heading">Services</a>
+          <a href="#how-it-works" class="hover:text-heading">How It Works</a>
+          <a href="#workers" class="hover:text-heading">For Workers</a>
+          <a href="#pricing" class="hover:text-heading">Pricing</a>
+          <a href="#about" class="hover:text-heading">About</a>
+          <a href="#contact" class="hover:text-heading">Contact</a>
+        </nav>
+        <div class="hidden lg:flex items-center space-x-4">
+          <button class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
+            Login
+          </button>
+          <button class="px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-glass">
+            Get Started
+          </button>
+        </div>
+        <button id="mobileToggle" class="lg:hidden w-10 h-10 rounded-xl border border-black/10 flex flex-col justify-center items-center space-y-1.5">
+          <span class="block w-6 h-0.5 bg-heading"></span>
+          <span class="block w-6 h-0.5 bg-heading"></span>
+          <span class="block w-6 h-0.5 bg-heading"></span>
+        </button>
+      </div>
+      <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0">
+        <div class="px-6 py-4 space-y-4 text-textGrey font-medium">
+          <a href="#services" class="block">Services</a>
+          <a href="#how-it-works" class="block">How It Works</a>
+          <a href="#workers" class="block">For Workers</a>
+          <a href="#pricing" class="block">Pricing</a>
+          <a href="#about" class="block">About</a>
+          <a href="#contact" class="block">Contact</a>
+          <div class="flex space-x-3 pt-2">
+            <button class="flex-1 px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
+              Login
+            </button>
+            <button class="flex-1 px-5 py-2 rounded-xl bg-primary text-white font-semibold">
+              Get Started
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-32">
+      <section class="py-24 lg:py-32 hero-gradient-bg relative" id="about">
+        <div class="max-w-[80vw] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+          <!-- Left Column: Hero Copy -->
+          <div class="space-y-8 hero-copy">
+            <div class="inline-block">
+              <p class="uppercase tracking-[0.3em] text-xs font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full">
+                Field-Ready Teams
+              </p>
+            </div>
+            
+            <h1 class="text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] text-gray-900">
+              Reliable blue-collar professionals, 
+              <span class="bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">
+                on demand
+              </span>
+            </h1>
+            
+            <p class="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl">
+              Connect with ID-verified electricians, carpenters, cleaners, AC engineers, and delivery helpers. Book instantly, track in real-time, and pay only when satisfied.
+            </p>
+    
+            <!-- Search Card -->
+            <div class="glass-card rounded-3xl p-6 lg:p-8 space-y-5">
+              <div class="flex flex-col xl:flex-row gap-4">
+                <div class="relative w-full xl:w-1/3">
+                  <select class="input-field w-full appearance-none rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium cursor-pointer">
+                    <option>Choose service</option>
+                    <option>Deep Cleaning</option>
+                    <option>Electrical Repair</option>
+                    <option>AC Servicing</option>
+                    <option>Carpentry</option>
+                  </select>
+                  <span class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">▾</span>
+                </div>
+                <input 
+                  type="text" 
+                  placeholder="Enter your location" 
+                  class="input-field flex-1 rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400"
+                />
+                <button class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                  Search
+                </button>
+              </div>
+              
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button class="btn-primary flex-1 px-6 py-4 rounded-2xl text-white font-semibold">
+                  Book a Service
+                </button>
+                <button class="btn-secondary flex-1 px-6 py-4 rounded-2xl font-semibold">
+                  Become a Worker
+                </button>
+              </div>
+            </div>
+    
+            <!-- Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4">
+              <div class="stat-badge rounded-2xl p-4">
+                <p class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">100K+</p>
+                <p class="text-sm text-gray-600 mt-1">Jobs completed</p>
+              </div>
+              <div class="stat-badge rounded-2xl p-4">
+                <p class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">8,200</p>
+                <p class="text-sm text-gray-600 mt-1">Verified pros</p>
+              </div>
+              <div class="stat-badge rounded-2xl p-4">
+                <p class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">4.9/5</p>
+                <p class="text-sm text-gray-600 mt-1">Post-job rating</p>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Right Column: Visual Cards -->
+          <div class="relative">
+            <div class="hero-visual-card rounded-[32px] p-8 lg:p-12 relative overflow-hidden">
+              <!-- Floating Shapes -->
+              <div class="floating-shape -top-8 right-8 w-20 h-20 border-2 border-indigo-200" style="animation-delay: 0s;"></div>
+              <div class="floating-shape -bottom-10 left-8 w-24 h-24 rounded-full border-2 border-teal-200" style="animation-delay: 1s;"></div>
+              <div class="floating-shape top-20 left-1/2 w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-100 to-teal-50" style="animation-delay: 2s;"></div>
+              
+              <div class="relative space-y-5">
+                <!-- Live Tracking Card -->
+                <div class="bg-white/95 border border-indigo-100 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
+                  <div class="flex items-center justify-between text-sm mb-3">
+                    <span class="text-gray-600 font-medium">Field Operations</span>
+                    <span class="badge-live text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                      Live tracking
+                    </span>
+                  </div>
+                  <p class="text-3xl lg:text-4xl font-bold text-gray-900">Arrival in 18 min</p>
+                  <p class="text-sm text-gray-500 mt-2 font-medium">Worker ID · FL-4821</p>
+                </div>
+    
+                <!-- Confirmation Card -->
+                <div class="accent-card-blue text-white rounded-3xl p-6 lg:p-7">
+                  <p class="text-xs uppercase tracking-[0.25em] text-indigo-200 font-semibold mb-3">Same-Day Slots</p>
+                  <p class="text-xl lg:text-2xl font-bold leading-snug">97% confirmed in under 12 minutes</p>
+                  <p class="text-sm text-indigo-200 mt-3">Reliability desk monitoring</p>
+                </div>
+    
+                <!-- Quality Index Card -->
+                <div class="bg-white/95 border border-teal-100 rounded-3xl p-6 shadow-lg backdrop-blur-sm flex items-center justify-between">
+                  <div>
+                    <p class="text-sm text-gray-600 font-medium mb-1">Quality Index</p>
+                    <p class="text-3xl lg:text-4xl font-bold text-gray-900">4.9 / 5</p>
+                  </div>
+                  <div class="accent-card-teal w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                    Q
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-24 lg:py-32 services-gradient relative" id="services">
+        <div class="max-w-[85vw] mx-auto px-6 lg:px-12 relative z-10">
+          <!-- Header -->
+          <div class="text-center space-y-5 mb-16 lg:mb-20 max-w-3xl mx-auto">
+            <div class="inline-block">
+              <p class="text-indigo-600 uppercase tracking-[0.3em] text-xs font-semibold bg-indigo-50 px-4 py-2 rounded-full">
+                Popular Services
+              </p>
+            </div>
+            <h2 class="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
+              Professionals for every
+              <span class="bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">
+                home or field
+              </span>
+              requirement
+            </h2>
+            <p class="text-gray-600 text-lg lg:text-xl leading-relaxed">
+              Curated service units with pre-configured SOPs, safety coverage, and transparent pricing
+            </p>
+          </div>
+    
+          <!-- Services Grid -->
+          <div class="bento-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(260px,1fr)] gap-6" id="serviceGrid">
+            
+            <!-- Featured Service Card -->
+            <article class="service-card featured-card rounded-3xl p-8 flex flex-col justify-between shadow-lg">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-16 h-16 rounded-2xl flex items-center justify-center">
+                  <svg width="32" height="32" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M24 8v8m0 8v16m8-24l-16 16m0-16l16 16"/>
+                    <circle cx="24" cy="24" r="20"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold">30 min</span>
+                </span>
+              </div>
+              <div class="space-y-4 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold mb-3">Featured</p>
+                  <h3 class="text-3xl font-bold mt-2">Deep Cleaning</h3>
+                </div>
+                <p class="text-white/80 text-base leading-relaxed">
+                  Complete home sanitization with eco-friendly products and professional equipment
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-white/20">
+                <span class="text-sm text-white/70 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-2xl font-bold text-white">₹1,499</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 1 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 16l10 10-10 10M24 26h10"/>
+                    <rect x="8" y="8" width="32" height="32" rx="4"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">45 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">Electrical</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">Wiring & Repair</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Certified electricians for installations, repairs, and safety inspections
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹899</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 2 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="12" width="32" height="24" rx="2"/>
+                    <path d="M16 12V8a4 4 0 018 0v4M24 24v4"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">60 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">Carpentry</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">Custom Work</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Skilled carpenters for furniture assembly, repairs, and custom installations
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹1,200</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 3 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="24" cy="24" r="16"/>
+                    <path d="M24 16v8l4 4"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">40 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">HVAC</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">AC Service</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Expert AC installation, maintenance, and repair with 90-day warranty
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹699</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 4 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 24h32M24 8v32"/>
+                    <circle cx="24" cy="24" r="4"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">50 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">Plumbing</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">Pipe & Drain</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Licensed plumbers for leak repairs, installations, and emergency services
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹799</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 5 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20l12-12 12 12M12 28h24"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">35 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">Painting</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">Wall Finishing</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Professional painters for interior, exterior, and texture work
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹999</span>
+                </div>
+              </div>
+            </article>
+    
+            <!-- Regular Service Card 6 -->
+            <article class="service-card rounded-3xl p-7 flex flex-col justify-between shadow-md">
+              <div class="flex items-center justify-between mb-6">
+                <div class="service-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="16" width="32" height="24" rx="2"/>
+                    <path d="M16 16V12a4 4 0 118 0v4"/>
+                  </svg>
+                </div>
+                <span class="sla-badge text-xs uppercase tracking-[0.25em] px-3 py-2 rounded-xl">
+                  <span class="font-semibold text-gray-700">25 min</span>
+                </span>
+              </div>
+              <div class="space-y-3 flex-1">
+                <div>
+                  <p class="tag-badge text-xs uppercase tracking-[0.2em] font-semibold text-gray-600 mb-2">Moving</p>
+                  <h3 class="text-2xl font-bold text-gray-900 mt-1">Delivery Help</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                  Reliable helpers for moving, packing, and heavy lifting tasks
+                </p>
+              </div>
+              <div class="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <span class="text-sm text-gray-500 font-medium">Starting at</span>
+                <div class="price-tag">
+                  <span class="price-amount text-xl font-bold text-indigo-600">₹599</span>
+                </div>
+              </div>
+            </article>
+    
+          </div>
+        </div>
+      </section>
+
+      <section class="py-28 bg-white" id="how-it-works">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="flex flex-col lg:flex-row justify-between items-start gap-10 mb-16">
+            <div class="max-w-xl space-y-4">
+              <p class="text-primary/80 uppercase tracking-[0.35em] text-xs">How it works</p>
+              <h2 class="text-4xl lg:text-5xl font-semibold mt-3">Clear steps, predictable outcomes.</h2>
+            </div>
+            <p class="text-textGrey max-w-xl">
+              Every visit is orchestrated like an ops run—scope, assignment, arrival, service, closure. Nothing is left to chance, and every stakeholder sees the same source of truth.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="howSteps">
+            <div class="bg-greyBg rounded-3xl border border-black/5 p-8 space-y-4">
+              <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
+                <div class="w-7 h-7 border border-primary rounded-lg"></div>
+              </div>
+              <h3 class="text-2xl font-semibold">Select a Service</h3>
+              <p class="text-textGrey">
+                Choose the scope, materials, and timing. Pricing adjusts instantly with pin code and complexity.
+              </p>
+            </div>
+            <div class="bg-greyBg rounded-3xl border border-black/5 p-8 space-y-4">
+              <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
+                <div class="w-7 h-7 border border-darkBlue rounded-full"></div>
+              </div>
+              <h3 class="text-2xl font-semibold">Get Matched</h3>
+              <p class="text-textGrey">
+                We assign specialists with verified IDs, insurance, and live location sharing—ready for dispatch.
+              </p>
+            </div>
+            <div class="bg-greyBg rounded-3xl border border-black/5 p-8 space-y-4">
+              <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
+                <div class="w-8 h-8 border border-accent rotate-45"></div>
+              </div>
+              <h3 class="text-2xl font-semibold">Track & Close</h3>
+              <p class="text-textGrey">
+                Monitor progress on the app, approve deliverables, and release payment once you sign off.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-28 bg-greyBg" id="why">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="text-center space-y-4 mb-16">
+            <p class="text-primary/80 uppercase tracking-[0.35em] text-xs">Why NAME</p>
+            <h2 class="text-4xl lg:text-5xl font-semibold">Operations-grade reliability for every visit.</h2>
+            <p class="text-textGrey text-lg max-w-2xl mx-auto">Controls honed across thousands of assignments, now available for every household and facility.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="features">
+          </div>
+        </div>
+      </section>
+
+      <section class="py-28 bg-white" id="workers">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div class="rounded-3xl p-10 bg-lightBlue/70 border border-lightBlue/40" id="customersColumn">
+            <p class="text-xs uppercase tracking-[0.35em] text-primary/80 mb-5">For customers</p>
+            <h3 class="text-3xl font-semibold mb-6 text-heading">Plan, book, and monitor every service.</h3>
+            <ul class="space-y-4 text-textGrey">
+              <li>Clear pricing with line-item visibility before confirmation.</li>
+              <li>Fast booking windows with precise arrival estimates.</li>
+              <li>ID-verified professionals with live location sharing.</li>
+              <li>In-app support and escalation layers on standby.</li>
+            </ul>
+          </div>
+          <div class="rounded-3xl p-10 bg-gradient-to-br from-darkBlue to-[#121A2F] text-white border border-white/10" id="workersColumn">
+            <p class="text-xs uppercase tracking-[0.35em] text-white/60 mb-5">For workers</p>
+            <h3 class="text-3xl font-semibold mb-6">Predictable demand, faster payouts.</h3>
+            <ul class="space-y-4 text-white/80">
+              <li>Continuous job flow matched to skills and ratings.</li>
+              <li>Instant payouts with zero subscription fees.</li>
+              <li>Training modules, tool financing, and safety cover.</li>
+              <li>Dedicated partner care for scheduling and routing.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-28 bg-greyBg" id="impact">
+        <div class="max-w-6xl mx-auto px-6 text-center space-y-10">
+          <p class="text-primary/80 uppercase tracking-[0.35em] text-xs">Impact</p>
+          <h2 class="text-4xl lg:text-5xl font-semibold">Operating at city scale from day one.</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="counters">
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-black/5">
+              <p class="text-4xl font-semibold text-heading counter" data-target="125000">0</p>
+              <p class="text-textGrey mt-2">Jobs completed</p>
+            </div>
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-black/5">
+              <p class="text-4xl font-semibold text-heading counter" data-target="8200">0</p>
+              <p class="text-textGrey mt-2">Verified professionals</p>
+            </div>
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-black/5">
+              <p class="text-4xl font-semibold text-heading counter" data-target="4.9">0</p>
+              <p class="text-textGrey mt-2">Average rating</p>
+            </div>
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-black/5">
+              <p class="text-4xl font-semibold text-heading counter" data-target="28">0</p>
+              <p class="text-textGrey mt-2">Cities served</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      <section class="py-24 bg-white" id="testimonials">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+            <div>
+              <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Testimonials</p>
+              <h2 class="text-4xl font-semibold mt-3">Consistently high follow-up ratings.</h2>
+            </div>
+            <p class="text-textGrey mt-4 md:mt-0">Rated 4.9 out of 5 based on service follow-ups.</p>
+          </div>
+          <div class="overflow-hidden relative">
+            <div class="flex gap-6 testimonial-track" id="testimonialTrack">
+              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
+                <p class="text-lg text-textGrey">
+                  "NAME got an electrician to my warehouse within an hour. Billing was transparent and every detail was logged in-app."
+                </p>
+                <div>
+                  <p class="text-heading font-semibold">Rhea Kapur</p>
+                  <p class="text-sm text-textGrey">Emergency Electrical Fix</p>
+                </div>
+              </div>
+              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
+                <p class="text-lg text-textGrey">
+                  "I handle AC maintenance for multiple sites. NAME's workers arrive prepared with the requested parts and leave the job documented."
+                </p>
+                <div>
+                  <p class="text-heading font-semibold">Nikhil Rao</p>
+                  <p class="text-sm text-textGrey">AC Overhaul</p>
+                </div>
+              </div>
+              <div class="min-w-full bg-greyBg rounded-2xl border border-black/5 p-8 space-y-4">
+                <p class="text-lg text-textGrey">
+                  "As a worker partner, I get same-day payouts into my wallet. The app keeps routes efficient and customers verified."
+                </p>
+                <div>
+                  <p class="text-heading font-semibold">Prakash Menon</p>
+                  <p class="text-sm text-textGrey">Logistics Support</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mobile App -->
+      <section class="py-24 bg-greyBg" id="app">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-6">
+            <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Mobile</p>
+            <h2 class="text-4xl font-semibold">Operate everything from the NAME app.</h2>
+            <p class="text-textGrey text-lg">
+              Monitor active jobs, communicate with your assigned professional, and review payouts securely. Built with real-time ops tooling.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button class="flex-1 px-6 py-4 rounded-2xl bg-darkBlue text-white text-left font-semibold">
+                App Store
+                <span class="block text-sm text-white/70 font-normal">Download for iOS</span>
+              </button>
+              <button class="flex-1 px-6 py-4 rounded-2xl bg-primary text-white text-left font-semibold">
+                Play Store
+                <span class="block text-sm text-white/80 font-normal">Download for Android</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <div class="phone-frame w-64 h-[520px] p-6 bg-gradient-to-b from-white to-greyBg" id="phoneMockup">
+              <div class="h-full rounded-2xl border border-black/5 p-4 space-y-4">
+                <div class="h-8 bg-lightBlue rounded-xl"></div>
+                <div class="space-y-3">
+                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
+                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
+                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
+                </div>
+                <div class="h-24 bg-white rounded-2xl border border-black/5"></div>
+                <div class="h-12 bg-darkBlue rounded-xl"></div>
+                <div class="h-12 bg-primary rounded-xl"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section class="py-24 bg-white" id="pricing">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="text-center space-y-4 mb-10">
+            <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Pricing</p>
+            <h2 class="text-4xl font-semibold">Configure the plan that fits your ops.</h2>
+          </div>
+          <div class="flex items-center justify-center mb-12">
+            <div class="flex items-center bg-greyBg rounded-full px-2 py-1">
+              <button id="monthlyBtn" class="px-6 py-2 rounded-full text-sm font-semibold text-heading bg-white shadow">
+                Monthly
+              </button>
+              <button id="yearlyBtn" class="px-6 py-2 rounded-full text-sm font-semibold text-textGrey">
+                Yearly (save 12%)
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="pricing-card rounded-3xl border border-black/5 p-8 space-y-4" data-plan="basic">
+              <p class="text-sm uppercase tracking-[0.3em] text-textGrey">Basic</p>
+              <p class="text-4xl font-semibold text-heading price" data-monthly="1999" data-yearly="1799">₹1,999</p>
+              <p class="text-textGrey">Essential booking tools for homes & small teams.</p>
+              <div class="space-y-2 text-sm text-textGrey">
+                <p>- Unlimited customer bookings</p>
+                <p>- Standard verification</p>
+                <p>- Live chat support</p>
+                <p>- Payment protection</p>
+              </div>
+              <button class="w-full py-3 rounded-xl border border-darkBlue text-darkBlue font-semibold">
+                Choose Basic
+              </button>
+            </div>
+            <div class="pricing-card rounded-3xl border-2 border-primary p-8 space-y-4 bg-lightBlue" data-plan="standard">
+              <p class="text-sm uppercase tracking-[0.3em] text-primary">Standard</p>
+              <p class="text-4xl font-semibold text-heading price" data-monthly="3299" data-yearly="2899">₹3,299</p>
+              <p class="text-textGrey">Advanced scheduling and SLA tracking for SMBs.</p>
+              <div class="space-y-2 text-sm text-textGrey">
+                <p>- Priority matching queues</p>
+                <p>- Worker performance insights</p>
+                <p>- Managed service desk</p>
+                <p>- Escalation routing</p>
+              </div>
+              <button class="w-full py-3 rounded-xl bg-primary text-white font-semibold">
+                Choose Standard
+              </button>
+            </div>
+            <div class="pricing-card rounded-3xl border border-black/5 p-8 space-y-4" data-plan="business">
+              <p class="text-sm uppercase tracking-[0.3em] text-textGrey">Business</p>
+              <p class="text-4xl font-semibold text-heading price" data-monthly="5499" data-yearly="4999">₹5,499</p>
+              <p class="text-textGrey">Enterprise-grade support with custom routing.</p>
+              <div class="space-y-2 text-sm text-textGrey">
+                <p>- Dedicated city ops team</p>
+                <p>- API & integrations</p>
+                <p>- On-site quality audits</p>
+                <p>- Custom compliance layers</p>
+              </div>
+              <button class="w-full py-3 rounded-xl border border-darkBlue text-darkBlue font-semibold">
+                Talk to Sales
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="py-24 bg-greyBg" id="faq">
+        <div class="max-w-4xl mx-auto px-6 overflow-hidden">
+          <div class="text-center space-y-4 mb-12">
+            <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">FAQ</p>
+            <h2 class="text-4xl font-semibold">Clear answers before you book.</h2>
+          </div>
+          <div id="faqList" class="space-y-4">
+            <!-- FAQs inserted via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="py-20 relative cta-gradient text-white overflow-hidden" id="contact">
+        <div class="cta-motion" id="ctaMotion"></div>
+        <div class="relative max-w-5xl mx-auto px-6 text-center space-y-6">
+          <h2 class="text-4xl lg:text-5xl font-semibold">
+            Ready to book your service or start earning? Get started today.
+          </h2>
+          <p class="text-lg text-white/80">
+            NAME keeps both customers and workers in sync with real-time operations, verified profiles, and instant payouts.
+          </p>
+          <button class="px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass">
+            Get Started
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-darkBlue text-white py-16" id="footer">
+      <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-10 text-sm">
+        <div class="col-span-2 space-y-4">
+          <p class="text-lg font-semibold">NAME</p>
+          <p class="text-white/70">
+            NAME is a blue-collar service marketplace connecting customers and skilled professionals with transparent pricing and live operations.
+          </p>
+        </div>
+        <div>
+          <p class="uppercase tracking-[0.2em] text-xs text-white/50 mb-4">Services</p>
+          <ul class="space-y-2 text-white/80">
+            <li>Cleaning</li>
+            <li>Electrical</li>
+            <li>Repairs</li>
+            <li>AC Servicing</li>
+          </ul>
+        </div>
+        <div>
+          <p class="uppercase tracking-[0.2em] text-xs text-white/50 mb-4">Company</p>
+          <ul class="space-y-2 text-white/80">
+            <li>About</li>
+            <li>Press</li>
+            <li>Careers</li>
+            <li>Blog</li>
+          </ul>
+        </div>
+        <div>
+          <p class="uppercase tracking-[0.2em] text-xs text-white/50 mb-4">For Workers</p>
+          <ul class="space-y-2 text-white/80">
+            <li>Onboarding</li>
+            <li>Training</li>
+            <li>Payouts</li>
+            <li>Support</li>
+          </ul>
+        </div>
+        <div>
+          <p class="uppercase tracking-[0.2em] text-xs text-white/50 mb-4">Legal</p>
+          <ul class="space-y-2 text-white/80">
+            <li>Privacy</li>
+            <li>Terms</li>
+            <li>Licensing</li>
+            <li>Security</li>
+          </ul>
+        </div>
+        <div>
+          <p class="uppercase tracking-[0.2em] text-xs text-white/50 mb-4">Support</p>
+          <ul class="space-y-2 text-white/80">
+            <li>Help desk</li>
+            <li>Partner care</li>
+            <li>Coverage</li>
+            <li>Contact</li>
+          </ul>
+        </div>
+      </div>
+      <div class="max-w-6xl mx-auto px-6 mt-10 text-white/50 text-xs">
+        © <span id="currentYear"></span> NAME Operations Pvt. Ltd. All rights reserved.
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="/cursor/script.js"></script>
+  </body>
+</html>
