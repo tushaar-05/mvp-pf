@@ -568,41 +568,175 @@
 
       <!-- Mobile App -->
       <section class="py-24 bg-greyBg" id="app">
-        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div class="space-y-6">
-            <p class="text-primary/80 uppercase tracking-[0.3em] text-sm">Mobile</p>
-            <h2 class="text-4xl font-semibold">Operate everything from the NAME app.</h2>
-            <p class="text-textGrey text-lg">
-              Monitor active jobs, communicate with your assigned professional, and review payouts securely. Built with real-time ops tooling.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <button class="flex-1 px-6 py-4 rounded-2xl bg-darkBlue text-white text-left font-semibold">
-                App Store
+         <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12   items-center">
+        <div class="space-y-6">
+        <p class="text-primary/80 uppercase tracking-[0.3em] text-sm font-semibold">Mobile App</p>
+        <h2 class="text-4xl font-bold leading-tight">Find your next job from anywhere.</h2>
+        <p class="text-textGrey text-lg leading-relaxed">
+          Browse thousands of blue collar opportunities, apply instantly, track applications, and connect directly with employers—all from your phone.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button class="flex-1 px-6 py-4 rounded-2xl bg-darkBlue text-white text-left font-semibold hover:bg-darkBlue/90 transition-colors">
+            <div class="flex items-center gap-3">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <div>
+                <div>App Store</div>
                 <span class="block text-sm text-white/70 font-normal">Download for iOS</span>
-              </button>
-              <button class="flex-1 px-6 py-4 rounded-2xl bg-primary text-white text-left font-semibold">
-                Play Store
-                <span class="block text-sm text-white/80 font-normal">Download for Android</span>
-              </button>
-            </div>
-          </div>
-          <div class="flex justify-center">
-            <div class="phone-frame w-64 h-[520px] p-6 bg-gradient-to-b from-white to-greyBg" id="phoneMockup">
-              <div class="h-full rounded-2xl border border-black/5 p-4 space-y-4">
-                <div class="h-8 bg-lightBlue rounded-xl"></div>
-                <div class="space-y-3">
-                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
-                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
-                  <div class="h-12 bg-white rounded-xl border border-black/5"></div>
-                </div>
-                <div class="h-24 bg-white rounded-2xl border border-black/5"></div>
-                <div class="h-12 bg-darkBlue rounded-xl"></div>
-                <div class="h-12 bg-primary rounded-xl"></div>
               </div>
+            </div>
+          </button>
+          <button class="flex-1 px-6 py-4 rounded-2xl bg-primary text-white text-left font-semibold hover:bg-primary/90 transition-colors">
+            <div class="flex items-center gap-3">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+              </svg>
+              <div>
+                <div>Google Play</div>
+                <span class="block text-sm text-white/80 font-normal">Download for Android</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <div class="phone-frame w-72 h-[580px] bg-gray-900 rounded-[3rem] p-3 shadow-2xl" id="phoneMockup">
+          <div class="h-full rounded-[2.5rem] bg-white overflow-hidden flex flex-col">
+            <!-- Status Bar -->
+            <div class="bg-white px-6 py-3 flex justify-between items-center text-xs">
+              <span class="font-semibold">9:41</span>
+              <div class="flex gap-1">
+                <div class="w-4 h-3 bg-gray-800 rounded-sm"></div>
+                <div class="w-4 h-3 bg-gray-800 rounded-sm"></div>
+                <div class="w-4 h-3 bg-gray-800 rounded-sm"></div>
+              </div>
+            </div>
+
+            <!-- App Header -->
+            <div class="px-5 py-4 bg-primary text-white">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold">WorkHub</h3>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+              </div>
+              <div class="relative">
+                <input type="text" placeholder="Search jobs, companies..." class="w-full px-4 py-2 rounded-lg text-gray-800 text-sm" />
+                <svg class="w-5 h-5 absolute right-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Job Listings -->
+            <div class="flex-1 bg-greyBg p-4 space-y-3 overflow-auto">
+              <!-- Job Card 1 -->
+              <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Electrician</h4>
+                    <p class="text-sm text-textGrey">ABC Construction Co.</p>
+                  </div>
+                  <span class="text-primary font-semibold text-sm">$28/hr</span>
+                </div>
+                <div class="flex gap-2 text-xs text-textGrey mb-2">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    Chicago, IL
+                  </span>
+                  <span>• Full-time</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">Certified</span>
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">3+ years</span>
+                </div>
+              </div>
+
+              <!-- Job Card 2 -->
+              <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Plumber</h4>
+                    <p class="text-sm text-textGrey">QuickFix Services</p>
+                  </div>
+                  <span class="text-primary font-semibold text-sm">$32/hr</span>
+                </div>
+                <div class="flex gap-2 text-xs text-textGrey mb-2">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    New York, NY
+                  </span>
+                  <span>• Contract</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">Licensed</span>
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">Urgent</span>
+                </div>
+              </div>
+
+              <!-- Job Card 3 -->
+              <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Welder</h4>
+                    <p class="text-sm text-textGrey">Industrial Solutions Ltd.</p>
+                  </div>
+                  <span class="text-primary font-semibold text-sm">$30/hr</span>
+                </div>
+                <div class="flex gap-2 text-xs text-textGrey mb-2">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    Houston, TX
+                  </span>
+                  <span>• Full-time</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">MIG/TIG</span>
+                  <span class="px-2 py-1 bg-lightBlue text-primary text-xs rounded-md font-medium">Benefits</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bg-white border-t border-gray-200 px-6 py-3 flex justify-around items-center">
+              <button class="flex flex-col items-center gap-1">
+                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+                <span class="text-xs text-primary font-medium">Home</span>
+              </button>
+              <button class="flex flex-col items-center gap-1">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs text-gray-400">Search</span>
+              </button>
+              <button class="flex flex-col items-center gap-1">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                  <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs text-gray-400">Applied</span>
+              </button>
+              <button class="flex flex-col items-center gap-1">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs text-gray-400">Profile</span>
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
       <!-- Pricing -->
       <section class="py-24 bg-white" id="pricing">
