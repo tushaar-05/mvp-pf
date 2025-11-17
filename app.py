@@ -3,7 +3,9 @@ from flask_wtf import CSRFProtect
 import mysql.connector
 import re
 import os
+import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +22,13 @@ db_config = {
     'database': 'blue_collar_marketplace',
     'port': 3306
 }
+
+# File upload configuration
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
+MAX_FILE_SIZE = 4 * 1024 * 1024  # 4MB
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
     """Create and return database connection"""
@@ -57,6 +66,101 @@ def init_database():
                 )
             ''')
             
+            # Professional profiles table (extends users table)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_profiles (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL UNIQUE,
+                    gender ENUM('male', 'female', 'other'),
+                    street_address TEXT,
+                    city VARCHAR(100),
+                    state VARCHAR(100),
+                    pincode VARCHAR(10),
+                    profile_photo VARCHAR(255),
+                    work_radius_km INT DEFAULT 10,
+                    bio TEXT,
+                    experience_years ENUM('0-1', '2-5', '6-10', '10+'),
+                    skill_level ENUM('beginner', 'intermediate', 'expert'),
+                    hourly_rate DECIMAL(10,2),
+                    is_verified BOOLEAN DEFAULT FALSE,
+                    verification_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+                    is_active BOOLEAN DEFAULT TRUE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # Professional services table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_services (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    professional_id INT NOT NULL,
+                    primary_service VARCHAR(100) NOT NULL,
+                    sub_service VARCHAR(200) NOT NULL,
+                    base_price DECIMAL(10,2),
+                    price_type ENUM('fixed', 'hourly', 'square_feet') DEFAULT 'fixed',
+                    is_active BOOLEAN DEFAULT TRUE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # Professional availability table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_availability (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    professional_id INT NOT NULL,
+                    day_of_week ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'),
+                    start_time TIME,
+                    end_time TIME,
+                    is_available BOOLEAN DEFAULT TRUE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # Professional languages table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_languages (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    professional_id INT NOT NULL,
+                    language VARCHAR(50) NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # Professional documents table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_documents (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    professional_id INT NOT NULL,
+                    document_type ENUM('government_id_front', 'government_id_back', 'address_proof', 'pan_card', 'portfolio', 'police_verification'),
+                    file_name VARCHAR(255) NOT NULL,
+                    file_path VARCHAR(500) NOT NULL,
+                    file_size INT,
+                    mime_type VARCHAR(100),
+                    is_verified BOOLEAN DEFAULT FALSE,
+                    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
+                )
+            ''')
+            
+            # Professional portfolio table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professional_portfolio (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    professional_id INT NOT NULL,
+                    image_name VARCHAR(255) NOT NULL,
+                    image_path VARCHAR(500) NOT NULL,
+                    caption TEXT,
+                    display_order INT DEFAULT 0,
+                    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
+                )
+            ''')
+            
             conn.commit()
             cursor.close()
             conn.close()
@@ -88,6 +192,29 @@ def validate_phone(phone):
     
     return True, "Phone number is valid"
 
+def allowed_file(filename):
+    """Check if file type is allowed"""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def save_uploaded_file(file, subfolder):
+    """Save uploaded file and return filename"""
+    if file and allowed_file(file.filename):
+        # Generate unique filename
+        file_ext = file.filename.rsplit('.', 1)[1].lower()
+        filename = f"{uuid.uuid4().hex}.{file_ext}"
+        
+        # Create directory if it doesn't exist
+        upload_path = os.path.join(app.config['UPLOAD_FOLDER'], subfolder)
+        os.makedirs(upload_path, exist_ok=True)
+        
+        file_path = os.path.join(upload_path, filename)
+        file.save(file_path)
+        return filename
+    return None
+
+# ========== REGULAR USER ROUTES ==========
+
 @app.route('/')
 def index():
     """Home page route"""
@@ -95,7 +222,7 @@ def index():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    """Signup page route"""
+    """Customer signup page route"""
     if request.method == 'POST':
         return handle_signup()
     
@@ -103,7 +230,7 @@ def signup():
     return render_template('signup.html')
 
 def handle_signup():
-    """Handle signup form submission"""
+    """Handle customer signup form submission"""
     try:
         # Get form data
         first_name = request.form.get('firstName', '').strip()
@@ -263,10 +390,13 @@ def handle_login():
             session['user_name'] = f"{user['first_name']} {user['last_name']}"
             session['user_type'] = user['user_type']
             
+            # Redirect based on user type
+            redirect_url = '/professional/dashboard' if user['user_type'] == 'professional' else '/dashboard'
+            
             return jsonify({
                 'success': True, 
                 'message': 'Login successful! Redirecting...',
-                'redirect': '/dashboard'
+                'redirect': redirect_url
             })
         else:
             return jsonify({'success': False, 'message': 'Invalid email or password'})
@@ -277,17 +407,435 @@ def handle_login():
 
 @app.route('/dashboard')
 def dashboard():
-    """User dashboard"""
+    """Customer dashboard"""
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     return f"Welcome to your dashboard, {session['user_name']}!"
+
+@app.route('/professional/dashboard')
+def professional_dashboard():
+    """Professional dashboard"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+    
+    return f"Welcome to your professional dashboard, {session['user_name']}!"
 
 @app.route('/logout')
 def logout():
     """Logout user"""
     session.clear()
     return redirect(url_for('index'))
+
+# ========== PROFESSIONAL SIGNUP ROUTES ==========
+
+@app.route('/professional/signup', methods=['GET'])
+def professional_signup():
+    """Professional signup page"""
+    return render_template('professional_signup.html')
+
+@app.route('/api/professional/signup', methods=['POST'])
+def api_professional_signup():
+    """Handle professional signup form submission"""
+    try:
+        # Get form data
+        data = request.form
+        
+        # Step 1: Personal Information
+        if 'step' in data and data['step'] == '1':
+            return handle_personal_info(data, request.files)
+        
+        # Step 2: Service Details
+        elif 'step' in data and data['step'] == '2':
+            return handle_service_details(data)
+        
+        # Step 3: Experience & Pricing
+        elif 'step' in data and data['step'] == '3':
+            return handle_experience_pricing(data)
+        
+        # Step 4: Documents Upload
+        elif 'step' in data and data['step'] == '4':
+            return handle_documents_upload(data, request.files)
+        
+        # Complete registration
+        elif 'step' in data and data['step'] == 'complete':
+            return complete_professional_registration(data)
+        
+        return jsonify({'success': False, 'message': 'Invalid step'})
+        
+    except Exception as e:
+        print(f"Professional signup error: {e}")
+        return jsonify({'success': False, 'message': 'An error occurred during registration'})
+
+def handle_personal_info(data, files):
+    """Handle step 1: Personal information"""
+    # Validate required fields
+    required_fields = ['fullName', 'gender', 'phone', 'email', 'password', 
+                      'street', 'city', 'pincode', 'state']
+    
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({'success': False, 'message': f'{field} is required'})
+    
+    # Validate email format
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', data['email']):
+        return jsonify({'success': False, 'message': 'Please enter a valid email address'})
+    
+    # Validate phone number
+    if not re.match(r'^\d{10}$', data['phone']):
+        return jsonify({'success': False, 'message': 'Phone number must be 10 digits'})
+    
+    # Validate pincode
+    if not re.match(r'^\d{6}$', data['pincode']):
+        return jsonify({'success': False, 'message': 'Pincode must be 6 digits'})
+    
+    # Validate password
+    if len(data['password']) < 8 or not re.search(r'[A-Za-z]', data['password']) or not re.search(r'\d', data['password']):
+        return jsonify({'success': False, 'message': 'Password must be at least 8 characters with letters and numbers'})
+    
+    # Check if user already exists
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'message': 'Database connection error'})
+    
+    cursor = conn.cursor()
+    
+    # Check for existing email
+    cursor.execute("SELECT id FROM users WHERE email = %s", (data['email'],))
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({'success': False, 'message': 'An account with this email already exists'})
+    
+    # Check for existing phone
+    cursor.execute("SELECT id FROM users WHERE phone = %s", (data['phone'],))
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({'success': False, 'message': 'An account with this phone number already exists'})
+    
+    # Store data in session for later steps
+    session['professional_data'] = {
+        'personal': {
+            'full_name': data['fullName'],
+            'gender': data['gender'],
+            'phone': data['phone'],
+            'email': data['email'],
+            'password': data['password'],
+            'street': data['street'],
+            'city': data['city'],
+            'pincode': data['pincode'],
+            'state': data['state'],
+            'work_radius': data.get('workRadius', 10)
+        }
+    }
+    
+    # Handle profile photo upload
+    if 'profilePhoto' in files:
+        profile_photo = files['profilePhoto']
+        if profile_photo and allowed_file(profile_photo.filename):
+            if profile_photo.content_length > MAX_FILE_SIZE:
+                return jsonify({'success': False, 'message': 'Profile photo must be less than 4MB'})
+            
+            filename = save_uploaded_file(profile_photo, 'profiles')
+            if filename:
+                session['professional_data']['personal']['profile_photo'] = filename
+    
+    cursor.close()
+    conn.close()
+    
+    return jsonify({'success': True, 'message': 'Personal information saved', 'next_step': 2})
+
+def handle_service_details(data):
+    """Handle step 2: Service details"""
+    if 'professional_data' not in session:
+        return jsonify({'success': False, 'message': 'Session expired. Please start over.'})
+    
+    # Validate required fields
+    if not data.get('primaryService'):
+        return jsonify({'success': False, 'message': 'Primary service is required'})
+    
+    sub_services = data.getlist('subServices[]')
+    if not sub_services:
+        return jsonify({'success': False, 'message': 'At least one sub-service is required'})
+    
+    if not data.get('skillLevel'):
+        return jsonify({'success': False, 'message': 'Skill level is required'})
+    
+    languages = data.getlist('languages[]')
+    if not languages:
+        return jsonify({'success': False, 'message': 'At least one language is required'})
+    
+    # Store service data in session
+    session['professional_data']['services'] = {
+        'primary_service': data['primaryService'],
+        'sub_services': sub_services,
+        'skill_level': data['skillLevel'],
+        'languages': languages
+    }
+    
+    return jsonify({'success': True, 'message': 'Service details saved', 'next_step': 3})
+
+def handle_experience_pricing(data):
+    """Handle step 3: Experience and pricing"""
+    if 'professional_data' not in session:
+        return jsonify({'success': False, 'message': 'Session expired. Please start over.'})
+    
+    # Validate required fields
+    if not data.get('experience'):
+        return jsonify({'success': False, 'message': 'Years of experience is required'})
+    
+    if not data.get('about') or len(data['about']) < 40:
+        return jsonify({'success': False, 'message': 'About me must be at least 40 characters'})
+    
+    # Store experience data in session
+    session['professional_data']['experience'] = {
+        'years': data['experience'],
+        'about': data['about'],
+        'pricing': {},
+        'availability': {}
+    }
+    
+    # Process pricing data
+    for key, value in data.items():
+        if key.startswith('pricing-') and not key.startswith('pricingType-'):
+            service_name = key.replace('pricing-', '').replace('-', ' ')
+            price_type = data.get(f'pricingType-{service_name.replace(" ", "-").lower()}', 'fixed')
+            session['professional_data']['experience']['pricing'][service_name] = {
+                'amount': value,
+                'type': price_type
+            }
+    
+    # Process availability data
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    for day in days:
+        if data.get(f'available-{day}') == 'on':
+            session['professional_data']['experience']['availability'][day] = {
+                'start': data.get(f'startTime-{day}', '09:00'),
+                'end': data.get(f'endTime-{day}', '18:00')
+            }
+    
+    return jsonify({'success': True, 'message': 'Experience and pricing saved', 'next_step': 4})
+
+def handle_documents_upload(data, files):
+    """Handle step 4: Documents upload"""
+    if 'professional_data' not in session:
+        return jsonify({'success': False, 'message': 'Session expired. Please start over.'})
+    
+    # Store documents data in session
+    session['professional_data']['documents'] = {
+        'pan_number': data.get('panNumber', '')
+    }
+    
+    # Handle file uploads
+    document_files = {}
+    required_docs = ['idFront', 'idBack', 'addressProof']
+    
+    for doc_type in required_docs:
+        if doc_type in files:
+            file = files[doc_type]
+            if file and allowed_file(file.filename):
+                if file.content_length > MAX_FILE_SIZE:
+                    return jsonify({'success': False, 'message': f'{doc_type} must be less than 4MB'})
+                
+                filename = save_uploaded_file(file, 'documents')
+                if filename:
+                    document_files[doc_type] = filename
+    
+    # Check if required documents are uploaded
+    for doc_type in required_docs:
+        if doc_type not in document_files:
+            return jsonify({'success': False, 'message': f'{doc_type} is required'})
+    
+    session['professional_data']['documents']['files'] = document_files
+    
+    # Handle PAN card upload if provided
+    if 'panCard' in files and files['panCard']:
+        pan_file = files['panCard']
+        if allowed_file(pan_file.filename):
+            if pan_file.content_length > MAX_FILE_SIZE:
+                return jsonify({'success': False, 'message': 'PAN card must be less than 4MB'})
+            
+            filename = save_uploaded_file(pan_file, 'documents')
+            if filename:
+                session['professional_data']['documents']['pan_card'] = filename
+    
+    # Handle portfolio images
+    portfolio_files = []
+    if 'portfolio' in files:
+        portfolio_files_list = files.getlist('portfolio')
+        for file in portfolio_files_list:
+            if file and allowed_file(file.filename):
+                if file.content_length > MAX_FILE_SIZE:
+                    continue  # Skip files that are too large
+                
+                filename = save_uploaded_file(file, 'portfolio')
+                if filename:
+                    portfolio_files.append(filename)
+    
+    session['professional_data']['documents']['portfolio'] = portfolio_files
+    
+    return jsonify({'success': True, 'message': 'Documents uploaded successfully', 'next_step': 5})
+
+def complete_professional_registration(data):
+    """Complete professional registration"""
+    if 'professional_data' not in session:
+        return jsonify({'success': False, 'message': 'Session expired. Please start over.'})
+    
+    professional_data = session['professional_data']
+    
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'message': 'Database connection error'})
+    
+    try:
+        cursor = conn.cursor()
+        
+        # Start transaction
+        conn.start_transaction()
+        
+        # 1. Create user account
+        personal_data = professional_data['personal']
+        password_hash = generate_password_hash(personal_data['password'])
+        
+        # Split full name into first and last name
+        name_parts = personal_data['full_name'].split(' ', 1)
+        first_name = name_parts[0]
+        last_name = name_parts[1] if len(name_parts) > 1 else ''
+        
+        cursor.execute('''
+            INSERT INTO users (first_name, last_name, email, phone, password_hash, user_type)
+            VALUES (%s, %s, %s, %s, %s, 'professional')
+        ''', (
+            first_name,
+            last_name,
+            personal_data['email'],
+            personal_data['phone'],
+            password_hash
+        ))
+        
+        user_id = cursor.lastrowid
+        
+        # 2. Create professional profile
+        cursor.execute('''
+            INSERT INTO professional_profiles 
+            (user_id, gender, street_address, city, state, pincode, profile_photo, 
+             work_radius_km, bio, experience_years, skill_level)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (
+            user_id,
+            personal_data['gender'],
+            personal_data['street'],
+            personal_data['city'],
+            personal_data['state'],
+            personal_data['pincode'],
+            personal_data.get('profile_photo'),
+            personal_data.get('work_radius', 10),
+            professional_data['experience']['about'],
+            professional_data['experience']['years'],
+            professional_data['services']['skill_level']
+        ))
+        
+        professional_id = cursor.lastrowid
+        
+        # 3. Add services
+        services_data = professional_data['services']
+        for sub_service in services_data['sub_services']:
+            pricing = professional_data['experience']['pricing'].get(sub_service, {})
+            cursor.execute('''
+                INSERT INTO professional_services 
+                (professional_id, primary_service, sub_service, base_price, price_type)
+                VALUES (%s, %s, %s, %s, %s)
+            ''', (
+                professional_id,
+                services_data['primary_service'],
+                sub_service,
+                pricing.get('amount'),
+                pricing.get('type', 'fixed')
+            ))
+        
+        # 4. Add languages
+        for language in services_data['languages']:
+            cursor.execute('''
+                INSERT INTO professional_languages (professional_id, language)
+                VALUES (%s, %s)
+            ''', (professional_id, language))
+        
+        # 5. Add availability
+        availability_data = professional_data['experience']['availability']
+        for day, times in availability_data.items():
+            cursor.execute('''
+                INSERT INTO professional_availability 
+                (professional_id, day_of_week, start_time, end_time, is_available)
+                VALUES (%s, %s, %s, %s, TRUE)
+            ''', (professional_id, day, times['start'], times['end']))
+        
+        # 6. Add documents
+        documents_data = professional_data['documents']
+        document_types = {
+            'idFront': 'government_id_front',
+            'idBack': 'government_id_back',
+            'addressProof': 'address_proof',
+            'panCard': 'pan_card'
+        }
+        
+        for doc_key, doc_type in document_types.items():
+            if doc_key in documents_data.get('files', {}):
+                cursor.execute('''
+                    INSERT INTO professional_documents 
+                    (professional_id, document_type, file_name, file_path)
+                    VALUES (%s, %s, %s, %s)
+                ''', (
+                    professional_id,
+                    doc_type,
+                    documents_data['files'][doc_key],
+                    f"documents/{documents_data['files'][doc_key]}"
+                ))
+        
+        # 7. Add portfolio images
+        for portfolio_image in documents_data.get('portfolio', []):
+            cursor.execute('''
+                INSERT INTO professional_portfolio 
+                (professional_id, image_name, image_path)
+                VALUES (%s, %s, %s)
+            ''', (professional_id, portfolio_image, f"portfolio/{portfolio_image}"))
+        
+        # Commit transaction
+        conn.commit()
+        
+        # Clear session data
+        session.pop('professional_data', None)
+        
+        # Set user session
+        session['user_id'] = user_id
+        session['user_email'] = personal_data['email']
+        session['user_name'] = personal_data['full_name']
+        session['user_type'] = 'professional'
+        
+        cursor.close()
+        conn.close()
+        
+        return jsonify({
+            'success': True, 
+            'message': 'Registration completed successfully! Your application is under review.',
+            'redirect': '/professional/dashboard'
+        })
+        
+    except mysql.connector.Error as e:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        print(f"Database error during registration: {e}")
+        return jsonify({'success': False, 'message': 'Database error during registration'})
+    
+    except Exception as e:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        print(f"Unexpected error during registration: {e}")
+        return jsonify({'success': False, 'message': 'An unexpected error occurred'})
+
+# ========== API ENDPOINTS ==========
 
 # API endpoint for AJAX signup (if you want to use AJAX instead of form submission)
 @app.route('/api/signup', methods=['POST'])
@@ -302,6 +850,11 @@ def api_login():
     return handle_login()
 
 if __name__ == '__main__':
+    # Create upload directories
+    os.makedirs(os.path.join(UPLOAD_FOLDER, 'profiles'), exist_ok=True)
+    os.makedirs(os.path.join(UPLOAD_FOLDER, 'documents'), exist_ok=True)
+    os.makedirs(os.path.join(UPLOAD_FOLDER, 'portfolio'), exist_ok=True)
+    
     # Initialize database on startup
     init_database()
     

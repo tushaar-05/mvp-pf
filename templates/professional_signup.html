@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join as Professional | NAME - Blue-Collar Service Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        background: '#F8F9FC',
+                        card: '#FFFFFF',
+                        border: '#E5E7EB',
+                        textPrimary: '#111827',
+                        textSecondary: '#6B7280',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        error: '#EF4444'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FC;
+        }
+        
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        
+        .step-indicator.completed {
+            background-color: #10B981;
+            color: white;
+        }
+        
+        .form-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+        }
+        
+        .file-upload-preview {
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-preview:hover {
+            transform: scale(1.05);
+        }
+        
+        .service-pill {
+            transition: all 0.2s ease;
+        }
+        
+        .service-pill:hover {
+            transform: translateY(-2px);
+        }
+        
+        .availability-toggle {
+            transition: all 0.2s ease;
+        }
+        
+        .availability-toggle.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-background text-textPrimary min-h-screen">
+    <!-- Navigation -->
+    <header class="bg-card border-b border-border py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <span class="font-bold text-xl">NAME</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/" class="text-textSecondary hover:text-textPrimary font-medium">Home</a>
+                <a href="/login" class="text-textSecondary hover:text-textPrimary font-medium">Login</a>
+                <a href="/signup" class="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90">Join as Customer</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Steps -->
+        <div class="flex justify-between mb-12 relative">
+            <div class="absolute top-1/2 left-0 right-0 h-1 bg-border -translate-y-1/2 z-0"></div>
+            <div id="progressBar" class="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-10 transition-all duration-500" style="width: 0%"></div>
+            
+            <div class="step-indicator flex flex-col items-center relative z-20">
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-medium step-circle active" data-step="1">1</div>
+                <span class="mt-2 text-sm font-medium text-textPrimary">Personal</span>
+            </div>
+            <div class="step-indicator flex flex-col items-center relative z-20">
+                <div class="w-10 h-10 rounded-full bg-border text-textSecondary flex items-center justify-center font-medium step-circle" data-step="2">2</div>
+                <span class="mt-2 text-sm font-medium text-textSecondary">Services</span>
+            </div>
+            <div class="step-indicator flex flex-col items-center relative z-20">
+                <div class="w-10 h-10 rounded-full bg-border text-textSecondary flex items-center justify-center font-medium step-circle" data-step="3">3</div>
+                <span class="mt-2 text-sm font-medium text-textSecondary">Experience</span>
+            </div>
+            <div class="step-indicator flex flex-col items-center relative z-20">
+                <div class="w-10 h-10 rounded-full bg-border text-textSecondary flex items-center justify-center font-medium step-circle" data-step="4">4</div>
+                <span class="mt-2 text-sm font-medium text-textSecondary">Documents</span>
+            </div>
+            <div class="step-indicator flex flex-col items-center relative z-20">
+                <div class="w-10 h-10 rounded-full bg-border text-textSecondary flex items-center justify-center font-medium step-circle" data-step="5">5</div>
+                <span class="mt-2 text-sm font-medium text-textSecondary">Review</span>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-card bg-card p-8">
+            <!-- Step 1: Personal Information -->
+            <div id="step-1" class="step-content active">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-textPrimary">Personal Details</h2>
+                    <p class="text-textSecondary mt-2">Tell us about yourself so we can create your professional profile.</p>
+                </div>
+
+                <form id="personal-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="fullName" class="block text-sm font-medium text-textPrimary mb-2">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="gender" class="block text-sm font-medium text-textPrimary mb-2">Gender *</label>
+                            <select id="gender" name="gender" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-textPrimary mb-2">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="10-digit number">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-textPrimary mb-2">Email Address *</label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-textPrimary mb-2">Password *</label>
+                            <input type="password" id="password" name="password" required minlength="8" class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <p class="text-xs text-textSecondary mt-1">Must be at least 8 characters with letters and numbers</p>
+                        </div>
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-textPrimary mb-2">Confirm Password *</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Full Address *</label>
+                        <div class="space-y-4">
+                            <input type="text" id="street" name="street" required placeholder="Street Address" class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" id="city" name="city" required placeholder="City" class="px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <input type="text" id="pincode" name="pincode" required pattern="[0-9]{6}" placeholder="Pincode" class="px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <input type="text" id="state" name="state" required placeholder="State" class="px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Profile Photo *</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="px-6 py-3 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors">
+                                    <span>Upload Photo</span>
+                                </div>
+                            </div>
+                            <div id="profilePhotoPreview" class="w-16 h-16 rounded-full bg-border flex items-center justify-center overflow-hidden hidden">
+                                <img id="profilePreviewImg" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-sm text-textSecondary">Max size: 3MB</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">Work Radius *</label>
+                        <div class="space-y-4">
+                            <input type="range" id="workRadius" name="workRadius" min="2" max="30" value="10" class="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary">
+                            <div class="flex justify-between">
+                                <span class="text-sm text-textSecondary">2 km</span>
+                                <span id="radiusValue" class="text-sm font-medium text-textPrimary">10 km</span>
+                                <span class="text-sm text-textSecondary">30 km</span>
+                            </div>
+                            <p class="text-sm text-textSecondary">You can take bookings within <span id="radiusText" class="font-medium">10 km</span> of your location</p>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flex justify-between mt-8">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button id="next-to-2" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Service Details -->
+            <div id="step-2" class="step-content hidden">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-textPrimary">Services You Provide</h2>
+                    <p class="text-textSecondary mt-2">Choose your expertise so customers find you easily.</p>
+                </div>
+
+                <form id="services-form" class="space-y-6">
+                    <div>
+                        <label for="primaryService" class="block text-sm font-medium text-textPrimary mb-2">Primary Service Category *</label>
+                        <select id="primaryService" name="primaryService" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <option value="">Select a category</option>
+                            <option value="ac_repair">AC Repair</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="carpentry">Carpentry</option>
+                            <option value="appliance_repair">Appliance Repair</option>
+                            <option value="painting">Painting</option>
+                            <option value="cleaning">Cleaning</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Sub-Services *</label>
+                        <div id="subServicesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Dynamic content based on primary service selection -->
+                            <p class="text-textSecondary">Select a primary service category to see available sub-services</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Skill Level *</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="skillLevel" value="beginner" class="sr-only" required>
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Beginner</div>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="skillLevel" value="intermediate" class="sr-only">
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Intermediate</div>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="skillLevel" value="expert" class="sr-only">
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Expert</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Languages Spoken *</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="languages" value="english" class="sr-only">
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">English</div>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="languages" value="hindi" class="sr-only">
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Hindi</div>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="languages" value="local" class="sr-only">
+                                <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Local Language</div>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flex justify-between mt-8">
+                    <button id="back-to-1" class="px-6 py-3 border border-border rounded-lg font-medium text-textPrimary hover:bg-background transition-colors">Back</button>
+                    <button id="next-to-3" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Experience & Pricing -->
+            <div id="step-3" class="step-content hidden">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-textPrimary">Experience & Service Rates</h2>
+                    <p class="text-textSecondary mt-2">Add your work experience and set your base pricing.</p>
+                </div>
+
+                <form id="experience-form" class="space-y-6">
+                    <div>
+                        <label for="experience" class="block text-sm font-medium text-textPrimary mb-2">Years of Experience *</label>
+                        <select id="experience" name="experience" required class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <option value="">Select experience</option>
+                            <option value="0-1">0-1 years</option>
+                            <option value="2-5">2-5 years</option>
+                            <option value="6-10">6-10 years</option>
+                            <option value="10+">10+ years</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="about" class="block text-sm font-medium text-textPrimary mb-2">About Me *</label>
+                        <textarea id="about" name="about" required minlength="40" rows="4" placeholder="Describe your work style, experience, tools you use, and what makes you reliable." class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"></textarea>
+                        <p class="text-xs text-textSecondary mt-1"><span id="aboutCount">0</span>/40 characters minimum</p>
+                    </div>
+
+                    <div id="pricingContainer">
+                        <label class="block text-sm font-medium text-textPrimary mb-2">Base Pricing *</label>
+                        <p class="text-textSecondary mb-4">Set your base rates for selected services</p>
+                        <!-- Dynamic pricing fields will be inserted here -->
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">Weekly Availability *</label>
+                        <div id="availabilityContainer" class="space-y-4">
+                            <!-- Dynamic availability fields will be inserted here -->
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flex justify-between mt-8">
+                    <button id="back-to-2" class="px-6 py-3 border border-border rounded-lg font-medium text-textPrimary hover:bg-background transition-colors">Back</button>
+                    <button id="next-to-4" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Documents Upload -->
+            <div id="step-4" class="step-content hidden">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-textPrimary">Verification Documents</h2>
+                    <p class="text-textSecondary mt-2">We verify your identity to ensure user safety.</p>
+                </div>
+
+                <form id="documents-form" class="space-y-8">
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">Government ID *</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-textSecondary mb-2">Front Image</label>
+                                <div class="relative">
+                                    <input type="file" id="idFront" name="idFront" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <div class="px-6 py-8 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors flex flex-col items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <span>Upload Front</span>
+                                    </div>
+                                </div>
+                                <div id="idFrontPreview" class="mt-2 hidden">
+                                    <!-- Preview will be inserted here -->
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-textSecondary mb-2">Back Image</label>
+                                <div class="relative">
+                                    <input type="file" id="idBack" name="idBack" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <div class="px-6 py-8 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors flex flex-col items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <span>Upload Back</span>
+                                    </div>
+                                </div>
+                                <div id="idBackPreview" class="mt-2 hidden">
+                                    <!-- Preview will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">Address Proof *</label>
+                        <div class="relative">
+                            <input type="file" id="addressProof" name="addressProof" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            <div class="px-6 py-8 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors flex flex-col items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                <span>Upload Address Proof</span>
+                            </div>
+                        </div>
+                        <div id="addressProofPreview" class="mt-2 hidden">
+                            <!-- Preview will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">PAN Card Details</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="panNumber" class="block text-sm text-textSecondary mb-2">PAN Number</label>
+                                <input type="text" id="panNumber" name="panNumber" class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="ABCDE1234F">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-textSecondary mb-2">PAN Card Image</label>
+                                <div class="relative">
+                                    <input type="file" id="panCard" name="panCard" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <div class="px-6 py-8 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors flex flex-col items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <span>Upload PAN Card</span>
+                                    </div>
+                                </div>
+                                <div id="panCardPreview" class="mt-2 hidden">
+                                    <!-- Preview will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-textPrimary mb-4">Work Portfolio (Optional)</label>
+                        <p class="text-textSecondary mb-4">Upload images of your previous work (max 6 images)</p>
+                        <div class="relative">
+                            <input type="file" id="portfolio" name="portfolio" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            <div class="px-6 py-8 border-2 border-dashed border-border rounded-lg text-textSecondary hover:border-primary hover:text-primary transition-colors flex flex-col items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>Upload Portfolio Images</span>
+                            </div>
+                        </div>
+                        <div id="portfolioPreview" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4 hidden">
+                            <!-- Portfolio previews will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="text-sm text-textSecondary">
+                        <p>* Max file size: 4MB per file</p>
+                        <p>* Accepted formats: JPG, PNG, PDF</p>
+                    </div>
+                </form>
+
+                <div class="flex justify-between mt-8">
+                    <button id="back-to-3" class="px-6 py-3 border border-border rounded-lg font-medium text-textPrimary hover:bg-background transition-colors">Back</button>
+                    <button id="next-to-5" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Verification & Submit -->
+            <div id="step-5" class="step-content hidden">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-textPrimary">Review & Submit</h2>
+                    <p class="text-textSecondary mt-2">Confirm all details before submitting your application.</p>
+                </div>
+
+                <div id="summaryContainer" class="space-y-6">
+                    <!-- Summary will be dynamically generated here -->
+                </div>
+
+                <div class="mt-8">
+                    <label class="flex items-start space-x-3">
+                        <input type="checkbox" id="termsAgreement" name="termsAgreement" required class="mt-1 w-4 h-4 text-primary border-border rounded focus:ring-primary/20">
+                        <span class="text-sm text-textPrimary">I agree to the <a href="#" class="text-primary hover:underline">Terms & Conditions</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <div class="flex justify-between mt-8">
+                    <button id="back-to-4" class="px-6 py-3 border border-border rounded-lg font-medium text-textPrimary hover:bg-background transition-colors">Back</button>
+                    <button id="submit-application" disabled class="bg-primary/50 text-white px-6 py-3 rounded-lg font-medium transition-colors">Submit Application</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-card rounded-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div class="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-textPrimary mb-2">Application Submitted!</h3>
+            <p class="text-textSecondary mb-6">Your application has been submitted. Verification will take approximately 24-48 hours.</p>
+            <button id="closeModal" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors w-full">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Service data
+        const serviceData = {
+            ac_repair: [
+                "AC Regular Service",
+                "AC Gas Filling",
+                "AC Repair",
+                "AC Installation",
+                "AC Uninstallation"
+            ],
+            electrical: [
+                "Wiring & Installation",
+                "Switch & Socket Repair",
+                "Light Fixture Installation",
+                "Electrical Safety Check",
+                "Circuit Breaker Repair"
+            ],
+            plumbing: [
+                "Pipe Repair & Installation",
+                "Leak Detection & Repair",
+                "Tap & Faucet Repair",
+                "Water Heater Installation",
+                "Drain Cleaning"
+            ],
+            carpentry: [
+                "Furniture Repair",
+                "Furniture Assembly",
+                "Custom Carpentry",
+                "Door & Window Repair",
+                "Wood Polishing"
+            ],
+            appliance_repair: [
+                "Refrigerator Repair",
+                "Washing Machine Repair",
+                "Microwave Repair",
+                "Water Purifier Service",
+                "Chimney Repair"
+            ],
+            painting: [
+                "Wall Painting",
+                "Exterior Painting",
+                "Texture Painting",
+                "Wood Polishing",
+                "Waterproofing"
+            ],
+            cleaning: [
+                "Deep Cleaning",
+                "Regular Cleaning",
+                "Office Cleaning",
+                "Post-Construction Cleaning",
+                "Carpet Cleaning"
+            ],
+            others: [
+                "Pest Control",
+                "Moving & Packing",
+                "Gardening",
+                "Home Automation",
+                "Other Services"
+            ]
+        };
+
+        // Days of week for availability
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        // Current step tracking
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // Form data storage
+        const formData = {
+            personal: {},
+            services: {},
+            experience: {},
+            documents: {}
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            updateProgressBar();
+            initializeServiceSelection();
+            initializeAvailability();
+        });
+
+        function initializeEventListeners() {
+            // Step navigation
+            document.getElementById('next-to-2').addEventListener('click', () => validateAndNavigate(1, 2));
+            document.getElementById('next-to-3').addEventListener('click', () => validateAndNavigate(2, 3));
+            document.getElementById('next-to-4').addEventListener('click', () => validateAndNavigate(3, 4));
+            document.getElementById('next-to-5').addEventListener('click', () => validateAndNavigate(4, 5));
+            
+            document.getElementById('back-to-1').addEventListener('click', () => navigateToStep(1));
+            document.getElementById('back-to-2').addEventListener('click', () => navigateToStep(2));
+            document.getElementById('back-to-3').addEventListener('click', () => navigateToStep(3));
+            document.getElementById('back-to-4').addEventListener('click', () => navigateToStep(4));
+
+            // Form interactions
+            document.getElementById('workRadius').addEventListener('input', updateRadiusText);
+            document.getElementById('primaryService').addEventListener('change', updateSubServices);
+            document.getElementById('about').addEventListener('input', updateAboutCount);
+            document.getElementById('termsAgreement').addEventListener('change', toggleSubmitButton);
+            document.getElementById('submit-application').addEventListener('click', submitApplication);
+            document.getElementById('closeModal').addEventListener('click', closeSuccessModal);
+
+            // File upload previews
+            initializeFileUploads();
+            
+            // Skill level selection
+            initializeSkillSelection();
+            
+            // Language selection
+            initializeLanguageSelection();
+        }
+
+        function updateProgressBar() {
+            const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+            
+            // Update step indicators
+            document.querySelectorAll('.step-circle').forEach((circle, index) => {
+                const stepNumber = index + 1;
+                if (stepNumber < currentStep) {
+                    circle.classList.remove('active', 'bg-border', 'text-textSecondary');
+                    circle.classList.add('completed', 'bg-success', 'text-white');
+                } else if (stepNumber === currentStep) {
+                    circle.classList.remove('completed', 'bg-border', 'text-textSecondary');
+                    circle.classList.add('active', 'bg-primary', 'text-white');
+                } else {
+                    circle.classList.remove('active', 'completed', 'bg-primary', 'bg-success', 'text-white');
+                    circle.classList.add('bg-border', 'text-textSecondary');
+                }
+            });
+        }
+
+        function updateRadiusText() {
+            const radius = document.getElementById('workRadius').value;
+            document.getElementById('radiusValue').textContent = `${radius} km`;
+            document.getElementById('radiusText').textContent = `${radius} km`;
+        }
+
+        function initializeServiceSelection() {
+            document.getElementById('primaryService').addEventListener('change', function() {
+                updateSubServices();
+                updatePricingFields();
+            });
+        }
+
+        function updateSubServices() {
+            const primaryService = document.getElementById('primaryService').value;
+            const container = document.getElementById('subServicesContainer');
+            
+            if (!primaryService) {
+                container.innerHTML = '<p class="text-textSecondary">Select a primary service category to see available sub-services</p>';
+                return;
+            }
+            
+            const subServices = serviceData[primaryService] || [];
+            
+            if (subServices.length === 0) {
+                container.innerHTML = '<p class="text-textSecondary">No sub-services available for this category</p>';
+                return;
+            }
+            
+            let html = '';
+            subServices.forEach(service => {
+                html += `
+                    <label class="flex items-center">
+                        <input type="checkbox" name="subServices" value="${service}" class="sr-only">
+                        <div class="w-full px-4 py-3 border border-border rounded-lg service-pill cursor-pointer text-textPrimary hover:border-primary transition-colors">
+                            ${service}
+                        </div>
+                    </label>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Add event listeners to the new checkboxes
+            container.querySelectorAll('label').forEach(label => {
+                label.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                    
+                    if (checkbox.checked) {
+                        this.querySelector('div').classList.add('border-primary', 'bg-primary/5');
+                    } else {
+                        this.querySelector('div').classList.remove('border-primary', 'bg-primary/5');
+                    }
+                    
+                    updatePricingFields();
+                });
+            });
+        }
+
+        function initializeSkillSelection() {
+            document.querySelectorAll('input[name="skillLevel"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('input[name="skillLevel"]').forEach(r => {
+                        const pill = r.parentNode.querySelector('div');
+                        if (r.checked) {
+                            pill.classList.add('border-primary', 'bg-primary/5');
+                        } else {
+                            pill.classList.remove('border-primary', 'bg-primary/5');
+                        }
+                    });
+                });
+            });
+        }
+
+        function initializeLanguageSelection() {
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('input[name="languages"]')) {
+                    const checkbox = e.target.closest('input[name="languages"]');
+                    const pill = checkbox.parentNode.querySelector('div');
+                    
+                    if (checkbox.checked) {
+                        pill.classList.add('border-primary', 'bg-primary/5');
+                    } else {
+                        pill.classList.remove('border-primary', 'bg-primary/5');
+                    }
+                }
+            });
+        }
+
+        function updateAboutCount() {
+            const about = document.getElementById('about');
+            const count = about.value.length;
+            document.getElementById('aboutCount').textContent = count;
+            
+            if (count < 40) {
+                about.classList.add('border-warning');
+                about.classList.remove('border-success');
+            } else {
+                about.classList.remove('border-warning');
+                about.classList.add('border-success');
+            }
+        }
+
+        function updatePricingFields() {
+            const container = document.getElementById('pricingContainer');
+            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedSubServices.length === 0) {
+                container.innerHTML = `
+                    <label class="block text-sm font-medium text-textPrimary mb-2">Base Pricing *</label>
+                    <p class="text-textSecondary">Select sub-services to set pricing</p>
+                `;
+                return;
+            }
+            
+            let html = `
+                <label class="block text-sm font-medium text-textPrimary mb-2">Base Pricing *</label>
+                <p class="text-textSecondary mb-4">Set your base rates for selected services</p>
+                <div class="space-y-4">
+            `;
+            
+            selectedSubServices.forEach(service => {
+                html += `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label class="text-sm font-medium text-textPrimary">${service}</label>
+                        <div class="md:col-span-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-textSecondary">₹</span>
+                                <input type="number" name="pricing-${service.replace(/\s+/g, '-').toLowerCase()}" 
+                                       placeholder="Enter amount" min="0" 
+                                       class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <select name="pricingType-${service.replace(/\s+/g, '-').toLowerCase()}" 
+                                        class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                    <option value="fixed">Fixed</option>
+                                    <option value="hourly">Per Hour</option>
+                                    <option value="square_feet">Per Sq. Ft.</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function initializeAvailability() {
+            const container = document.getElementById('availabilityContainer');
+            let html = '';
+            
+            daysOfWeek.forEach(day => {
+                html += `
+                    <div class="flex items-center justify-between p-4 border border-border rounded-lg">
+                        <label class="flex items-center space-x-3 cursor-pointer availability-toggle">
+                            <input type="checkbox" name="available-${day.toLowerCase()}" class="sr-only">
+                            <div class="w-10 h-6 bg-border rounded-full p-1 transition-colors">
+                                <div class="w-4 h-4 bg-white rounded-full transition-transform"></div>
+                            </div>
+                            <span class="font-medium text-textPrimary">${day}</span>
+                        </label>
+                        <div class="flex items-center space-x-2 availability-times hidden">
+                            <input type="time" name="startTime-${day.toLowerCase()}" class="px-3 py-2 border border-border rounded-lg">
+                            <span class="text-textSecondary">to</span>
+                            <input type="time" name="endTime-${day.toLowerCase()}" class="px-3 py-2 border border-border rounded-lg">
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Add event listeners for availability toggles
+            container.querySelectorAll('.availability-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                    
+                    const timesContainer = this.closest('.flex').querySelector('.availability-times');
+                    
+                    if (checkbox.checked) {
+                        this.classList.add('active');
+                        timesContainer.classList.remove('hidden');
+                    } else {
+                        this.classList.remove('active');
+                        timesContainer.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        function initializeFileUploads() {
+            // Profile photo
+            document.getElementById('profilePhoto').addEventListener('change', function(e) {
+                handleFileUpload(e, 'profilePhotoPreview', 'profilePreviewImg');
+            });
+            
+            // Document uploads
+            const documentUploads = [
+                { id: 'idFront', previewId: 'idFrontPreview' },
+                { id: 'idBack', previewId: 'idBackPreview' },
+                { id: 'addressProof', previewId: 'addressProofPreview' },
+                { id: 'panCard', previewId: 'panCardPreview' }
+            ];
+            
+            documentUploads.forEach(doc => {
+                document.getElementById(doc.id).addEventListener('change', function(e) {
+                    handleFileUpload(e, doc.previewId);
+                });
+            });
+            
+            // Portfolio upload
+            document.getElementById('portfolio').addEventListener('change', function(e) {
+                handlePortfolioUpload(e);
+            });
+        }
+
+        function handleFileUpload(event, previewContainerId, imgElementId) {
+            const file = event.target.files[0];
+            const previewContainer = document.getElementById(previewContainerId);
+            
+            if (!file) return;
+            
+            // Validate file size (4MB max)
+            if (file.size > 4 * 1024 * 1024) {
+                alert('File size must be less than 4MB');
+                event.target.value = '';
+                return;
+            }
+            
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload JPG, PNG, or PDF files only');
+                event.target.value = '';
+                return;
+            }
+            
+            if (imgElementId) {
+                // For image preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(imgElementId).src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // For document preview
+                previewContainer.innerHTML = `
+                    <div class="flex items-center justify-between p-3 bg-background rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-textSecondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm font-medium text-textPrimary">${file.name}</p>
+                                <p class="text-xs text-textSecondary">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                            </div>
+                        </div>
+                        <button type="button" class="text-textSecondary hover:text-error" onclick="removeFile('${previewContainerId}', '${event.target.id}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                previewContainer.classList.remove('hidden');
+            }
+        }
+
+        function handlePortfolioUpload(event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('portfolioPreview');
+            
+            if (!files || files.length === 0) return;
+            
+            // Validate number of files
+            if (files.length > 6) {
+                alert('Maximum 6 portfolio images allowed');
+                event.target.value = '';
+                return;
+            }
+            
+            let html = '';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Validate file size and type
+                if (file.size > 4 * 1024 * 1024) {
+                    alert(`File "${file.name}" exceeds 4MB size limit`);
+                    continue;
+                }
+                
+                if (!file.type.startsWith('image/')) {
+                    alert(`File "${file.name}" is not an image`);
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    html += `
+                        <div class="relative file-upload-preview">
+                            <img src="${e.target.result}" alt="Portfolio image" class="w-full h-32 object-cover rounded-lg">
+                            <button type="button" class="absolute -top-2 -right-2 bg-error text-white rounded-full w-6 h-6 flex items-center justify-center text-xs" 
+                                    onclick="removePortfolioImage(this)">
+                                ×
+                            </button>
+                        </div>
+                    `;
+                    
+                    if (i === files.length - 1) {
+                        previewContainer.innerHTML = html;
+                        previewContainer.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeFile(previewContainerId, inputId) {
+            document.getElementById(previewContainerId).classList.add('hidden');
+            document.getElementById(previewContainerId).innerHTML = '';
+            document.getElementById(inputId).value = '';
+        }
+
+        function removePortfolioImage(button) {
+            button.parentElement.remove();
+            
+            // Hide container if no images left
+            const previewContainer = document.getElementById('portfolioPreview');
+            if (previewContainer.children.length === 0) {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
+        function validateAndNavigate(fromStep, toStep) {
+            // Basic validation before navigating
+            let isValid = true;
+            
+            switch (fromStep) {
+                case 1:
+                    isValid = validateStep1();
+                    break;
+                case 2:
+                    isValid = validateStep2();
+                    break;
+                case 3:
+                    isValid = validateStep3();
+                    break;
+                case 4:
+                    isValid = validateStep4();
+                    break;
+            }
+            
+            if (isValid) {
+                saveStepData(fromStep);
+                navigateToStep(toStep);
+            }
+        }
+
+        function validateStep1() {
+            const requiredFields = [
+                'fullName', 'gender', 'phone', 'email', 'password', 
+                'confirmPassword', 'street', 'city', 'pincode', 'state'
+            ];
+            
+            for (let field of requiredFields) {
+                const element = document.getElementById(field);
+                if (!element.value.trim()) {
+                    showValidationError(element, 'This field is required');
+                    return false;
+                }
+            }
+            
+            // Phone validation
+            const phone = document.getElementById('phone').value;
+            if (!/^\d{10}$/.test(phone)) {
+                showValidationError(document.getElementById('phone'), 'Phone must be 10 digits');
+                return false;
+            }
+            
+            // Pincode validation
+            const pincode = document.getElementById('pincode').value;
+            if (!/^\d{6}$/.test(pincode)) {
+                showValidationError(document.getElementById('pincode'), 'Pincode must be 6 digits');
+                return false;
+            }
+            
+            // Password validation
+            const password = document.getElementById('password').value;
+            if (password.length < 8 || !/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+                showValidationError(document.getElementById('password'), 'Password must be at least 8 characters with letters and numbers');
+                return false;
+            }
+            
+            // Confirm password
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                showValidationError(document.getElementById('confirmPassword'), 'Passwords do not match');
+                return false;
+            }
+            
+            // Profile photo
+            const profilePhoto = document.getElementById('profilePhoto').files[0];
+            if (!profilePhoto) {
+                alert('Please upload a profile photo');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function validateStep2() {
+            const primaryService = document.getElementById('primaryService').value;
+            if (!primaryService) {
+                alert('Please select a primary service category');
+                return false;
+            }
+            
+            const subServices = document.querySelectorAll('input[name="subServices"]:checked');
+            if (subServices.length === 0) {
+                alert('Please select at least one sub-service');
+                return false;
+            }
+            
+            const skillLevel = document.querySelector('input[name="skillLevel"]:checked');
+            if (!skillLevel) {
+                alert('Please select your skill level');
+                return false;
+            }
+            
+            const languages = document.querySelectorAll('input[name="languages"]:checked');
+            if (languages.length === 0) {
+                alert('Please select at least one language');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function validateStep3() {
+            const experience = document.getElementById('experience').value;
+            if (!experience) {
+                alert('Please select your years of experience');
+                return false;
+            }
+            
+            const about = document.getElementById('about').value;
+            if (about.length < 40) {
+                alert('About me must be at least 40 characters');
+                return false;
+            }
+            
+            // Check if pricing is set for all selected services
+            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+                .map(cb => cb.value);
+            
+            for (let service of selectedSubServices) {
+                const pricingInput = document.querySelector(`input[name="pricing-${service.replace(/\s+/g, '-').toLowerCase()}"]`);
+                if (!pricingInput || !pricingInput.value) {
+                    alert(`Please set pricing for ${service}`);
+                    return false;
+                }
+            }
+            
+            // Check if at least one day is available
+            const availableDays = document.querySelectorAll('input[name^="available-"]:checked');
+            if (availableDays.length === 0) {
+                alert('Please set your availability for at least one day');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function validateStep4() {
+            // Check required documents
+            const idFront = document.getElementById('idFront').files[0];
+            const idBack = document.getElementById('idBack').files[0];
+            const addressProof = document.getElementById('addressProof').files[0];
+            
+            if (!idFront || !idBack || !addressProof) {
+                alert('Please upload all required documents');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function showValidationError(element, message) {
+            // Simple validation error display
+            element.focus();
+            alert(message);
+        }
+
+        function saveStepData(step) {
+            switch (step) {
+                case 1:
+                    formData.personal = {
+                        fullName: document.getElementById('fullName').value,
+                        gender: document.getElementById('gender').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        street: document.getElementById('street').value,
+                        city: document.getElementById('city').value,
+                        pincode: document.getElementById('pincode').value,
+                        state: document.getElementById('state').value,
+                        workRadius: document.getElementById('workRadius').value,
+                        profilePhoto: document.getElementById('profilePhoto').files[0]?.name
+                    };
+                    break;
+                case 2:
+                    formData.services = {
+                        primaryService: document.getElementById('primaryService').value,
+                        subServices: Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+                            .map(cb => cb.value),
+                        skillLevel: document.querySelector('input[name="skillLevel"]:checked')?.value,
+                        languages: Array.from(document.querySelectorAll('input[name="languages"]:checked'))
+                            .map(cb => cb.value)
+                    };
+                    break;
+                case 3:
+                    const pricing = {};
+                    document.querySelectorAll('input[name^="pricing-"]').forEach(input => {
+                        const service = input.name.replace('pricing-', '').replace(/-/g, ' ');
+                        pricing[service] = {
+                            amount: input.value,
+                            type: document.querySelector(`select[name="pricingType-${service.replace(/\s+/g, '-').toLowerCase()}"]`).value
+                        };
+                    });
+                    
+                    const availability = {};
+                    daysOfWeek.forEach(day => {
+                        const checkbox = document.querySelector(`input[name="available-${day.toLowerCase()}"]`);
+                        if (checkbox.checked) {
+                            availability[day] = {
+                                start: document.querySelector(`input[name="startTime-${day.toLowerCase()}"]`).value,
+                                end: document.querySelector(`input[name="endTime-${day.toLowerCase()}"]`).value
+                            };
+                        }
+                    });
+                    
+                    formData.experience = {
+                        years: document.getElementById('experience').value,
+                        about: document.getElementById('about').value,
+                        pricing: pricing,
+                        availability: availability
+                    };
+                    break;
+                case 4:
+                    formData.documents = {
+                        idFront: document.getElementById('idFront').files[0]?.name,
+                        idBack: document.getElementById('idBack').files[0]?.name,
+                        addressProof: document.getElementById('addressProof').files[0]?.name,
+                        panNumber: document.getElementById('panNumber').value,
+                        panCard: document.getElementById('panCard').files[0]?.name,
+                        portfolio: Array.from(document.getElementById('portfolio').files).map(f => f.name)
+                    };
+                    break;
+            }
+        }
+
+        function navigateToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('active');
+            });
+            
+            // Show target step
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update current step and progress
+            currentStep = step;
+            updateProgressBar();
+            
+            // If navigating to step 5, generate summary
+            if (step === 5) {
+                generateSummary();
+            }
+            
+            // Animate step transition
+            gsap.from(`#step-${step}`, {
+                duration: 0.5,
+                opacity: 0,
+                y: 20,
+                ease: "power2.out"
+            });
+        }
+
+        function generateSummary() {
+            const container = document.getElementById('summaryContainer');
+            let html = '';
+            
+            // Personal Information
+            html += `
+                <div class="border border-border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-textPrimary mb-4">Personal Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div><span class="text-textSecondary">Name:</span> ${formData.personal.fullName}</div>
+                        <div><span class="text-textSecondary">Gender:</span> ${formData.personal.gender}</div>
+                        <div><span class="text-textSecondary">Phone:</span> ${formData.personal.phone}</div>
+                        <div><span class="text-textSecondary">Email:</span> ${formData.personal.email}</div>
+                        <div class="md:col-span-2"><span class="text-textSecondary">Address:</span> ${formData.personal.street}, ${formData.personal.city}, ${formData.personal.state} - ${formData.personal.pincode}</div>
+                        <div><span class="text-textSecondary">Work Radius:</span> ${formData.personal.workRadius} km</div>
+                    </div>
+                </div>
+            `;
+            
+            // Services
+            html += `
+                <div class="border border-border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-textPrimary mb-4">Services</h3>
+                    <div class="space-y-3 text-sm">
+                        <div><span class="text-textSecondary">Primary Service:</span> ${formData.services.primaryService}</div>
+                        <div><span class="text-textSecondary">Sub-Services:</span> ${formData.services.subServices.join(', ')}</div>
+                        <div><span class="text-textSecondary">Skill Level:</span> ${formData.services.skillLevel}</div>
+                        <div><span class="text-textSecondary">Languages:</span> ${formData.services.languages.join(', ')}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Experience & Pricing
+            html += `
+                <div class="border border-border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-textPrimary mb-4">Experience & Pricing</h3>
+                    <div class="space-y-4 text-sm">
+                        <div><span class="text-textSecondary">Experience:</span> ${formData.experience.years} years</div>
+                        <div><span class="text-textSecondary">About Me:</span> ${formData.experience.about}</div>
+                        <div>
+                            <span class="text-textSecondary">Pricing:</span>
+                            <div class="mt-2 space-y-2">
+            `;
+            
+            Object.entries(formData.experience.pricing).forEach(([service, details]) => {
+                html += `<div class="pl-4">${service}: ₹${details.amount} (${details.type})</div>`;
+            });
+            
+            html += `
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-textSecondary">Availability:</span>
+                            <div class="mt-2 space-y-1">
+            `;
+            
+            Object.entries(formData.experience.availability).forEach(([day, times]) => {
+                html += `<div class="pl-4">${day}: ${times.start} - ${times.end}</div>`;
+            });
+            
+            html += `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Documents
+            html += `
+                <div class="border border-border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-textPrimary mb-4">Documents</h3>
+                    <div class="space-y-3 text-sm">
+                        <div><span class="text-textSecondary">Government ID:</span> Uploaded</div>
+                        <div><span class="text-textSecondary">Address Proof:</span> Uploaded</div>
+                        <div><span class="text-textSecondary">PAN Card:</span> ${formData.documents.panNumber || 'Not provided'}</div>
+                        <div><span class="text-textSecondary">Portfolio Images:</span> ${formData.documents.portfolio?.length || 0} uploaded</div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function toggleSubmitButton() {
+            const submitButton = document.getElementById('submit-application');
+            const termsChecked = document.getElementById('termsAgreement').checked;
+            
+            if (termsChecked) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('bg-primary/50');
+                submitButton.classList.add('bg-primary', 'hover:bg-primary/90');
+            } else {
+                submitButton.disabled = true;
+                submitButton.classList.remove('bg-primary', 'hover:bg-primary/90');
+                submitButton.classList.add('bg-primary/50');
+            }
+        }
+
+        function submitApplication() {
+            // Here you would typically send the data to your backend
+            // For now, we'll just show the success modal
+            
+            // Simulate API call
+            const submitButton = document.getElementById('submit-application');
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Submitting...';
+            
+            setTimeout(() => {
+                showSuccessModal();
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Submit Application';
+            }, 1500);
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('hidden');
+            
+            // Animate modal appearance
+            gsap.from(modal.querySelector('.bg-card'), {
+                duration: 0.5,
+                scale: 0.8,
+                opacity: 0,
+                ease: "back.out(1.7)"
+            });
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.add('hidden');
+            
+            // Redirect to home or login page
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
