@@ -72,3 +72,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const submitLoader = document.getElementById('submitLoader');
+  const errorMessage = document.getElementById('errorMessage');
+  const successMessage = document.getElementById('successMessage');
+  
+  // Show loading state
+  submitBtn.disabled = true;
+  submitText.classList.add('hidden');
+  submitLoader.classList.remove('hidden');
+  errorMessage.classList.add('hidden');
+  successMessage.classList.add('hidden');
+  
+  try {
+    const formData = new FormData(this);
+    
+    const response = await fetch('/signup', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      successMessage.textContent = result.message;
+      successMessage.classList.remove('hidden');
+      
+      // Redirect after successful signup
+      if (result.redirect) {
+        setTimeout(() => {
+          window.location.href = result.redirect;
+        }, 2000);
+      }
+    } else {
+      errorMessage.textContent = result.message;
+      errorMessage.classList.remove('hidden');
+    }
+  } catch (error) {
+    errorMessage.textContent = 'An error occurred. Please try again.';
+    errorMessage.classList.remove('hidden');
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    submitText.classList.remove('hidden');
+    submitLoader.classList.add('hidden');
+  }
+});
