@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join as Professional | NAME - Blue-Collar Service Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#2D5BFF',
+              textGrey: '#4A4F59',
+              heading: '#0F1115',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: #fafbfd;
+      }
+
+      .glass-nav {
+        backdrop-filter: blur(18px);
+        background: rgba(255, 255, 255, 0.8);
+        border-bottom: 1px solid rgba(13, 19, 33, 0.08);
+      }
+
+      .hero-gradient-bg {
+        background: linear-gradient(135deg, #f0f4ff 0%, #fef7f5 50%, #f5fbfa 100%);
+        position: relative;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(45, 91, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(45, 91, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+        animation: cardFadeIn 0.8s ease-out;
+      }
+
+      @keyframes cardFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #2D5BFF 0%, #3D6BFF 100%) !important;
+        box-shadow: 0 4px 16px rgba(45, 91, 255, 0.3) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: white !important;
+        border: none !important;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(45, 91, 255, 0.4) !important;
+        background: linear-gradient(135deg, #2D5BFF 0%, #3D6BFF 100%) !important;
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+      }
+
+      .input-field {
+        border: 1.5px solid rgba(45, 91, 255, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: #2D5BFF;
+        box-shadow: 0 0 0 3px rgba(45, 91, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-white text-heading">
+    <header class="fixed top-0 inset-x-0 z-50 glass-nav">
+      <div class="max-w-[80vw] mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-primary"></div>
+          </div>
+          <span class="font-semibold text-lg tracking-tight text-heading">NAME</span>
+        </div>
+        <div class="hidden lg:flex items-center space-x-4">
+          <a href="/" class="px-5 py-2 rounded-xl text-textGrey font-medium hover:text-heading">
+            Back to Home
+          </a>
+          <a href="/login" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
+            Login
+          </a>
+        </div>
+        <button id="mobileToggle" class="lg:hidden w-10 h-10 rounded-xl border border-black/10 flex flex-col justify-center items-center space-y-1.5">
+          <span class="block w-6 h-0.5 bg-heading"></span>
+          <span class="block w-6 h-0.5 bg-heading"></span>
+          <span class="block w-6 h-0.5 bg-heading"></span>
+        </button>
+      </div>
+      <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0 absolute left-0 right-0 top-full overflow-hidden transform-gpu transition-transform duration-200">
+        <div class="px-6 py-4 space-y-4 text-textGrey font-medium">
+          <a href="/" class="block">Back to Home</a>
+          <a href="/login" class="block">Login</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-24 min-h-screen hero-gradient-bg flex items-center justify-center px-6 py-12">
+      <div class="w-full max-w-4xl">
+        <!-- Worker Signup Card -->
+        <div class="glass-card rounded-3xl p-8 lg:p-10 space-y-6 shadow-lg">
+          <div class="text-center space-y-3">
+            <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+              Join as a Professional
+            </h1>
+            <p class="text-gray-600">
+              Start your professional journey and connect with customers
+            </p>
+          </div>
+
+          <form class="space-y-5" id="signupForm" method="POST" action="/signup-worker">
+            <!-- Personal Information -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="space-y-5">
+                <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Personal Information</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label for="firstName" class="block text-sm font-semibold text-gray-700">
+                      First name *
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      required
+                      placeholder="John"
+                      class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label for="lastName" class="block text-sm font-semibold text-gray-700">
+                      Last name *
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      required
+                      placeholder="Doe"
+                      class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label for="email" class="block text-sm font-semibold text-gray-700">
+                    Email address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="you@example.com"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label for="phone" class="block text-sm font-semibold text-gray-700">
+                    Phone number *
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    placeholder="+91 98765 43210"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label for="password" class="block text-sm font-semibold text-gray-700">
+                    Password *
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="Create a strong password"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">
+                    Must be at least 8 characters with letters and numbers
+                  </p>
+                </div>
+
+                <div class="space-y-2">
+                  <label for="confirmPassword" class="block text-sm font-semibold text-gray-700">
+                    Confirm password *
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    required
+                    placeholder="Re-enter your password"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+
+              <!-- Professional Information -->
+              <div class="space-y-5">
+                <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Professional Information</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label for="experienceYears" class="block text-sm font-semibold text-gray-700">
+                      Experience (Years) *
+                    </label>
+                    <input
+                      type="number"
+                      id="experienceYears"
+                      name="experienceYears"
+                      required
+                      min="0"
+                      max="50"
+                      placeholder="5"
+                      class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label for="hourlyRate" class="block text-sm font-semibold text-gray-700">
+                      Hourly Rate (₹) *
+                    </label>
+                    <input
+                      type="number"
+                      id="hourlyRate"
+                      name="hourlyRate"
+                      required
+                      min="0"
+                      step="0.01"
+                      placeholder="500"
+                      class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label for="serviceCategory" class="block text-sm font-semibold text-gray-700">
+                    Service Category *
+                  </label>
+                  <select
+                    id="serviceCategory"
+                    name="serviceCategory"
+                    required
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  >
+                    <option value="">Select your service category</option>
+                    <option value="Plumbing">Plumbing</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Carpentry">Carpentry</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Painting">Painting</option>
+                    <option value="AC Repair">AC Repair</option>
+                    <option value="Appliance Repair">Appliance Repair</option>
+                    <option value="Pest Control">Pest Control</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label for="skills" class="block text-sm font-semibold text-gray-700">
+                    Skills & Specializations *
+                  </label>
+                  <textarea
+                    id="skills"
+                    name="skills"
+                    required
+                    rows="3"
+                    placeholder="List your skills and specializations (e.g., Pipe fitting, Leak detection, Faucet installation...)"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                  ></textarea>
+                </div>
+
+                <div class="space-y-2">
+                  <label for="bio" class="block text-sm font-semibold text-gray-700">
+                    Professional Bio
+                  </label>
+                  <textarea
+                    id="bio"
+                    name="bio"
+                    rows="3"
+                    placeholder="Tell customers about your experience and approach to work..."
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Information -->
+            <div class="space-y-5 pt-4">
+              <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Address Information</h3>
+              
+              <div class="space-y-2">
+                <label for="address" class="block text-sm font-semibold text-gray-700">
+                  Full Address *
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  required
+                  rows="2"
+                  placeholder="Enter your complete address"
+                  class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                ></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="space-y-2">
+                  <label for="city" class="block text-sm font-semibold text-gray-700">
+                    City *
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    required
+                    placeholder="Mumbai"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label for="state" class="block text-sm font-semibold text-gray-700">
+                    State *
+                  </label>
+                  <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    required
+                    placeholder="Maharashtra"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label for="pincode" class="block text-sm font-semibold text-gray-700">
+                    Pincode *
+                  </label>
+                  <input
+                    type="text"
+                    id="pincode"
+                    name="pincode"
+                    required
+                    placeholder="400001"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Verification -->
+            <div class="space-y-5 pt-4">
+              <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">ID Verification</h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label for="idProofType" class="block text-sm font-semibold text-gray-700">
+                    ID Proof Type *
+                  </label>
+                  <select
+                    id="idProofType"
+                    name="idProofType"
+                    required
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  >
+                    <option value="">Select ID proof type</option>
+                    <option value="aadhaar">Aadhaar Card</option>
+                    <option value="pan">PAN Card</option>
+                    <option value="driving_license">Driving License</option>
+                    <option value="voter_id">Voter ID</option>
+                  </select>
+                </div>
+                <div class="space-y-2">
+                  <label for="idProofNumber" class="block text-sm font-semibold text-gray-700">
+                    ID Proof Number *
+                  </label>
+                  <input
+                    type="text"
+                    id="idProofNumber"
+                    name="idProofNumber"
+                    required
+                    placeholder="Enter your ID number"
+                    class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Terms and Submit -->
+            <div class="flex items-start space-x-2 pt-4">
+              <input
+                type="checkbox"
+                id="terms"
+                name="terms"
+                required
+                class="w-4 h-4 mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <label for="terms" class="text-sm text-gray-600">
+                I agree to the
+                <a href="#" class="text-primary font-medium hover:text-indigo-700">Professional Terms of Service</a>
+                and
+                <a href="#" class="text-primary font-medium hover:text-indigo-700">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="btn-primary w-full px-6 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 mt-6"
+            >
+              <span id="submitText">Create Professional Account</span>
+              <span id="submitLoader" class="hidden">Creating account...</span>
+            </button>
+            <div id="errorMessage" class="hidden text-red-600 text-sm mt-2 text-center"></div>
+            <div id="successMessage" class="hidden text-green-600 text-sm mt-2 text-center"></div>
+          </form>
+
+          <div class="text-center pt-4">
+            <p class="text-sm text-gray-600">
+              Looking for customer account?
+              <a href="/signup" class="text-primary font-semibold hover:text-indigo-700">
+                Sign up as Customer
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobileToggle').addEventListener('click', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const isHidden = mobileMenu.classList.contains('scale-y-0');
+        
+        if (isHidden) {
+          mobileMenu.classList.remove('scale-y-0', 'opacity-0');
+          mobileMenu.classList.add('scale-y-100', 'opacity-100');
+        } else {
+          mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+          mobileMenu.classList.add('scale-y-0', 'opacity-0');
+        }
+      });
+
+      // Form submission handling
+      document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const submitLoader = document.getElementById('submitLoader');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        submitLoader.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        successMessage.classList.add('hidden');
+        
+        try {
+          const formData = new FormData(this);
+          
+          const response = await fetch('/signup-worker', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            successMessage.textContent = result.message;
+            successMessage.classList.remove('hidden');
+            
+            // Redirect after successful signup
+            if (result.redirect) {
+              setTimeout(() => {
+                window.location.href = result.redirect;
+              }, 2000);
+            }
+          } else {
+            errorMessage.textContent = result.message;
+            errorMessage.classList.remove('hidden');
+          }
+        } catch (error) {
+          errorMessage.textContent = 'An error occurred. Please try again.';
+          errorMessage.classList.remove('hidden');
+        } finally {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitText.classList.remove('hidden');
+          submitLoader.classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>
