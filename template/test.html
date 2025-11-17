@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceHub | Create New Gig</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-active {
+            background-color: rgba(79, 70, 229, 0.05);
+            border-left: 3px solid #4F46E5;
+        }
+        .urgency-option {
+            transition: all 0.2s ease;
+        }
+        .urgency-option:hover {
+            transform: translateY(-1px);
+        }
+        .image-preview {
+            transition: all 0.2s ease;
+        }
+        .image-preview:hover {
+            transform: scale(1.05);
+        }
+        .form-section {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex h-screen">
+    <!-- Left Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center mr-2">
+                    <span class="text-white font-bold text-sm">SH</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">ServiceHub</span>
+            </div>
+        </div>
+        
+        <nav class="flex-1 p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        My Gigs
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 sidebar-active text-indigo-700 font-medium rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Gig
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Payments
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-gray-600 text-sm font-medium">JD</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">John Doe</p>
+                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex-1 overflow-y-auto">
+        <div class="px-8 py-10">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Create a New Gig</h1>
+                <p class="text-gray-600">Describe your issue so nearby service providers can help.</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+                <form id="gigForm">
+                    <!-- Gig Title -->
+                    <div class="mb-8 form-section">
+                        <label for="gigTitle" class="block text-sm font-medium text-gray-700 mb-2">Gig Title</label>
+                        <input 
+                            type="text" 
+                            id="gigTitle" 
+                            name="gigTitle" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                            placeholder="Example: AC not cooling properly"
+                            maxlength="80"
+                        >
+                        <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                            <span id="titleError" class="text-red-500 hidden">Title must be at least 10 characters</span>
+                            <span id="titleCounter">0/80</span>
+                        </div>
+                    </div>
+
+                    <!-- Problem Category -->
+                    <div class="mb-8 form-section">
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Problem Category</label>
+                        <select 
+                            id="category" 
+                            name="category" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white transition-colors"
+                        >
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="ac-service">AC Service</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="painting">Painting</option>
+                            <option value="cleaning">Cleaning</option>
+                            <option value="appliance-repair">Appliance Repair</option>
+                            <option value="carpentry">Carpentry</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-8 form-section">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            rows="5" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none" 
+                            placeholder="Provide clear details about the issue, symptoms, when it started, and any relevant context."
+                        ></textarea>
+                        <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                            <span id="descError" class="text-red-500 hidden">Description must be at least 40 characters</span>
+                            <span id="descCounter">0 characters</span>
+                        </div>
+                    </div>
+
+                    <!-- Address Fields -->
+                    <div class="mb-8 form-section">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <input 
+                                    type="text" 
+                                    id="street" 
+                                    name="street" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                                    placeholder="Street"
+                                >
+                            </div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    id="city" 
+                                    name="city" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                                    placeholder="City"
+                                >
+                            </div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    id="pincode" 
+                                    name="pincode" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                                    placeholder="Pincode"
+                                    maxlength="6"
+                                >
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <span id="pincodeError" class="text-red-500 hidden">Pincode must be exactly 6 digits</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Urgency Selection -->
+                    <div class="mb-8 form-section">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Urgency Level</label>
+                        <div class="flex space-x-4">
+                            <label class="urgency-option flex-1">
+                                <input type="radio" name="urgency" value="normal" class="sr-only" checked>
+                                <div class="border border-gray-300 rounded-lg py-3 px-4 text-center cursor-pointer transition-colors hover:border-indigo-400">
+                                    <span class="text-gray-700 font-medium">Normal</span>
+                                </div>
+                            </label>
+                            <label class="urgency-option flex-1">
+                                <input type="radio" name="urgency" value="urgent" class="sr-only">
+                                <div class="border border-gray-300 rounded-lg py-3 px-4 text-center cursor-pointer transition-colors hover:border-indigo-400">
+                                    <span class="text-gray-700 font-medium">Urgent</span>
+                                </div>
+                            </label>
+                            <label class="urgency-option flex-1">
+                                <input type="radio" name="urgency" value="emergency" class="sr-only">
+                                <div class="border border-red-300 rounded-lg py-3 px-4 text-center cursor-pointer transition-colors hover:border-red-400">
+                                    <span class="text-red-700 font-medium">Emergency</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Photo Upload -->
+                    <div class="mb-8 form-section">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload Photos</label>
+                        <div 
+                            id="dropZone" 
+                            class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-colors hover:border-indigo-400"
+                        >
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600">Drag and drop your images here, or click to browse</p>
+                            <p class="text-xs text-gray-500 mt-1">Maximum 5 images, 4MB each</p>
+                            <input type="file" id="fileInput" class="hidden" multiple accept="image/*">
+                        </div>
+                        <div id="imagePreviews" class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-4"></div>
+                    </div>
+
+                    <!-- Preferred Time & Date -->
+                    <div class="mb-8 form-section">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Time & Date</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <input 
+                                    type="date" 
+                                    id="preferredDate" 
+                                    name="preferredDate" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                >
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <span id="dateError" class="text-red-500 hidden">Date must be today or in the future</span>
+                                </div>
+                            </div>
+                            <div>
+                                <select 
+                                    id="preferredTime" 
+                                    name="preferredTime" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white transition-colors"
+                                >
+                                    <option value="" disabled selected>Select a time</option>
+                                    <option value="morning">Morning (8 AM - 12 PM)</option>
+                                    <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                                    <option value="evening">Evening (4 PM - 8 PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Input -->
+                    <div class="mb-8 form-section">
+                        <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Budget (Optional)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500">₹</span>
+                            </div>
+                            <input 
+                                type="number" 
+                                id="budget" 
+                                name="budget" 
+                                class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                                placeholder="Your expected budget (optional)"
+                                min="0"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-section">
+                        <button 
+                            type="button" 
+                            id="submitBtn" 
+                            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform hover:scale-[1.02] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
+                            disabled
+                        >
+                            Publish Gig
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">Preview Your Gig</h2>
+                <p class="text-gray-600 mt-1">Review your gig details before publishing</p>
+            </div>
+            
+            <div class="p-6">
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Title</h3>
+                        <p id="previewTitle" class="mt-1 text-lg font-medium text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Category</h3>
+                        <p id="previewCategory" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Description</h3>
+                        <p id="previewDescription" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Address</h3>
+                        <p id="previewAddress" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Urgency</h3>
+                        <p id="previewUrgency" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Preferred Time & Date</h3>
+                        <p id="previewDateTime" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Budget</h3>
+                        <p id="previewBudget" class="mt-1 text-gray-900"></p>
+                    </div>
+                    
+                    <div id="previewImages" class="hidden">
+                        <h3 class="text-sm font-medium text-gray-500">Images</h3>
+                        <div id="previewImagesContainer" class="mt-2 grid grid-cols-3 gap-2"></div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex space-x-3">
+                    <button 
+                        type="button" 
+                        id="cancelPreview" 
+                        class="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                    >
+                        Edit Details
+                    </button>
+                    <button 
+                        type="button" 
+                        id="confirmPublish" 
+                        class="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                    >
+                        Confirm & Publish
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Gig successfully published — service providers will now be notified in your area.</span>
+        </div>
+    </div>
+
+    <script>
+        // Initialize GSAP animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register ScrollTrigger plugin
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Sidebar fade-in animation
+            gsap.from('.fixed', {
+                opacity: 0,
+                x: -20,
+                duration: 0.6,
+                ease: "power2.out"
+            });
+            
+            // Form sections animation
+            gsap.to('.form-section', {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.15,
+                scrollTrigger: {
+                    trigger: '.form-section',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+            
+            // Initialize form validation
+            initializeFormValidation();
+            
+            // Initialize image upload functionality
+            initializeImageUpload();
+            
+            // Initialize urgency selection styling
+            initializeUrgencySelection();
+            
+            // Initialize preview modal
+            initializePreviewModal();
+        });
+        
+        // Form Validation Logic
+        function initializeFormValidation() {
+            const form = document.getElementById('gigForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const titleInput = document.getElementById('gigTitle');
+            const titleCounter = document.getElementById('titleCounter');
+            const titleError = document.getElementById('titleError');
+            const descInput = document.getElementById('description');
+            const descCounter = document.getElementById('descCounter');
+            const descError = document.getElementById('descError');
+            const pincodeInput = document.getElementById('pincode');
+            const pincodeError = document.getElementById('pincodeError');
+            const dateInput = document.getElementById('preferredDate');
+            const dateError = document.getElementById('dateError');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            
+            // Title validation and counter
+            titleInput.addEventListener('input', function() {
+                const length = this.value.length;
+                titleCounter.textContent = `${length}/80`;
+                
+                if (length > 0 && length < 10) {
+                    titleError.classList.remove('hidden');
+                    this.classList.add('border-red-500');
+                } else {
+                    titleError.classList.add('hidden');
+                    this.classList.remove('border-red-500');
+                }
+                
+                validateForm();
+            });
+            
+            // Description validation and counter
+            descInput.addEventListener('input', function() {
+                const length = this.value.length;
+                descCounter.textContent = `${length} characters`;
+                
+                if (length > 0 && length < 40) {
+                    descError.classList.remove('hidden');
+                    this.classList.add('border-red-500');
+                    descCounter.classList.add('text-red-500');
+                } else {
+                    descError.classList.add('hidden');
+                    this.classList.remove('border-red-500');
+                    descCounter.classList.remove('text-red-500');
+                }
+                
+                validateForm();
+            });
+            
+            // Pincode validation
+            pincodeInput.addEventListener('input', function() {
+                const value = this.value;
+                
+                if (value.length === 6 && /^\d+$/.test(value)) {
+                    pincodeError.classList.add('hidden');
+                    this.classList.remove('border-red-500');
+                } else if (value.length > 0) {
+                    pincodeError.classList.remove('hidden');
+                    this.classList.add('border-red-500');
+                } else {
+                    pincodeError.classList.add('hidden');
+                    this.classList.remove('border-red-500');
+                }
+                
+                validateForm();
+            });
+            
+            // Date validation
+            dateInput.addEventListener('change', function() {
+                const selectedDate = new Date(this.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    dateError.classList.remove('hidden');
+                    this.classList.add('border-red-500');
+                } else {
+                    dateError.classList.add('hidden');
+                    this.classList.remove('border-red-500');
+                }
+                
+                validateForm();
+            });
+            
+            // Form validation function
+            function validateForm() {
+                const titleValid = titleInput.value.length >= 10;
+                const descValid = descInput.value.length >= 40;
+                const pincodeValid = pincodeInput.value.length === 6 && /^\d+$/.test(pincodeInput.value);
+                const dateValid = dateInput.value && new Date(dateInput.value) >= new Date().setHours(0,0,0,0);
+                const categoryValid = document.getElementById('category').value;
+                
+                if (titleValid && descValid && pincodeValid && dateValid && categoryValid) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            }
+            
+            // Trigger validation on category change
+            document.getElementById('category').addEventListener('change', validateForm);
+            
+            // Trigger validation on street and city input
+            document.getElementById('street').addEventListener('input', validateForm);
+            document.getElementById('city').addEventListener('input', validateForm);
+        }
+        
+        // Image Upload Functionality
+        function initializeImageUpload() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const imagePreviews = document.getElementById('imagePreviews');
+            let uploadedImages = [];
+            
+            // Click on drop zone to trigger file input
+            dropZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+            
+            // Drag and drop functionality
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('border-indigo-500', 'bg-indigo-50');
+            });
+            
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // Handle uploaded files
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Check if we've reached the maximum number of images
+                    if (uploadedImages.length >= 5) {
+                        alert('Maximum 5 images allowed');
+                        break;
+                    }
+                    
+                    // Check file size (4MB limit)
+                    if (file.size > 4 * 1024 * 1024) {
+                        alert(`File "${file.name}" is too large. Maximum size is 4MB.`);
+                        continue;
+                    }
+                    
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert(`File "${file.name}" is not an image.`);
+                        continue;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const imageData = {
+                            name: file.name,
+                            url: e.target.result
+                        };
+                        
+                        uploadedImages.push(imageData);
+                        renderImagePreviews();
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+                
+                // Reset file input to allow uploading the same file again
+                fileInput.value = '';
+            }
+            
+            // Render image previews
+            function renderImagePreviews() {
+                imagePreviews.innerHTML = '';
+                
+                uploadedImages.forEach((image, index) => {
+                    const preview = document.createElement('div');
+                    preview.className = 'relative image-preview';
+                    
+                    preview.innerHTML = `
+                        <img src="${image.url}" alt="Preview" class="w-full h-24 object-cover rounded-lg">
+                        <button type="button" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs" data-index="${index}">
+                            ×
+                        </button>
+                    `;
+                    
+                    imagePreviews.appendChild(preview);
+                });
+                
+                // Add remove event listeners
+                document.querySelectorAll('#imagePreviews button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        uploadedImages.splice(index, 1);
+                        renderImagePreviews();
+                    });
+                });
+            }
+            
+            // Expose uploadedImages for use in preview modal
+            window.uploadedImages = uploadedImages;
+        }
+        
+        // Urgency Selection Styling
+        function initializeUrgencySelection() {
+            const urgencyOptions = document.querySelectorAll('.urgency-option');
+            
+            urgencyOptions.forEach(option => {
+                const input = option.querySelector('input');
+                const display = option.querySelector('div');
+                
+                input.addEventListener('change', function() {
+                    // Remove selected styling from all options
+                    urgencyOptions.forEach(opt => {
+                        const disp = opt.querySelector('div');
+                        disp.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-red-500', 'bg-red-50');
+                    });
+                    
+                    // Add selected styling to current option
+                    if (input.value === 'emergency') {
+                        display.classList.add('border-red-500', 'bg-red-50');
+                    } else {
+                        display.classList.add('border-indigo-500', 'bg-indigo-50');
+                    }
+                });
+            });
+        }
+        
+        // Preview Modal Functionality
+        function initializePreviewModal() {
+            const previewModal = document.getElementById('previewModal');
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelPreview = document.getElementById('cancelPreview');
+            const confirmPublish = document.getElementById('confirmPublish');
+            
+            // Open preview modal when submit button is clicked
+            submitBtn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    populatePreviewModal();
+                    previewModal.classList.remove('hidden');
+                    
+                    // Animate modal appearance
+                    gsap.fromTo(previewModal.querySelector('.bg-white'), 
+                        { scale: 0.9, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
+                    );
+                }
+            });
+            
+            // Close preview modal when cancel button is clicked
+            cancelPreview.addEventListener('click', function() {
+                previewModal.classList.add('hidden');
+            });
+            
+            // Handle form submission
+            confirmPublish.addEventListener('click', function() {
+                // In a real app, you would submit the form data to a server here
+                // For this demo, we'll just show a success message
+                
+                previewModal.classList.add('hidden');
+                showToast();
+                
+                // Reset form after successful submission
+                setTimeout(() => {
+                    document.getElementById('gigForm').reset();
+                    window.uploadedImages = [];
+                    document.getElementById('imagePreviews').innerHTML = '';
+                    document.getElementById('submitBtn').disabled = true;
+                    
+                    // Reset urgency selection styling
+                    document.querySelectorAll('.urgency-option div').forEach(div => {
+                        div.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-red-500', 'bg-red-50');
+                    });
+                    
+                    // Set normal urgency as selected by default
+                    document.querySelector('input[value="normal"]').checked = true;
+                    document.querySelector('input[value="normal"]').dispatchEvent(new Event('change'));
+                }, 2000);
+            });
+            
+            // Populate preview modal with form data
+            function populatePreviewModal() {
+                // Get form values
+                const title = document.getElementById('gigTitle').value;
+                const category = document.getElementById('category').options[document.getElementById('category').selectedIndex].text;
+                const description = document.getElementById('description').value;
+                const street = document.getElementById('street').value;
+                const city = document.getElementById('city').value;
+                const pincode = document.getElementById('pincode').value;
+                const urgency = document.querySelector('input[name="urgency"]:checked').value;
+                const date = document.getElementById('preferredDate').value;
+                const time = document.getElementById('preferredTime').options[document.getElementById('preferredTime').selectedIndex].text;
+                const budget = document.getElementById('budget').value;
+                
+                // Format date for display
+                const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Set preview values
+                document.getElementById('previewTitle').textContent = title;
+                document.getElementById('previewCategory').textContent = category;
+                document.getElementById('previewDescription').textContent = description;
+                document.getElementById('previewAddress').textContent = `${street}, ${city}, ${pincode}`;
+                document.getElementById('previewUrgency').textContent = urgency.charAt(0).toUpperCase() + urgency.slice(1);
+                document.getElementById('previewDateTime').textContent = `${formattedDate}, ${time}`;
+                document.getElementById('previewBudget').textContent = budget ? `₹${budget}` : 'Not specified';
+                
+                // Handle image previews
+                const previewImagesContainer = document.getElementById('previewImagesContainer');
+                previewImagesContainer.innerHTML = '';
+                
+                if (window.uploadedImages && window.uploadedImages.length > 0) {
+                    document.getElementById('previewImages').classList.remove('hidden');
+                    
+                    window.uploadedImages.forEach(image => {
+                        const img = document.createElement('img');
+                        img.src = image.url;
+                        img.alt = 'Preview';
+                        img.className = 'w-full h-24 object-cover rounded-lg';
+                        previewImagesContainer.appendChild(img);
+                    });
+                } else {
+                    document.getElementById('previewImages').classList.add('hidden');
+                }
+            }
+        }
+        
+        // Show toast notification
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-x-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
