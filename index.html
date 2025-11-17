@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/cursor/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body class="bg-white text-heading">
     <header class="fixed top-0 inset-x-0 z-50 glass-nav">
@@ -44,7 +44,7 @@
           <span class="block w-6 h-0.5 bg-heading"></span>
         </button>
       </div>
-      <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0">
+  <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0 absolute left-0 right-0 top-full overflow-hidden transform-gpu transition-transform duration-200">
         <div class="px-6 py-4 space-y-4 text-textGrey font-medium">
           <a href="#services" class="block">Services</a>
           <a href="#how-it-works" class="block">How It Works</a>
@@ -64,7 +64,7 @@
       </div>
     </header>
 
-    <main class="pt-32">
+  <main class="pt-19">
       <section class="py-24 lg:py-32 hero-gradient-bg relative" id="about">
         <div class="max-w-[80vw] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
           <!-- Left Column: Hero Copy -->
@@ -685,10 +685,10 @@
       <section class="py-20 relative cta-gradient text-white overflow-hidden" id="contact">
         <div class="cta-motion" id="ctaMotion"></div>
         <div class="relative max-w-5xl mx-auto px-6 text-center space-y-6">
-          <h2 class="text-4xl lg:text-5xl font-semibold">
+          <h2 class="text-4xl lg:text-5xl text-black font-semibold">
             Ready to book your service or start earning? Get started today.
           </h2>
-          <p class="text-lg text-white/80">
+          <p class="text-lg text-black/80">
             NAME keeps both customers and workers in sync with real-time operations, verified profiles, and instant payouts.
           </p>
           <button class="px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass">
@@ -759,6 +759,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="/cursor/script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
