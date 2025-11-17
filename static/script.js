@@ -23,3 +23,53 @@ tailwind.config = {
   },
 };
 
+
+// Impact counters animation using GSAP + ScrollTrigger
+document.addEventListener('DOMContentLoaded', () => {
+  // Guard if GSAP isn't loaded
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const counters = document.querySelectorAll('#counters .counter');
+  if (!counters.length) return;
+
+  counters.forEach((el, i) => {
+    const raw = el.getAttribute('data-target') || el.textContent || '0';
+    const isFloat = raw.indexOf('.') !== -1;
+    const target = parseFloat(raw.toString().replace(/,/g, '')) || 0;
+
+    const obj = { value: 0 };
+
+    // animate parent card in with a subtle pop when it enters view
+    const card = el.closest('.bg-white') || el.parentElement;
+    gsap.fromTo(card, { y: 12, opacity: 0 }, {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: card, start: 'top 95%', once: true },
+      delay: i * 0.05,
+    });
+
+    gsap.to(obj, {
+      value: target,
+      duration: Math.min(2.5, Math.max(0.9, target / 5000)),
+      ease: 'power1.out',
+      scrollTrigger: {
+        trigger: '#impact',
+        start: 'top 80%',
+        once: true,
+      },
+      onUpdate: () => {
+        let v = isFloat ? obj.value.toFixed(1) : Math.floor(obj.value);
+        if (!isFloat) v = new Intl.NumberFormat().format(v);
+        el.textContent = v;
+      },
+      onComplete: () => {
+        const final = isFloat ? target.toFixed(1) : new Intl.NumberFormat().format(target);
+        el.textContent = final;
+      },
+    });
+  });
+});
+

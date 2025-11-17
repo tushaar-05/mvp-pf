@@ -810,7 +810,41 @@
             <h2 class="text-4xl font-semibold">Clear answers before you book.</h2>
           </div>
           <div id="faqList" class="space-y-4">
-            <!-- FAQs inserted via JS -->
+            <!-- Static FAQs added for now (native <details> for accessibility) -->
+            <details class="bg-white rounded-2xl p-5 border border-black/5" open>
+              <summary class="text-lg font-semibold cursor-pointer">How do I book a service?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Choose a service, enter your location, pick a time slot, and confirm payment. You will receive booking details and a live ETA for the assigned professional.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">What are the prices and what's included?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Each service card shows a starting price. Final pricing depends on scope, materials, and location. Taxes and any additional parts are shown before checkout.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">Can I reschedule or cancel a booking?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>Yes — you can reschedule or cancel from your booking page. Cancellation policies vary by service; any applicable refunds or fees are displayed during cancellation.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">Are workers ID-verified and insured?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>All professionals on our platform undergo ID verification and basic background checks. For specific services, additional insurance or certifications may be listed on the service card.</p>
+              </div>
+            </details>
+
+            <details class="bg-white rounded-2xl p-5 border border-black/5">
+              <summary class="text-lg font-semibold cursor-pointer">What payment methods do you accept?</summary>
+              <div class="mt-3 text-textGrey">
+                <p>We accept major credit/debit cards and UPI. Payments are captured securely and released to the worker after you confirm job completion, subject to the service's payout terms.</p>
+              </div>
+            </details>
           </div>
         </div>
       </section>
