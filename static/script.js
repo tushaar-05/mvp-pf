@@ -23,3 +23,104 @@ tailwind.config = {
   },
 };
 
+
+// Impact counters animation using GSAP + ScrollTrigger
+document.addEventListener('DOMContentLoaded', () => {
+  // Guard if GSAP isn't loaded
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const counters = document.querySelectorAll('#counters .counter');
+  if (!counters.length) return;
+
+  counters.forEach((el, i) => {
+    const raw = el.getAttribute('data-target') || el.textContent || '0';
+    const isFloat = raw.indexOf('.') !== -1;
+    const target = parseFloat(raw.toString().replace(/,/g, '')) || 0;
+
+    const obj = { value: 0 };
+
+    // animate parent card in with a subtle pop when it enters view
+    const card = el.closest('.bg-white') || el.parentElement;
+    gsap.fromTo(card, { y: 12, opacity: 0 }, {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: card, start: 'top 95%', once: true },
+      delay: i * 0.05,
+    });
+
+    gsap.to(obj, {
+      value: target,
+      duration: Math.min(2.5, Math.max(0.9, target / 5000)),
+      ease: 'power1.out',
+      scrollTrigger: {
+        trigger: '#impact',
+        start: 'top 80%',
+        once: true,
+      },
+      onUpdate: () => {
+        let v = isFloat ? obj.value.toFixed(1) : Math.floor(obj.value);
+        if (!isFloat) v = new Intl.NumberFormat().format(v);
+        el.textContent = v;
+      },
+      onComplete: () => {
+        const final = isFloat ? target.toFixed(1) : new Intl.NumberFormat().format(target);
+        el.textContent = final;
+      },
+    });
+  });
+});
+
+
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const submitLoader = document.getElementById('submitLoader');
+  const errorMessage = document.getElementById('errorMessage');
+  const successMessage = document.getElementById('successMessage');
+  
+  // Show loading state
+  submitBtn.disabled = true;
+  submitText.classList.add('hidden');
+  submitLoader.classList.remove('hidden');
+  errorMessage.classList.add('hidden');
+  successMessage.classList.add('hidden');
+  
+  try {
+    const formData = new FormData(this);
+    
+    const response = await fetch('/signup', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      successMessage.textContent = result.message;
+      successMessage.classList.remove('hidden');
+      
+      // Redirect after successful signup
+      if (result.redirect) {
+        setTimeout(() => {
+          window.location.href = result.redirect;
+        }, 2000);
+      }
+    } else {
+      errorMessage.textContent = result.message;
+      errorMessage.classList.remove('hidden');
+    }
+  } catch (error) {
+    errorMessage.textContent = 'An error occurred. Please try again.';
+    errorMessage.classList.remove('hidden');
+  } finally {
+    // Reset button state
+    submitBtn.disabled = false;
+    submitText.classList.remove('hidden');
+    submitLoader.classList.add('hidden');
+  }
+});
