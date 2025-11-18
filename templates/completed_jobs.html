@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completed Jobs - Blue Collar Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            transform: translateX(4px);
+        }
+        
+        .nav-link.active {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .job-card {
+            transition: all 0.3s ease;
+        }
+        
+        .job-card:hover {
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .rating-stars {
+            color: #f59e0b;
+        }
+        
+        .notification {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#64748b',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        background: '#f8fafc',
+                        card: '#ffffff',
+                        border: '#e2e8f0',
+                        textPrimary: '#1e293b',
+                        textSecondary: '#64748b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Main Layout -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-card border-r border-border flex flex-col shadow-sm">
+            <!-- Logo -->
+            <div class="p-6 border-b border-border">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-tools text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">BlueCollar Pro</h1>
+                        <p class="text-xs text-textSecondary font-medium">Professional Dashboard</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 overflow-y-auto">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="dashboard.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="new-requests.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-bell w-5 mr-3"></i>
+                            <span>New Requests</span>
+                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">8</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="active-jobs.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-tools w-5 mr-3"></i>
+                            <span>Active Jobs</span>
+                            <span class="ml-auto bg-blue-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="completed.html" class="nav-link active flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium">
+                            <i class="fas fa-check-circle w-5 mr-3"></i>
+                            <span>Completed Jobs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="earnings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-wallet w-5 mr-3"></i>
+                            <span>Earnings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="schedule.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reviews.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-star w-5 mr-3"></i>
+                            <span>Ratings & Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
+                            <i class="fas fa-cog w-5 mr-3"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="p-4 border-t border-border bg-gradient-to-br from-slate-50 to-white">
+                <div class="flex items-center mb-3">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold text-lg shadow-md">
+                        R
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
+                        <p class="text-xs text-textSecondary font-medium">Professional Account</p>
+                    </div>
+                </div>
+                <a href="logout.html" class="flex items-center justify-center text-textSecondary hover:text-red-500 text-sm font-medium py-2 px-3 rounded-lg hover:bg-red-50 transition-all">
+                    <i class="fas fa-sign-out-alt w-4 mr-2"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto bg-slate-50">
+            <!-- Header -->
+            <header class="bg-card border-b border-border px-6 py-4 shadow-sm sticky top-0 z-10">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-textPrimary">Completed Jobs</h1>
+                        <p class="text-sm text-textSecondary mt-0.5">Review your completed work and client feedback</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="relative hover:bg-slate-100 p-2.5 rounded-xl transition-all">
+                            <i class="fas fa-bell text-textSecondary text-lg"></i>
+                            <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold shadow-md">2</span>
+                        </button>
+                        <div class="flex items-center space-x-3 pl-4 border-l border-border">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
+                                <p class="text-xs text-textSecondary font-medium">Professional</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold shadow-md">
+                                R
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content -->
+            <main class="p-6">
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-5 border border-emerald-100 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-textSecondary text-sm font-medium">Total Completed</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-1">24</h3>
+                            </div>
+                            <div class="bg-emerald-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-white to-amber-50 rounded-2xl p-5 border border-amber-100 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-textSecondary text-sm font-medium">Total Earnings</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-1">₹42,500</h3>
+                            </div>
+                            <div class="bg-amber-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-wallet text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-5 border border-blue-100 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-textSecondary text-sm font-medium">Avg. Rating</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-1">4.7</h3>
+                            </div>
+                            <div class="bg-blue-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-star text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-white to-purple-50 rounded-2xl p-5 border border-purple-100 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-textSecondary text-sm font-medium">Repeat Clients</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-1">8</h3>
+                            </div>
+                            <div class="bg-purple-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-redo text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter and Sort Bar -->
+                <div class="bg-card rounded-2xl p-5 border border-border shadow-sm mb-6">
+                    <div class="flex flex-wrap gap-4 items-center justify-between">
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-btn active px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white" data-filter="all">
+                                All Jobs
+                            </button>
+                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="recent">
+                                Last 30 Days
+                            </button>
+                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="rated">
+                                With Reviews
+                            </button>
+                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="high-rated">
+                                5 Star Jobs
+                            </button>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <span class="text-sm text-textSecondary font-medium mr-2">Sort by:</span>
+                            <select id="sortSelect" class="bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold border-none outline-none cursor-pointer">
+                                <option value="recent">Most Recent</option>
+                                <option value="rating">Highest Rated</option>
+                                <option value="earnings">Highest Earnings</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Jobs List -->
+                <div class="space-y-4" id="jobsList">
+                    <!-- Job Card 1 - With 5 Star Review -->
+                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm fade-in" data-date="2" data-rating="5" data-earnings="3200" data-reviewed="true">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4 flex-1">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                                    <i class="fas fa-wrench text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="text-lg font-bold text-textPrimary">Bathroom Pipe Replacement</h3>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold">Completed</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
+                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Sanjay Mehta</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>3.2 km away</span>
+                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>2 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Replaced old corroded pipes in master bathroom. Fixed leaky faucets and installed new water-saving fixtures. Client very satisfied with quality.</p>
+                                    
+                                    <!-- Rating and Review -->
+                                    <div class="bg-slate-50 rounded-xl p-4 mb-3">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <div class="rating-stars flex">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <span class="text-sm font-bold text-textPrimary">5.0</span>
+                                        </div>
+                                        <p class="text-sm text-textSecondary italic">"Rajesh did an excellent job! Very professional and clean work. The pipes look great and no more leaks. Will definitely hire again for future plumbing work."</p>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Plumbing</span>
+                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-star mr-1"></i>5 Star Review</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right ml-4">
+                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
+                                    <p class="text-xs font-medium opacity-90">Earned</p>
+                                    <p class="text-2xl font-bold">₹3,200</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
+                                    <p class="text-xs font-medium opacity-90">Duration</p>
+                                    <p class="text-2xl font-bold">4h</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 pt-4 border-t border-border">
+                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="contactClient(this)">
+                                <i class="fas fa-phone mr-2"></i>Contact Again
+                            </button>
+                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="saveToPortfolio(this)">
+                                <i class="fas fa-save mr-2"></i>Save to Portfolio
+                            </button>
+                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 2 - With 4 Star Review -->
+                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm fade-in" data-date="5" data-rating="4" data-earnings="4500" data-reviewed="true">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4 flex-1">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                                    <i class="fas fa-hammer text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="text-lg font-bold text-textPrimary">Bookshelf Installation</h3>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold">Completed</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
+                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Anita Desai</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>1.5 km away</span>
+                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>5 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Installed a floor-to-ceiling bookshelf in home library. Custom design with adjustable shelves. Required precise measurements and secure wall mounting.</p>
+                                    
+                                    <!-- Rating and Review -->
+                                    <div class="bg-slate-50 rounded-xl p-4 mb-3">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <div class="rating-stars flex">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                            <span class="text-sm font-bold text-textPrimary">4.0</span>
+                                        </div>
+                                        <p class="text-sm text-textSecondary italic">"Good work overall. The bookshelf looks sturdy and well-made. Took a bit longer than expected but the quality is good. Would recommend for carpentry work."</p>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-purple-100 text-purple-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Carpentry</span>
+                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
+                                        <span class="bg-amber-100 text-amber-700 text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-star mr-1"></i>4 Star Review</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right ml-4">
+                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
+                                    <p class="text-xs font-medium opacity-90">Earned</p>
+                                    <p class="text-2xl font-bold">₹4,500</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
+                                    <p class="text-xs font-medium opacity-90">Duration</p>
+                                    <p class="text-2xl font-bold">6h</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 pt-4 border-t border-border">
+                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="contactClient(this)">
+                                <i class="fas fa-phone mr-2"></i>Contact Again
+                            </button>
+                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="saveToPortfolio(this)">
+                                <i class="fas fa-save mr-2"></i>Save to Portfolio
+                            </button>
+                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 3 - No Review Yet -->
+                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm fade-in" data-date="7" data-rating="0" data-earnings="2800" data-reviewed="false">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4 flex-1">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                                    <i class="fas fa-bolt text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="text-lg font-bold text-textPrimary">Light Fixture Installation</h3>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold">Completed</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
+                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Rohit Verma</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>4.8 km away</span>
+                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>1 week ago</span>
+                                    </div>
+                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Installed 5 new LED light fixtures in living room and hallway. Replaced old wiring and switches. Client wanted energy-efficient lighting solution.</p>
+                                    
+                                    <!-- No Review Yet -->
+                                    <div class="bg-amber-50 rounded-xl p-4 mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-clock text-amber-500"></i>
+                                            <p class="text-sm text-amber-700 font-medium">No review yet. Client hasn't submitted feedback.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-amber-100 text-amber-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Electrical</span>
+                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
+                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-comment mr-1"></i>Review Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right ml-4">
+                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
+                                    <p class="text-xs font-medium opacity-90">Earned</p>
+                                    <p class="text-2xl font-bold">₹2,800</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
+                                    <p class="text-xs font-medium opacity-90">Duration</p>
+                                    <p class="text-2xl font-bold">3h</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 pt-4 border-t border-border">
+                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="requestReview(this)">
+                                <i class="fas fa-star mr-2"></i>Request Review
+                            </button>
+                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="contactClient(this)">
+                                <i class="fas fa-phone mr-2"></i>Contact Client
+                            </button>
+                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 4 - With 5 Star Review -->
+                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm fade-in" data-date="12" data-rating="5" data-earnings="5200" data-reviewed="true">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4 flex-1">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                                    <i class="fas fa-paint-roller text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="text-lg font-bold text-textPrimary">Bedroom Painting</h3>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold">Completed</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
+                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Meera Iyer</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>2.1 km away</span>
+                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>12 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Painted two bedrooms with premium matte finish. Included wall preparation, primer application, and two coats of paint. Furniture protection and cleanup included.</p>
+                                    
+                                    <!-- Rating and Review -->
+                                    <div class="bg-slate-50 rounded-xl p-4 mb-3">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <div class="rating-stars flex">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <span class="text-sm font-bold text-textPrimary">5.0</span>
+                                        </div>
+                                        <p class="text-sm text-textSecondary italic">"Absolutely fantastic work! The rooms look brand new. Rajesh was very careful with our furniture and the cleanup was perfect. The color matching was exactly what we wanted. Highly recommended!"</p>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-pink-100 text-pink-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Painting</span>
+                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
+                                        <span class="bg-emerald-100 text-emerald-700 text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-star mr-1"></i>5 Star Review</span>
+                                        <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-redo mr-1"></i>Repeat Client</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right ml-4">
+                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
+                                    <p class="text-xs font-medium opacity-90">Earned</p>
+                                    <p class="text-2xl font-bold">₹5,200</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
+                                    <p class="text-xs font-medium opacity-90">Duration</p>
+                                    <p class="text-2xl font-bold">8h</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 pt-4 border-t border-border">
+                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="contactClient(this)">
+                                <i class="fas fa-phone mr-2"></i>Contact Again
+                            </button>
+                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="saveToPortfolio(this)">
+                                <i class="fas fa-save mr-2"></i>Save to Portfolio
+                            </button>
+                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactive Functionality -->
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const jobCards = document.querySelectorAll('.job-card');
+            const sortSelect = document.getElementById('sortSelect');
+            
+            // Filter jobs by criteria
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active filter button
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
+                        btn.classList.add('bg-slate-100', 'text-textSecondary');
+                    });
+                    
+                    this.classList.add('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
+                    this.classList.remove('bg-slate-100', 'text-textSecondary');
+                    
+                    // Filter cards
+                    jobCards.forEach(card => {
+                        const rating = parseInt(card.getAttribute('data-rating'));
+                        const reviewed = card.getAttribute('data-reviewed') === 'true';
+                        const daysAgo = parseInt(card.getAttribute('data-date'));
+                        
+                        let showCard = false;
+                        
+                        if (filter === 'all') {
+                            showCard = true;
+                        } else if (filter === 'recent' && daysAgo <= 30) {
+                            showCard = true;
+                        } else if (filter === 'rated' && reviewed) {
+                            showCard = true;
+                        } else if (filter === 'high-rated' && rating === 5) {
+                            showCard = true;
+                        }
+                        
+                        card.style.display = showCard ? 'block' : 'none';
+                    });
+                });
+            });
+            
+            // Sort functionality
+            sortSelect.addEventListener('change', function() {
+                const sortBy = this.value;
+                const container = document.getElementById('jobsList');
+                const cards = Array.from(container.querySelectorAll('.job-card'));
+                
+                cards.sort((a, b) => {
+                    if (sortBy === 'recent') {
+                        return parseInt(a.getAttribute('data-date')) - parseInt(b.getAttribute('data-date'));
+                    } else if (sortBy === 'rating') {
+                        return parseInt(b.getAttribute('data-rating')) - parseInt(a.getAttribute('data-rating'));
+                    } else if (sortBy === 'earnings') {
+                        return parseInt(b.getAttribute('data-earnings')) - parseInt(a.getAttribute('data-earnings'));
+                    }
+                    return 0;
+                });
+                
+                // Re-append sorted cards
+                cards.forEach(card => container.appendChild(card));
+            });
+        });
+        
+        // Contact Client
+        function contactClient(button) {
+            const card = button.closest('.job-card');
+            const jobTitle = card.querySelector('h3').textContent;
+            const clientName = card.querySelector('.flex.flex-wrap span:first-child').textContent.replace('User', '').trim();
+            
+            showNotification(`Calling ${clientName} about "${jobTitle}"`, 'info');
+            // In a real app, this would initiate a phone call
+        }
+        
+        // Save to Portfolio
+        function saveToPortfolio(button) {
+            const card = button.closest('.job-card');
+            const jobTitle = card.querySelector('h3').textContent;
+            
+            // Update button to show saved state
+            button.innerHTML = '<i class="fas fa-check mr-2"></i>Saved to Portfolio';
+            button.classList.remove('bg-slate-100', 'text-textSecondary', 'hover:bg-slate-200');
+            button.classList.add('bg-emerald-100', 'text-emerald-700');
+            button.disabled = true;
+            
+            showNotification(`"${jobTitle}" saved to your portfolio`, 'success');
+        }
+        
+        // Request Review
+        function requestReview(button) {
+            const card = button.closest('.job-card');
+            const jobTitle = card.querySelector('h3').textContent;
+            const clientName = card.querySelector('.flex.flex-wrap span:first-child').textContent.replace('User', '').trim();
+            
+            // Update the review section
+            const reviewSection = card.querySelector('.bg-amber-50');
+            reviewSection.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check text-emerald-500"></i>
+                    <p class="text-sm text-emerald-700 font-medium">Review request sent to ${clientName}</p>
+                </div>
+            `;
+            reviewSection.classList.remove('bg-amber-50');
+            reviewSection.classList.add('bg-emerald-50');
+            
+            // Update button
+            button.innerHTML = '<i class="fas fa-check mr-2"></i>Review Requested';
+            button.classList.remove('bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
+            button.classList.add('bg-emerald-100', 'text-emerald-700');
+            button.disabled = true;
+            
+            showNotification(`Review request sent for "${jobTitle}"`, 'success');
+        }
+        
+        // View Job Details
+        function viewJobDetails(button) {
+            const card = button.closest('.job-card');
+            const jobTitle = card.querySelector('h3').textContent;
+            const clientName = card.querySelector('.flex.flex-wrap span:first-child').textContent;
+            const earnings = card.querySelector('.bg-gradient-to-br.from-emerald-500 .text-2xl').textContent;
+            const duration = card.querySelector('.bg-gradient-to-br.from-amber-500 .text-2xl').textContent;
+            const description = card.querySelector('p').textContent;
+            const hasReview = card.getAttribute('data-reviewed') === 'true';
+            
+            // Create a modal with job details
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-textPrimary">Job Details</h3>
+                        <button class="text-textSecondary hover:text-textPrimary" onclick="this.closest('.fixed').remove()">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Job Title</h4>
+                            <p class="text-textSecondary">${jobTitle}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Client</h4>
+                            <p class="text-textSecondary">${clientName}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Earnings</h4>
+                            <p class="text-textSecondary">${earnings}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Duration</h4>
+                            <p class="text-textSecondary">${duration}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Description</h4>
+                            <p class="text-textSecondary">${description}</p>
+                        </div>
+                        ${hasReview ? `
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Client Review</h4>
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                ${card.querySelector('.bg-slate-50').innerHTML}
+                            </div>
+                        </div>
+                        ` : `
+                        <div>
+                            <h4 class="font-semibold text-textPrimary mb-1">Review Status</h4>
+                            <div class="bg-amber-50 rounded-xl p-4">
+                                <p class="text-sm text-amber-700">No review submitted yet</p>
+                            </div>
+                        </div>
+                        `}
+                        <div class="pt-4 border-t border-border">
+                            <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-full py-3 rounded-xl font-bold" onclick="this.closest('.fixed').remove()">
+                                Close Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-4 rounded-xl shadow-lg z-50 notification`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} mr-3"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

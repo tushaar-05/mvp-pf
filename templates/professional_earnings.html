@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings | BlueCollar Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { transform: translateX(4px); }
+        .nav-link-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 10px 20px -15px rgba(37, 99, 235, 0.5);
+        }
+        .card { transition: box-shadow 0.2s ease; }
+        .card:hover { box-shadow: 0 20px 35px -25px rgba(15, 23, 42, 0.4); }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div class="p-6 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide">BlueCollar Pro</p>
+                        <p class="text-sm text-slate-700 font-semibold">Worker Workspace</p>
+                    </div>
+                </div>
+            </div>
+            {% include 'professional_sidebar.html' %}
+        </aside>
+
+        <!-- Page Content -->
+        <div class="flex-1 overflow-y-auto">
+            <header class="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-500">Earnings</p>
+                    <h1 class="text-2xl font-bold text-slate-900 mt-1">Payouts & Performance</h1>
+                    <p class="text-sm text-slate-500">Track income, payouts, and trends over time.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50">
+                        <i class="fas fa-download text-blue-500"></i> Export report
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-800">{{ user.full_name or 'Professional' }}</p>
+                            <p class="text-xs text-slate-500 font-medium">Pro account</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                            {{ (user.full_name or 'U')[0] }}
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-8 space-y-6">
+                <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="card bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">This week</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">₹{{ stats.this_week_earnings or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Depositing soon</p>
+                    </div>
+                    <div class="card bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">This month</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">₹{{ stats.this_month_earnings or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Total confirmed payouts</p>
+                    </div>
+                    <div class="card bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Last month</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">₹{{ stats.last_month_earnings or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Compare your progress</p>
+                    </div>
+                    <div class="card bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Lifetime</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">₹{{ stats.total_earnings or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">All-time earnings</p>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-xl font-semibold text-slate-900">Payout history</h2>
+                                <p class="text-sm text-slate-500">Review recent completed payments and amounts.</p>
+                            </div>
+                            <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                        {% if completed_jobs %}
+                            <div class="space-y-3">
+                                {% for job in completed_jobs %}
+                                    <div class="flex flex-wrap items-center justify-between gap-4 border border-slate-200 rounded-xl p-4">
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900">{{ job.title or 'Completed Gig' }}</p>
+                                            <p class="text-xs text-slate-500">{{ job.completed_at_display or job.updated_at }} • {{ job.customer_name or 'Customer' }}</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-lg font-bold text-emerald-600">₹{{ job.final_amount or 0 }}</p>
+                                            <p class="text-xs text-slate-400">Paid</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="border-2 border-dashed border-slate-200 rounded-2xl p-12 text-center">
+                                <i class="fas fa-wallet text-4xl text-slate-300 mb-4"></i>
+                                <p class="text-lg font-semibold text-slate-800 mb-1">No payouts yet</p>
+                                <p class="text-sm text-slate-500">Complete jobs to start seeing payouts here.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white space-y-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-blue-100 font-semibold">Tips</p>
+                            <h3 class="text-xl font-bold">Boost your earnings</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-blue-50">
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check text-blue-200 mt-1"></i>
+                                Respond to new requests within 10 minutes to raise your placement rank.
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check text-blue-200 mt-1"></i>
+                                Keep your schedule updated so you only get matched with jobs you can accept.
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check text-blue-200 mt-1"></i>
+                                Ask satisfied customers to leave a review—high ratings boost visibility.
+                            </li>
+                        </ul>
+                        <a href="{{ url_for('professional_services') }}" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-white text-blue-600 hover:bg-blue-50">
+                            <i class="fas fa-pen"></i> Update pricing
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ratings & Reviews | BlueCollar Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { transform: translateX(4px); }
+        .nav-link-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 10px 20px -15px rgba(37, 99, 235, 0.5);
+        }
+        .review-card { transition: box-shadow 0.2s ease; }
+        .review-card:hover { box-shadow: 0 20px 30px -25px rgba(15, 23, 42, 0.4); }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div class="p-6 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide">BlueCollar Pro</p>
+                        <p class="text-sm text-slate-700 font-semibold">Worker Workspace</p>
+                    </div>
+                </div>
+            </div>
+            {% include 'professional_sidebar.html' %}
+        </aside>
+
+        <!-- Page Content -->
+        <div class="flex-1 overflow-y-auto">
+            <header class="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-500">Feedback</p>
+                    <h1 class="text-2xl font-bold text-slate-900 mt-1">Ratings & Reviews</h1>
+                    <p class="text-sm text-slate-500">Learn what customers love and where to improve.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50">
+                        <i class="fas fa-share-alt text-blue-500"></i> Share profile
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-800">{{ user.full_name or 'Professional' }}</p>
+                            <p class="text-xs text-slate-500 font-medium">Reputation matters</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                            {{ (user.full_name or 'U')[0] }}
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-8 space-y-6">
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Average rating</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.rating or '-' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">{{ stats.reviews_count or reviews|length }} total reviews</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Completeness</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.completed_jobs or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Jobs finished successfully</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Response time</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.response_time or '—' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Average accept time</p>
+                    </div>
+                </section>
+
+                <section class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-slate-900">Customer feedback</h2>
+                            <p class="text-sm text-slate-500">Highlight great service in your profile and marketing.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                            <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow hover:shadow-lg">
+                                <i class="fas fa-envelope"></i> Request review
+                            </button>
+                        </div>
+                    </div>
+
+                    {% if reviews %}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {% for review in reviews %}
+                                <article class="review-card border border-slate-200 rounded-2xl p-5 bg-white">
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                                                {{ (review.reviewer_name or 'U')[0] }}
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-semibold text-slate-900">{{ review.reviewer_name or 'Customer' }}</p>
+                                                <div class="flex text-amber-400 text-xs">
+                                                    {% for i in range((review.rating or 0)|int) %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% endfor %}
+                                                    {% if (review.rating or 0)|int == 0 %}
+                                                        <i class="far fa-star text-slate-300"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs text-slate-500">{{ review.created_at_relative or review.created_at_display or '' }}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600">{{ review.comment or 'No review text provided.' }}</p>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="border-2 border-dashed border-slate-200 rounded-2xl p-12 text-center">
+                            <i class="fas fa-comments text-4xl text-slate-300 mb-4"></i>
+                            <p class="text-lg font-semibold text-slate-800 mb-1">No reviews yet</p>
+                            <p class="text-sm text-slate-500 mb-4">Complete jobs and ask customers for a quick shout-out.</p>
+                            <a href="{{ url_for('professional_active_jobs') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow hover:shadow-lg">
+                                <i class="fas fa-bolt"></i> Get to work
+                            </a>
+                        </div>
+                    {% endif %}
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+

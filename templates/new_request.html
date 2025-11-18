@@ -3,701 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Requests - Blue Collar Marketplace</title>
+    <title>New Requests | BlueCollar Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .nav-link {
-            transition: all 0.2s ease;
-        }
-        
-        .nav-link:hover {
-            transform: translateX(4px);
-        }
-        
-        .nav-link.active {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        
-        .request-card {
-            transition: all 0.3s ease;
-        }
-        
-        .request-card:hover {
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-        
-        .btn-primary {
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
-        
-        .btn-primary:hover {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            transition: all 0.2s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
-        
-        .filter-btn {
-            transition: all 0.2s ease;
-        }
-        
-        .filter-btn.active {
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { transform: translateX(4px); }
+        .nav-link-active {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            color: #fff;
+            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
         }
-        
-        .badge-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .8;
-            }
-        }
-        
-        .notification {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
+        .request-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+        .request-card:hover { box-shadow: 0 20px 35px -18px rgba(15, 23, 42, 0.45); transform: translateY(-2px); }
     </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#64748b',
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                        danger: '#ef4444',
-                        background: '#f8fafc',
-                        card: '#ffffff',
-                        border: '#e2e8f0',
-                        textPrimary: '#1e293b',
-                        textSecondary: '#64748b',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-background min-h-screen">
-    <!-- Main Layout -->
+<body class="bg-slate-100 min-h-screen">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-card border-r border-border flex flex-col shadow-sm">
-            <!-- Logo -->
-            <div class="p-6 border-b border-border">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-tools text-white"></i>
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div class="p-6 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center">
+                        <i class="fas fa-tools"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">BlueCollar Pro</h1>
-                        <p class="text-xs text-textSecondary font-medium">Professional Dashboard</p>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide">BlueCollar Pro</p>
+                        <p class="text-sm text-slate-700 font-semibold">Worker Workspace</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Navigation -->
-            <nav class="flex-1 p-4 overflow-y-auto">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="dashboard.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="new-requests.html" class="nav-link active flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium">
-                            <i class="fas fa-bell w-5 mr-3"></i>
-                            <span>New Requests</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm badge-pulse">8</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="active-jobs.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-tools w-5 mr-3"></i>
-                            <span>Active Jobs</span>
-                            <span class="ml-auto bg-blue-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">3</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="completed.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-check-circle w-5 mr-3"></i>
-                            <span>Completed Jobs</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="earnings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-wallet w-5 mr-3"></i>
-                            <span>Earnings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="schedule.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-calendar-alt w-5 mr-3"></i>
-                            <span>Schedule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="reviews.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-star w-5 mr-3"></i>
-                            <span>Ratings & Reviews</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="settings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-cog w-5 mr-3"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <!-- User Profile -->
-            <div class="p-4 border-t border-border bg-gradient-to-br from-slate-50 to-white">
-                <div class="flex items-center mb-3">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold text-lg shadow-md">
-                        R
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
-                        <p class="text-xs text-textSecondary font-medium">Professional Account</p>
-                    </div>
+            {% include 'professional_sidebar.html' %}
+        </aside>
+
+        <!-- Page -->
+        <div class="flex-1 overflow-y-auto">
+            <header class="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-500">Requests</p>
+                    <h1 class="text-2xl font-bold text-slate-900 mt-1">New Customer Requests</h1>
+                    <p class="text-sm text-slate-500">Claim work that matches your services and service area.</p>
                 </div>
-                <a href="logout.html" class="flex items-center justify-center text-textSecondary hover:text-red-500 text-sm font-medium py-2 px-3 rounded-lg hover:bg-red-50 transition-all">
-                    <i class="fas fa-sign-out-alt w-4 mr-2"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto bg-slate-50">
-            <!-- Header -->
-            <header class="bg-card border-b border-border px-6 py-4 shadow-sm sticky top-0 z-10">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-bold text-textPrimary">New Requests</h1>
-                        <p class="text-sm text-textSecondary mt-0.5">Respond quickly to secure new work opportunities</p>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button class="relative hover:bg-slate-100 p-2.5 rounded-xl transition-all">
-                            <i class="fas fa-bell text-textSecondary text-lg"></i>
-                            <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold shadow-md">5</span>
-                        </button>
-                        <div class="flex items-center space-x-3 pl-4 border-l border-border">
-                            <div class="text-right">
-                                <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
-                                <p class="text-xs text-textSecondary font-medium">Professional</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold shadow-md">
-                                R
-                            </div>
+                <div class="flex items-center gap-3">
+                    <a href="{{ url_for('create_gig') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50">
+                        <i class="fas fa-plus text-blue-500"></i> Post Gig
+                    </a>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-800">{{ user.full_name or 'Professional' }}</p>
+                            <p class="text-xs text-slate-500 font-medium">Available</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                            {{ (user.full_name or 'U')[0] }}
                         </div>
                     </div>
                 </div>
             </header>
-            
-            <!-- Main Content -->
-            <main class="p-6">
-                <!-- Filter and Sort Bar -->
-                <div class="bg-card rounded-2xl p-5 border border-border shadow-sm mb-6">
-                    <div class="flex flex-wrap gap-4 items-center justify-between">
-                        <div class="flex flex-wrap gap-2">
-                            <button class="filter-btn active px-4 py-2 rounded-xl text-sm font-semibold" data-filter="all">
-                                All Requests <span class="ml-1.5 bg-white/20 px-2 py-0.5 rounded-full text-xs">8</span>
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="plumbing">
-                                <i class="fas fa-wrench mr-1.5"></i>Plumbing
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="electrical">
-                                <i class="fas fa-bolt mr-1.5"></i>Electrical
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="carpentry">
-                                <i class="fas fa-hammer mr-1.5"></i>Carpentry
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="painting">
-                                <i class="fas fa-paint-roller mr-1.5"></i>Painting
-                            </button>
-                        </div>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-sm text-textSecondary font-medium mr-2">Sort by:</span>
-                            <select id="sortSelect" class="bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold border-none outline-none cursor-pointer">
-                                <option value="newest">Newest First</option>
-                                <option value="distance">Nearest First</option>
-                                <option value="budget">Highest Budget</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-5 border border-blue-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">New Today</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">5</h3>
-                            </div>
-                            <div class="bg-blue-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-clock text-white text-xl"></i>
-                            </div>
-                        </div>
+            <main class="p-8 space-y-6">
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Open Requests</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ requests|length }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Customers waiting for a response</p>
                     </div>
-                    <div class="bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-5 border border-emerald-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Avg. Response Time</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">12m</h3>
-                            </div>
-                            <div class="bg-emerald-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-tachometer-alt text-white text-xl"></i>
-                            </div>
-                        </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Active Jobs</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ active_jobs|length }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Currently assigned to you</p>
                     </div>
-                    <div class="bg-gradient-to-br from-white to-amber-50 rounded-2xl p-5 border border-amber-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Acceptance Rate</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">85%</h3>
-                            </div>
-                            <div class="bg-amber-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-chart-line text-white text-xl"></i>
-                            </div>
-                        </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">New today</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.new_requests or 0 }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Fresh opportunities today</p>
                     </div>
-                </div>
+                </section>
 
-                <!-- Requests List -->
-                <div class="space-y-4" id="requestsList">
-                    <!-- Request Card 1 -->
-                    <div class="request-card bg-card rounded-2xl p-6 border-2 border-blue-200 shadow-sm" data-category="plumbing" data-distance="2.3" data-budget="1500" data-time="5">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-wrench text-xl"></i>
-                                </div>
+                <section class="space-y-4">
+                    {% if requests %}
+                        {% for req in requests %}
+                        <article class="request-card bg-white border border-slate-200 rounded-2xl p-6">
+                            <div class="flex flex-wrap gap-4 justify-between">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Kitchen Sink Repair</h3>
-                                        <span class="bg-red-100 text-red-600 text-xs px-2.5 py-1 rounded-lg font-semibold">Urgent</span>
+                                    <div class="flex flex-wrap items-center gap-3 mb-2">
+                                        <h3 class="text-lg font-semibold text-slate-900">{{ req.title or 'Service Request' }}</h3>
+                                        {% if req.category %}
+                                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">{{ req.category }}</span>
+                                        {% endif %}
+                                        {% if req.requested_at_relative %}
+                                        <span class="text-xs text-slate-500 flex items-center gap-1">
+                                            <i class="fas fa-clock text-blue-500"></i>{{ req.requested_at_relative }}
+                                        </span>
+                                        {% endif %}
                                     </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Priya Sharma</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>2.3 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>5 mins ago</span>
+                                    <p class="text-sm text-slate-600 mb-3">{{ req.description or 'Customer did not add extra details.' }}</p>
+                                    <div class="text-sm text-slate-600 flex flex-wrap gap-4">
+                                        <span><i class="fas fa-user text-blue-500 mr-2"></i>{{ req.customer_name or 'Customer' }}</span>
+                                        <span>
+                                            <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                            {{ req.city or 'City' }}, {{ req.state or '' }}
+                                        </span>
+                                        {% if req.address_line1 %}
+                                        <span><i class="fas fa-location-arrow text-blue-500 mr-2"></i>{{ req.address_line1 }}</span>
+                                        {% endif %}
                                     </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Kitchen sink is leaking badly. Water is dripping from underneath. Need immediate assistance. Available all day today.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Plumbing</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-calendar mr-1"></i>Today</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
+                                </div>
+                                <div class="flex flex-col items-end justify-between gap-4">
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-500 uppercase tracking-wide">Posted</p>
+                                        <p class="text-sm font-semibold text-slate-900">{{ req.requested_at_display or req.requested_at_relative }}</p>
                                     </div>
+                                    <form method="POST" action="{{ url_for('accept_customer_gig', gig_id=req.id) }}" class="flex gap-2">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow hover:shadow-lg">
+                                            <i class="fas fa-check"></i> Accept
+                                        </button>
+                                        <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                            Skip
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹1,500</p>
-                                </div>
-                            </div>
+                        </article>
+                        {% endfor %}
+                    {% else %}
+                        <div class="bg-white border border-dashed border-slate-200 rounded-2xl p-12 text-center">
+                            <i class="fas fa-inbox text-4xl text-slate-300 mb-4"></i>
+                            <p class="text-lg font-semibold text-slate-800 mb-1">No pending requests</p>
+                            <p class="text-sm text-slate-500">Stand by—we'll notify you as soon as new gigs arrive.</p>
                         </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="acceptRequest(this)">
-                                <i class="fas fa-check mr-2"></i>Accept Request
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="declineRequest(this)">
-                                <i class="fas fa-times mr-2"></i>Decline
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Request Card 2 -->
-                    <div class="request-card bg-card rounded-2xl p-6 border border-border shadow-sm" data-category="electrical" data-distance="4.1" data-budget="2500" data-time="15">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-bolt text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Ceiling Fan Installation</h3>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Amit Patel</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>4.1 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>15 mins ago</span>
-                                    </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Need to install 2 ceiling fans in bedrooms. Fans are already purchased. Wiring needs to be checked first.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-amber-100 text-amber-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Electrical</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-calendar mr-1"></i>Tomorrow</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹2,500</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="acceptRequest(this)">
-                                <i class="fas fa-check mr-2"></i>Accept Request
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="declineRequest(this)">
-                                <i class="fas fa-times mr-2"></i>Decline
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Request Card 3 -->
-                    <div class="request-card bg-card rounded-2xl p-6 border border-border shadow-sm" data-category="carpentry" data-distance="1.8" data-budget="3500" data-time="30">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-hammer text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Custom Wardrobe Assembly</h3>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Neha Gupta</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>1.8 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>30 mins ago</span>
-                                    </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Looking for skilled carpenter to assemble a large wardrobe. All parts and hardware included. Preferably this weekend.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-purple-100 text-purple-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Carpentry</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-calendar mr-1"></i>This Weekend</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹3,500</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="acceptRequest(this)">
-                                <i class="fas fa-check mr-2"></i>Accept Request
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="declineRequest(this)">
-                                <i class="fas fa-times mr-2"></i>Decline
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Request Card 4 -->
-                    <div class="request-card bg-card rounded-2xl p-6 border border-border shadow-sm" data-category="painting" data-distance="5.5" data-budget="8000" data-time="45">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-paint-roller text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Living Room Painting</h3>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Suresh Reddy</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>5.5 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>45 mins ago</span>
-                                    </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Need to paint living room walls (approx 400 sq ft). Paint and materials will be provided. Looking for quality finish.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-pink-100 text-pink-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Painting</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-calendar mr-1"></i>Next Week</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹8,000</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="acceptRequest(this)">
-                                <i class="fas fa-check mr-2"></i>Accept Request
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="declineRequest(this)">
-                                <i class="fas fa-times mr-2"></i>Decline
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    {% endif %}
+                </section>
             </main>
         </div>
     </div>
-
-    <!-- JavaScript for Interactive Functionality -->
-    <script>
-        // Filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const requestCards = document.querySelectorAll('.request-card');
-            const sortSelect = document.getElementById('sortSelect');
-            
-            // Filter requests by category
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter');
-                    
-                    // Update active filter button
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('active', 'bg-blue-500', 'text-white');
-                        btn.classList.add('bg-slate-100', 'text-textSecondary');
-                    });
-                    
-                    this.classList.add('active', 'bg-blue-500', 'text-white');
-                    this.classList.remove('bg-slate-100', 'text-textSecondary');
-                    
-                    // Filter cards
-                    requestCards.forEach(card => {
-                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-            
-            // Sort functionality
-            sortSelect.addEventListener('change', function() {
-                const sortBy = this.value;
-                const container = document.getElementById('requestsList');
-                const cards = Array.from(container.querySelectorAll('.request-card'));
-                
-                cards.sort((a, b) => {
-                    if (sortBy === 'newest') {
-                        return parseInt(a.getAttribute('data-time')) - parseInt(b.getAttribute('data-time'));
-                    } else if (sortBy === 'distance') {
-                        return parseFloat(a.getAttribute('data-distance')) - parseFloat(b.getAttribute('data-distance'));
-                    } else if (sortBy === 'budget') {
-                        return parseInt(b.getAttribute('data-budget')) - parseInt(a.getAttribute('data-budget'));
-                    }
-                    return 0;
-                });
-                
-                // Re-append sorted cards
-                cards.forEach(card => container.appendChild(card));
-            });
-        });
-        
-        // Accept Request
-        function acceptRequest(button) {
-            const card = button.closest('.request-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            // Update UI
-            card.style.borderColor = '#10b981';
-            card.style.backgroundColor = '#f0fdf4';
-            
-            // Update buttons
-            const buttonsContainer = card.querySelector('.flex.gap-3');
-            buttonsContainer.innerHTML = `
-                <button class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" disabled>
-                    <i class="fas fa-check-circle mr-2"></i>Accepted
-                </button>
-                <button class="bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="undoAccept(this)">
-                    <i class="fas fa-undo mr-2"></i>Undo
-                </button>
-            `;
-            
-            // Update notification badge
-            updateNotificationBadge(-1);
-            
-            // Show success message
-            showNotification(`You've accepted the "${jobTitle}" request`, 'success');
-        }
-        
-        // Decline Request
-        function declineRequest(button) {
-            const card = button.closest('.request-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            if (confirm(`Are you sure you want to decline "${jobTitle}"?`)) {
-                // Animate card removal
-                card.style.opacity = '0';
-                card.style.transform = 'translateX(100px)';
-                
-                setTimeout(() => {
-                    card.remove();
-                    updateNotificationBadge(-1);
-                    showNotification(`You've declined the "${jobTitle}" request`, 'info');
-                }, 300);
-            }
-        }
-        
-        // Undo Accept
-        function undoAccept(button) {
-            const card = button.closest('.request-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            // Reset UI
-            card.style.borderColor = '';
-            card.style.backgroundColor = '';
-            
-            // Reset buttons
-            const buttonsContainer = card.querySelector('.flex.gap-3');
-            buttonsContainer.innerHTML = `
-                <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="acceptRequest(this)">
-                    <i class="fas fa-check mr-2"></i>Accept Request
-                </button>
-                <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="declineRequest(this)">
-                    <i class="fas fa-times mr-2"></i>Decline
-                </button>
-                <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewDetails(this)">
-                    <i class="fas fa-info-circle"></i>
-                </button>
-            `;
-            
-            // Update notification badge
-            updateNotificationBadge(1);
-            
-            // Show undo message
-            showNotification(`Acceptance of "${jobTitle}" has been undone`, 'info');
-        }
-        
-        // View Details
-        function viewDetails(button) {
-            const card = button.closest('.request-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            const category = card.getAttribute('data-category');
-            const budget = card.querySelector('.text-2xl').textContent;
-            const description = card.querySelector('p').textContent;
-            
-            // Create a simple modal with details
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-textPrimary">Request Details</h3>
-                        <button class="text-textSecondary hover:text-textPrimary" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Job Title</h4>
-                            <p class="text-textSecondary">${jobTitle}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Category</h4>
-                            <p class="text-textSecondary capitalize">${category}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Budget</h4>
-                            <p class="text-textSecondary">${budget}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Description</h4>
-                            <p class="text-textSecondary">${description}</p>
-                        </div>
-                        <div class="pt-4 border-t border-border">
-                            <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-full py-3 rounded-xl font-bold" onclick="this.closest('.fixed').remove()">
-                                Close Details
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Update notification badge
-        function updateNotificationBadge(change) {
-            const badge = document.querySelector('.nav-link.active .bg-red-500');
-            const currentCount = parseInt(badge.textContent);
-            const newCount = Math.max(0, currentCount + change);
-            badge.textContent = newCount;
-            
-            // Update header badge as well
-            const headerBadge = document.querySelector('header .bg-red-500');
-            if (headerBadge) {
-                headerBadge.textContent = newCount;
-            }
-        }
-        
-        // Show notification
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
-            
-            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-4 rounded-xl shadow-lg z-50 notification`;
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} mr-3"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            // Animate out and remove
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
+

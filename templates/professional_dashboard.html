@@ -29,6 +29,12 @@
         .nav-link:hover {
             transform: translateX(4px);
         }
+
+        .nav-link-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 12px 24px -12px rgba(59, 130, 246, 0.5);
+        }
         
         .nav-link.active {
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
@@ -136,60 +142,7 @@
             </div>
             
             <!-- Navigation -->
-            <nav class="flex-1 p-4 overflow-y-auto">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="#dashboard" class="nav-link active flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium">
-                            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#requests" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-bell w-5 mr-3"></i>
-                            <span>New Requests</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">{{ requests|length }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#active-jobs" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-tools w-5 mr-3"></i>
-                            <span>Active Jobs</span>
-                            <span class="ml-auto bg-blue-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">{{ active_jobs|length }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#completed" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-check-circle w-5 mr-3"></i>
-                            <span>Completed Jobs</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#earnings" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-wallet w-5 mr-3"></i>
-                            <span>Earnings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#schedule" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-calendar-alt w-5 mr-3"></i>
-                            <span>Schedule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#reviews" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-star w-5 mr-3"></i>
-                            <span>Ratings & Reviews</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#settings" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-cog w-5 mr-3"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            {% include 'professional_sidebar.html' %}
             
             <!-- User Profile -->
             <div class="p-4 border-t border-border bg-gradient-to-br from-slate-50 to-white">
@@ -300,10 +253,10 @@
                     <!-- Left Column -->
                     <div class="space-y-6">
                         <!-- Services Offered -->
-                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                        <div id="services" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <h2 class="text-xl font-bold text-textPrimary">Services</h2>
-                                <a href="#settings" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Manage →</a>
+                                <a href="{{ url_for('professional_services') }}" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Manage →</a>
                             </div>
                             {% if services %}
                                 <div class="space-y-3">
@@ -333,13 +286,13 @@
                         </div>
 
                         <!-- New Customer Requests -->
-                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                        <div id="requests" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <div>
                                     <h2 class="text-xl font-bold text-textPrimary">New Customer Requests</h2>
                                     <p class="text-xs text-textSecondary mt-0.5 font-medium">Respond quickly to win jobs</p>
                                 </div>
-                                <a href="#requests" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
+                                <a href="{{ url_for('professional_requests') }}" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
                             <div class="space-y-4">
@@ -380,6 +333,7 @@
                                                 {{ req.city or 'City' }}, {{ req.state or 'State' }} {{ req.pincode or '' }}
                                             </p>
                                             <form method="POST" action="{{ url_for('accept_customer_gig', gig_id=req.id) }}" class="flex gap-3">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                                 <button type="submit" class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex-1">
                                                     <i class="fas fa-check mr-1"></i> Accept
                                                 </button>
@@ -400,13 +354,13 @@
                         </div>
                         
                         <!-- Active Jobs -->
-                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                        <div id="active-jobs" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <div>
                                     <h2 class="text-xl font-bold text-textPrimary">Active Jobs</h2>
                                     <p class="text-xs text-textSecondary mt-0.5 font-medium">Jobs in progress</p>
                                 </div>
-                                <a href="#active-jobs" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
+                                <a href="{{ url_for('professional_active_jobs') }}#active-jobs" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
                             <div class="space-y-4">
@@ -454,18 +408,71 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <!-- Completed Jobs -->
+                        <div id="completed" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">Completed Jobs</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">Recent work you've wrapped up</p>
+                                </div>
+                                <a href="{{ url_for('professional_completed_jobs') }}" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">History →</a>
+                            </div>
+
+                            <div class="space-y-4">
+                                {% if completed_jobs %}
+                                    {% for job in completed_jobs[:3] %}
+                                        <div class="job-card p-5 border border-border rounded-xl bg-gradient-to-br from-white to-emerald-50/40">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-textPrimary text-base">{{ job.title or 'Completed Job' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1 font-medium">
+                                                        <i class="fas fa-user text-xs mr-1"></i>{{ job.customer_name or 'Customer' }}
+                                                        {% if job.completed_at_display %}
+                                                            <span class="mx-1">•</span>
+                                                            <i class="fas fa-calendar-check text-xs mr-1"></i>{{ job.completed_at_display }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                                {% if job.final_amount %}
+                                                    <span class="text-base font-bold text-emerald-600 bg-emerald-100 px-3 py-1.5 rounded-lg ml-3">₹{{ job.final_amount }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex items-center gap-2 text-xs text-textSecondary font-medium">
+                                                {% if job.city %}
+                                                    <span><i class="fas fa-map-marker-alt mr-1"></i>{{ job.city }}, {{ job.state or '' }}</span>
+                                                {% endif %}
+                                                {% if job.rating %}
+                                                    <span class="flex items-center"><i class="fas fa-star text-amber-400 mr-1"></i>{{ job.rating }}/5</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if completed_jobs|length > 3 %}
+                                        <a href="{{ url_for('professional_completed_jobs') }}" class="block text-center text-sm font-semibold text-primary hover:text-blue-700">
+                                            View {{ completed_jobs|length - 3 }} more completed job{{ '' if (completed_jobs|length - 3) == 1 else 's' }} →
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="p-8 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                        <i class="fas fa-medal text-4xl text-slate-300 mb-3"></i>
+                                        <p class="font-semibold mb-1">No completed jobs yet</p>
+                                        <p class="text-xs">Finish a gig to start building your track record</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Right Column -->
                     <div class="space-y-6">
                         <!-- Upcoming Schedule -->
-                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                        <div id="schedule" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <div>
                                     <h2 class="text-xl font-bold text-textPrimary">Today's Schedule</h2>
                                     <p class="text-xs text-textSecondary mt-0.5 font-medium">Your upcoming appointments</p>
                                 </div>
-                                <a href="#schedule" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Calendar →</a>
+                                <a href="{{ url_for('professional_schedule') }}" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Calendar →</a>
                             </div>
                             
                             <div class="space-y-3">
@@ -502,13 +509,13 @@
                         </div>
                         
                         <!-- Ratings & Reviews -->
-                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                        <div id="reviews" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <div>
                                     <h2 class="text-xl font-bold text-textPrimary">Ratings & Reviews</h2>
                                     <p class="text-xs text-textSecondary mt-0.5 font-medium">What customers say</p>
                                 </div>
-                                <a href="#reviews" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
+                                <a href="{{ url_for('professional_reviews') }}" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
                             <div class="flex items-center mb-5 p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
@@ -571,7 +578,7 @@
                         </div>
                         
                         <!-- Earnings Summary -->
-                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+                        <div id="earnings" class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
                             <h2 class="text-xl font-bold mb-5">Earnings Summary</h2>
                             
                             <div class="space-y-4">
@@ -594,8 +601,48 @@
                             </div>
                             
                             <div class="mt-6">
-                                <a href="#earnings" class="bg-white text-blue-600 px-5 py-3 rounded-xl text-sm font-bold w-full block text-center hover:bg-blue-50 transition-all shadow-md">
+                                <a href="{{ url_for('professional_earnings') }}" class="bg-white text-blue-600 px-5 py-3 rounded-xl text-sm font-bold w-full block text-center hover:bg-blue-50 transition-all shadow-md">
                                     <i class="fas fa-chart-line mr-2"></i>View Detailed Report
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Settings -->
+                        <div id="settings" class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">Account & Settings</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">Keep your profile up to date</p>
+                                </div>
+                                <span class="text-[11px] font-semibold text-textSecondary uppercase tracking-wide">Profile</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <a href="{{ url_for('professional_services') }}" class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all">
+                                    <div>
+                                        <p class="text-sm font-semibold text-textPrimary">Edit Services</p>
+                                        <p class="text-xs text-textSecondary mt-1">Update pricing & offerings</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-textSecondary"></i>
+                                </a>
+                                <a href="{{ url_for('professional_schedule') }}" class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all">
+                                    <div>
+                                        <p class="text-sm font-semibold text-textPrimary">Update Availability</p>
+                                        <p class="text-xs text-textSecondary mt-1">Adjust schedule preferences</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-textSecondary"></i>
+                                </a>
+                                <a href="{{ url_for('professional_active_jobs') }}" class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all">
+                                    <div>
+                                        <p class="text-sm font-semibold text-textPrimary">Manage Jobs</p>
+                                        <p class="text-xs text-textSecondary mt-1">Track status & updates</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-textSecondary"></i>
+                                </a>
+                                <a href="{{ url_for('logout') }}" class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-red-200 hover:bg-red-50/70 transition-all">
+                                    <div>
+                                        <p class="text-sm font-semibold text-textPrimary">Switch Account</p>
+                                        <p class="text-xs text-textSecondary mt-1">Sign out securely</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-textSecondary"></i>
                                 </a>
                             </div>
                         </div>
@@ -605,21 +652,5 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    navLinks.forEach(l => {
-                        l.classList.remove('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
-                        l.classList.add('text-textPrimary', 'hover:bg-blue-50');
-                    });
-                    this.classList.remove('text-textPrimary', 'hover:bg-blue-50');
-                    this.classList.add('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
-                });
-            });
-        });
-    </script>
 </body>
 </html>

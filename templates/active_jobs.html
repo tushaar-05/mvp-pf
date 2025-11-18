@@ -3,825 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Jobs - Blue Collar Marketplace</title>
+    <title>Active Jobs | BlueCollar Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { transform: translateX(4px); }
+        .nav-link-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
         }
-        
-        .nav-link {
-            transition: all 0.2s ease;
-        }
-        
-        .nav-link:hover {
-            transform: translateX(4px);
-        }
-        
-        .nav-link.active {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        
-        .job-card {
-            transition: all 0.3s ease;
-        }
-        
-        .job-card:hover {
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-        
-        .btn-primary {
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
-        
-        .btn-primary:hover {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            transition: all 0.2s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
-        
-        .status-badge {
-            transition: all 0.2s ease;
-        }
-        
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-        }
-        
-        .notification {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .badge-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .8;
-            }
-        }
+        .job-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+        .job-card:hover { box-shadow: 0 25px 35px -18px rgba(15, 23, 42, 0.4); transform: translateY(-2px); }
     </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#64748b',
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                        danger: '#ef4444',
-                        background: '#f8fafc',
-                        card: '#ffffff',
-                        border: '#e2e8f0',
-                        textPrimary: '#1e293b',
-                        textSecondary: '#64748b',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-background min-h-screen">
-    <!-- Main Layout -->
+<body class="bg-slate-100 min-h-screen">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-card border-r border-border flex flex-col shadow-sm">
-            <!-- Logo -->
-            <div class="p-6 border-b border-border">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-tools text-white"></i>
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div class="p-6 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center">
+                        <i class="fas fa-tools"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">BlueCollar Pro</h1>
-                        <p class="text-xs text-textSecondary font-medium">Professional Dashboard</p>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide">BlueCollar Pro</p>
+                        <p class="text-sm text-slate-700 font-semibold">Worker Workspace</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Navigation -->
-            <nav class="flex-1 p-4 overflow-y-auto">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="dashboard.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="new-requests.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-bell w-5 mr-3"></i>
-                            <span>New Requests</span>
-                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm badge-pulse">8</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="active-jobs.html" class="nav-link active flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium">
-                            <i class="fas fa-tools w-5 mr-3"></i>
-                            <span>Active Jobs</span>
-                            <span class="ml-auto bg-white text-blue-600 text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">3</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="completed.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-check-circle w-5 mr-3"></i>
-                            <span>Completed Jobs</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="earnings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-wallet w-5 mr-3"></i>
-                            <span>Earnings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="schedule.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-calendar-alt w-5 mr-3"></i>
-                            <span>Schedule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="reviews.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-star w-5 mr-3"></i>
-                            <span>Ratings & Reviews</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="settings.html" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
-                            <i class="fas fa-cog w-5 mr-3"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <!-- User Profile -->
-            <div class="p-4 border-t border-border bg-gradient-to-br from-slate-50 to-white">
-                <div class="flex items-center mb-3">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold text-lg shadow-md">
-                        R
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
-                        <p class="text-xs text-textSecondary font-medium">Professional Account</p>
-                    </div>
+            {% include 'professional_sidebar.html' %}
+        </aside>
+
+        <!-- Page -->
+        <div class="flex-1 overflow-y-auto">
+            <header class="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-500">Workboard</p>
+                    <h1 class="text-2xl font-bold text-slate-900 mt-1">Active Jobs</h1>
+                    <p class="text-sm text-slate-500">Track in-progress gigs and keep customers informed.</p>
                 </div>
-                <a href="logout.html" class="flex items-center justify-center text-textSecondary hover:text-red-500 text-sm font-medium py-2 px-3 rounded-lg hover:bg-red-50 transition-all">
-                    <i class="fas fa-sign-out-alt w-4 mr-2"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto bg-slate-50">
-            <!-- Header -->
-            <header class="bg-card border-b border-border px-6 py-4 shadow-sm sticky top-0 z-10">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-bold text-textPrimary">Active Jobs</h1>
-                        <p class="text-sm text-textSecondary mt-0.5">Manage your ongoing work and track progress</p>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button class="relative hover:bg-slate-100 p-2.5 rounded-xl transition-all">
-                            <i class="fas fa-bell text-textSecondary text-lg"></i>
-                            <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold shadow-md">5</span>
-                        </button>
-                        <div class="flex items-center space-x-3 pl-4 border-l border-border">
-                            <div class="text-right">
-                                <p class="text-sm font-semibold text-textPrimary">Rajesh Kumar</p>
-                                <p class="text-xs text-textSecondary font-medium">Professional</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold shadow-md">
-                                R
-                            </div>
+                <div class="flex items-center gap-3">
+                    <a href="{{ url_for('professional_requests') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50">
+                        <i class="fas fa-bolt text-amber-500"></i> View new requests
+                    </a>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-800">{{ user.full_name or 'Professional' }}</p>
+                            <p class="text-xs text-slate-500 font-medium">On duty</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                            {{ (user.full_name or 'U')[0] }}
                         </div>
                     </div>
                 </div>
             </header>
-            
-            <!-- Main Content -->
-            <main class="p-6">
-                <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-5 border border-blue-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Active Jobs</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">3</h3>
-                            </div>
-                            <div class="bg-blue-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-tools text-white text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-white to-amber-50 rounded-2xl p-5 border border-amber-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Today's Earnings</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">₹2,800</h3>
-                            </div>
-                            <div class="bg-amber-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-wallet text-white text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-5 border border-emerald-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Avg. Completion</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">68%</h3>
-                            </div>
-                            <div class="bg-emerald-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-chart-line text-white text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-white to-purple-50 rounded-2xl p-5 border border-purple-100 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-textSecondary text-sm font-medium">Scheduled</p>
-                                <h3 class="text-3xl font-bold text-textPrimary mt-1">2</h3>
-                            </div>
-                            <div class="bg-purple-500 p-3.5 rounded-xl shadow-lg">
-                                <i class="fas fa-calendar-alt text-white text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Filter and Sort Bar -->
-                <div class="bg-card rounded-2xl p-5 border border-border shadow-sm mb-6">
-                    <div class="flex flex-wrap gap-4 items-center justify-between">
-                        <div class="flex flex-wrap gap-2">
-                            <button class="filter-btn active px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white" data-filter="all">
-                                All Jobs
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="in-progress">
-                                In Progress
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="scheduled">
-                                Scheduled
-                            </button>
-                            <button class="filter-btn bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200" data-filter="pending">
-                                Pending
-                            </button>
-                        </div>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-sm text-textSecondary font-medium mr-2">Sort by:</span>
-                            <select id="sortSelect" class="bg-slate-100 text-textSecondary px-4 py-2 rounded-xl text-sm font-semibold border-none outline-none cursor-pointer">
-                                <option value="deadline">Nearest Deadline</option>
-                                <option value="progress">Progress</option>
-                                <option value="budget">Highest Budget</option>
-                            </select>
-                        </div>
+            <main class="p-8 space-y-6">
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">In progress</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ active_jobs|length }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Jobs currently assigned to you</p>
                     </div>
-                </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Completed</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ completed_jobs|length }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Finished in recent history</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Response time</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.response_time or '—' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Avg time to accept a request</p>
+                    </div>
+                </section>
 
-                <!-- Jobs List -->
-                <div class="space-y-4" id="jobsList">
-                    <!-- Job Card 1 -->
-                    <div class="job-card bg-card rounded-2xl p-6 border-2 border-blue-200 shadow-sm" data-status="in-progress" data-deadline="1" data-progress="75" data-budget="3500">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-hammer text-xl"></i>
-                                </div>
+                <section id="active-jobs" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-slate-900">Jobs in progress</h2>
+                            <p class="text-sm text-slate-500">Update customers as you move through each step.</p>
+                        </div>
+                        <a href="{{ url_for('professional_requests') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                            Need more work? Browse requests →
+                        </a>
+                    </div>
+
+                    {% if active_jobs %}
+                        {% for job in active_jobs %}
+                        <article class="job-card bg-white border border-slate-200 rounded-2xl p-6">
+                            <div class="flex flex-wrap gap-4 justify-between">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Custom Wardrobe Assembly</h3>
-                                        <span class="status-badge bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-lg font-semibold">In Progress</span>
+                                    <div class="flex flex-wrap items-center gap-3 mb-2">
+                                        <h3 class="text-lg font-semibold text-slate-900">{{ job.title or 'Gig' }}</h3>
+                                        <span class="text-xs font-semibold px-3 py-1 rounded-full {{ job.status_badge_class or 'bg-blue-50 text-blue-600' }}">
+                                            {{ job.status_label or 'Assigned' }}
+                                        </span>
+                                        {% if job.category %}
+                                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">{{ job.category }}</span>
+                                        {% endif %}
                                     </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Neha Gupta</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>1.8 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>Due: Tomorrow</span>
+                                    <p class="text-sm text-slate-600 mb-3">{{ job.description or 'No additional description provided.' }}</p>
+                                    <div class="text-sm text-slate-600 flex flex-wrap gap-4">
+                                        <span><i class="fas fa-user text-blue-500 mr-2"></i>{{ job.customer_name or 'Customer' }}</span>
+                                        <span><i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>{{ job.city or 'City' }}, {{ job.state or '' }}</span>
+                                        {% if job.address_line1 %}
+                                        <span><i class="fas fa-location-arrow text-blue-500 mr-2"></i>{{ job.address_line1 }}</span>
+                                        {% endif %}
                                     </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Assembling a large wardrobe with sliding doors. All parts and hardware provided. Client requested quality finish.</p>
-                                    
-                                    <!-- Progress Bar -->
-                                    <div class="mb-4">
-                                        <div class="flex justify-between text-sm text-textSecondary font-medium mb-1">
-                                            <span>Job Progress</span>
-                                            <span>75%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-200 rounded-full h-2.5">
-                                            <div class="progress-bar bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full" style="width: 75%"></div>
-                                        </div>
+                                </div>
+                                <div class="flex flex-col items-end gap-3">
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-500 uppercase tracking-wide">Updated</p>
+                                        <p class="text-sm font-semibold text-slate-900">{{ job.scheduled_for_display or job.updated_at }}</p>
                                     </div>
-                                    
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Carpentry</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-phone mr-1"></i>Contacted</span>
+                                    <div class="flex gap-2">
+                                        <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                            <i class="fas fa-comment"></i> Message
+                                        </button>
+                                        <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 shadow hover:shadow-lg">
+                                            <i class="fas fa-check-circle"></i> Mark complete
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹3,500</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
-                                    <p class="text-xs font-medium opacity-90">Earned</p>
-                                    <p class="text-2xl font-bold">₹2,625</p>
-                                </div>
-                            </div>
+                        </article>
+                        {% endfor %}
+                    {% else %}
+                        <div class="bg-white border border-dashed border-slate-200 rounded-2xl p-12 text-center">
+                            <i class="fas fa-clipboard-check text-4xl text-slate-300 mb-4"></i>
+                            <p class="text-lg font-semibold text-slate-800 mb-1">No active jobs yet</p>
+                            <p class="text-sm text-slate-500 mb-4">Accept a customer request to see it here.</p>
+                            <a href="{{ url_for('professional_requests') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow hover:shadow-lg">
+                                <i class="fas fa-bolt"></i> Browse requests
+                            </a>
                         </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="updateProgress(this)">
-                                <i class="fas fa-sync-alt mr-2"></i>Update Progress
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="contactClient(this)">
-                                <i class="fas fa-phone mr-2"></i>Contact Client
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
+                    {% endif %}
+                </section>
 
-                    <!-- Job Card 2 -->
-                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm" data-status="scheduled" data-deadline="3" data-progress="0" data-budget="2500">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-bolt text-xl"></i>
+                <section id="completed" class="space-y-4">
+                    <h2 class="text-lg font-semibold text-slate-900">Recently completed</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% if completed_jobs %}
+                            {% for job in completed_jobs %}
+                            <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-900">{{ job.title or 'Gig' }}</p>
+                                        <p class="text-xs text-slate-500">{{ job.customer_name or 'Customer' }}</p>
+                                    </div>
+                                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Completed</span>
                                 </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Ceiling Fan Installation</h3>
-                                        <span class="status-badge bg-amber-100 text-amber-700 text-xs px-2.5 py-1 rounded-lg font-semibold">Scheduled</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Amit Patel</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>4.1 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>Scheduled: 2 days later</span>
-                                    </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Install 2 ceiling fans in bedrooms. Fans already purchased. Wiring needs to be checked first. Client available on weekend.</p>
-                                    
-                                    <!-- Progress Bar -->
-                                    <div class="mb-4">
-                                        <div class="flex justify-between text-sm text-textSecondary font-medium mb-1">
-                                            <span>Job Progress</span>
-                                            <span>0%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-200 rounded-full h-2.5">
-                                            <div class="progress-bar bg-gradient-to-r from-amber-500 to-amber-600 h-2.5 rounded-full" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-amber-100 text-amber-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Electrical</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-calendar-check mr-1"></i>Confirmed</span>
-                                    </div>
-                                </div>
+                                <p class="text-xs text-slate-500">Finished on {{ job.completed_at_display or job.updated_at }}</p>
                             </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹2,500</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-slate-500 to-slate-600 text-white px-4 py-2 rounded-xl shadow-md">
-                                    <p class="text-xs font-medium opacity-90">Earned</p>
-                                    <p class="text-2xl font-bold">₹0</p>
-                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="bg-white border border-dashed border-slate-200 rounded-2xl p-8 text-center col-span-full">
+                                <p class="text-sm text-slate-500">You haven’t completed any jobs yet.</p>
                             </div>
-                        </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="startJob(this)">
-                                <i class="fas fa-play mr-2"></i>Start Job
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="rescheduleJob(this)">
-                                <i class="fas fa-calendar-alt mr-2"></i>Reschedule
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
+                        {% endif %}
                     </div>
-
-                    <!-- Job Card 3 -->
-                    <div class="job-card bg-card rounded-2xl p-6 border border-border shadow-sm" data-status="in-progress" data-deadline="2" data-progress="50" data-budget="1500">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                    <i class="fas fa-wrench text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h3 class="text-lg font-bold text-textPrimary">Kitchen Sink Repair</h3>
-                                        <span class="status-badge bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-lg font-semibold">In Progress</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-textSecondary font-medium mb-3">
-                                        <span><i class="fas fa-user mr-1.5 text-blue-500"></i>Priya Sharma</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1.5 text-blue-500"></i>2.3 km away</span>
-                                        <span><i class="fas fa-clock mr-1.5 text-blue-500"></i>Due: Today</span>
-                                    </div>
-                                    <p class="text-sm text-textSecondary leading-relaxed mb-3">Fixed the leaking issue. Now need to replace the pipe fittings and ensure no further leaks. Client at home.</p>
-                                    
-                                    <!-- Progress Bar -->
-                                    <div class="mb-4">
-                                        <div class="flex justify-between text-sm text-textSecondary font-medium mb-1">
-                                            <span>Job Progress</span>
-                                            <span>50%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-200 rounded-full h-2.5">
-                                            <div class="progress-bar bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full" style="width: 50%"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg font-semibold">Plumbing</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-home mr-1"></i>Residential</span>
-                                        <span class="bg-slate-100 text-textSecondary text-xs px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-check-circle mr-1"></i>Materials Ready</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right ml-4">
-                                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-xl shadow-md mb-2">
-                                    <p class="text-xs font-medium opacity-90">Budget</p>
-                                    <p class="text-2xl font-bold">₹1,500</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl shadow-md">
-                                    <p class="text-xs font-medium opacity-90">Earned</p>
-                                    <p class="text-2xl font-bold">₹750</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3 pt-4 border-t border-border">
-                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="updateProgress(this)">
-                                <i class="fas fa-sync-alt mr-2"></i>Update Progress
-                            </button>
-                            <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="completeJob(this)">
-                                <i class="fas fa-check-circle mr-2"></i>Mark Complete
-                            </button>
-                            <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </main>
         </div>
     </div>
-
-    <!-- JavaScript for Interactive Functionality -->
-    <script>
-        // Filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const jobCards = document.querySelectorAll('.job-card');
-            const sortSelect = document.getElementById('sortSelect');
-            
-            // Filter jobs by status
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter');
-                    
-                    // Update active filter button
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
-                        btn.classList.add('bg-slate-100', 'text-textSecondary');
-                    });
-                    
-                    this.classList.add('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
-                    this.classList.remove('bg-slate-100', 'text-textSecondary');
-                    
-                    // Filter cards
-                    jobCards.forEach(card => {
-                        if (filter === 'all' || card.getAttribute('data-status') === filter) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-            
-            // Sort functionality
-            sortSelect.addEventListener('change', function() {
-                const sortBy = this.value;
-                const container = document.getElementById('jobsList');
-                const cards = Array.from(container.querySelectorAll('.job-card'));
-                
-                cards.sort((a, b) => {
-                    if (sortBy === 'deadline') {
-                        return parseInt(a.getAttribute('data-deadline')) - parseInt(b.getAttribute('data-deadline'));
-                    } else if (sortBy === 'progress') {
-                        return parseInt(b.getAttribute('data-progress')) - parseInt(a.getAttribute('data-progress'));
-                    } else if (sortBy === 'budget') {
-                        return parseInt(b.getAttribute('data-budget')) - parseInt(a.getAttribute('data-budget'));
-                    }
-                    return 0;
-                });
-                
-                // Re-append sorted cards
-                cards.forEach(card => container.appendChild(card));
-            });
-        });
-        
-        // Update Progress
-        function updateProgress(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            const currentProgress = parseInt(card.getAttribute('data-progress'));
-            
-            // Show progress update modal
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl p-6 max-w-md w-full">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-textPrimary">Update Progress</h3>
-                        <button class="text-textSecondary hover:text-textPrimary" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-2">Current Progress: ${currentProgress}%</h4>
-                            <input type="range" min="0" max="100" value="${currentProgress}" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" id="progressSlider">
-                            <div class="flex justify-between text-sm text-textSecondary mt-1">
-                                <span>0%</span>
-                                <span id="progressValue">${currentProgress}%</span>
-                                <span>100%</span>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-2">Notes (Optional)</h4>
-                            <textarea class="w-full bg-slate-100 rounded-xl p-3 text-sm border-none outline-none" rows="3" placeholder="Add any notes about the job progress..."></textarea>
-                        </div>
-                        <div class="pt-4 border-t border-border flex gap-3">
-                            <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white flex-1 py-3 rounded-xl font-bold" onclick="saveProgress(this)">
-                                Save Progress
-                            </button>
-                            <button class="bg-slate-100 text-textSecondary flex-1 py-3 rounded-xl font-bold" onclick="this.closest('.fixed').remove()">
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            // Update progress value as slider moves
-            const slider = modal.querySelector('#progressSlider');
-            const progressValue = modal.querySelector('#progressValue');
-            
-            slider.addEventListener('input', function() {
-                progressValue.textContent = `${this.value}%`;
-            });
-        }
-        
-        // Save Progress
-        function saveProgress(button) {
-            const modal = button.closest('.fixed');
-            const slider = modal.querySelector('#progressSlider');
-            const newProgress = parseInt(slider.value);
-            const card = document.querySelector('.job-card[data-progress]');
-            
-            // Update progress in the card
-            card.setAttribute('data-progress', newProgress);
-            card.querySelector('.progress-bar').style.width = `${newProgress}%`;
-            card.querySelector('.flex.justify-between .text-sm:last-child span:last-child').textContent = `${newProgress}%`;
-            
-            // Update earned amount based on progress
-            const budget = parseInt(card.getAttribute('data-budget'));
-            const earned = Math.round((budget * newProgress) / 100);
-            card.querySelector('.bg-gradient-to-br.from-amber-500 .text-2xl').textContent = `₹${earned.toLocaleString()}`;
-            
-            // Update status if progress is 100%
-            if (newProgress === 100) {
-                const statusBadge = card.querySelector('.status-badge');
-                statusBadge.textContent = 'Completed';
-                statusBadge.className = 'status-badge bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold';
-                
-                // Update buttons
-                const buttonsContainer = card.querySelector('.flex.gap-3');
-                buttonsContainer.innerHTML = `
-                    <button class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" disabled>
-                        <i class="fas fa-check-circle mr-2"></i>Completed
-                    </button>
-                    <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="invoiceClient(this)">
-                        <i class="fas fa-file-invoice mr-2"></i>Send Invoice
-                    </button>
-                    <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                        <i class="fas fa-info-circle"></i>
-                    </button>
-                `;
-            }
-            
-            modal.remove();
-            showNotification(`Progress updated to ${newProgress}%`, 'success');
-        }
-        
-        // Start Job
-        function startJob(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            // Update status
-            card.setAttribute('data-status', 'in-progress');
-            const statusBadge = card.querySelector('.status-badge');
-            statusBadge.textContent = 'In Progress';
-            statusBadge.className = 'status-badge bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-lg font-semibold';
-            
-            // Update progress to 10%
-            card.setAttribute('data-progress', '10');
-            card.querySelector('.progress-bar').style.width = '10%';
-            card.querySelector('.flex.justify-between .text-sm:last-child span:last-child').textContent = '10%';
-            
-            // Update buttons
-            const buttonsContainer = card.querySelector('.flex.gap-3');
-            buttonsContainer.innerHTML = `
-                <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" onclick="updateProgress(this)">
-                    <i class="fas fa-sync-alt mr-2"></i>Update Progress
-                </button>
-                <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="contactClient(this)">
-                    <i class="fas fa-phone mr-2"></i>Contact Client
-                </button>
-                <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                    <i class="fas fa-info-circle"></i>
-                </button>
-            `;
-            
-            showNotification(`Started working on "${jobTitle}"`, 'success');
-        }
-        
-        // Complete Job
-        function completeJob(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            if (confirm(`Mark "${jobTitle}" as completed?`)) {
-                // Update status
-                card.setAttribute('data-status', 'completed');
-                const statusBadge = card.querySelector('.status-badge');
-                statusBadge.textContent = 'Completed';
-                statusBadge.className = 'status-badge bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-semibold';
-                
-                // Update progress to 100%
-                card.setAttribute('data-progress', '100');
-                card.querySelector('.progress-bar').style.width = '100%';
-                card.querySelector('.flex.justify-between .text-sm:last-child span:last-child').textContent = '100%';
-                
-                // Update earned amount
-                const budget = parseInt(card.getAttribute('data-budget'));
-                card.querySelector('.bg-gradient-to-br.from-amber-500 .text-2xl').textContent = `₹${budget.toLocaleString()}`;
-                
-                // Update buttons
-                const buttonsContainer = card.querySelector('.flex.gap-3');
-                buttonsContainer.innerHTML = `
-                    <button class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex-1" disabled>
-                        <i class="fas fa-check-circle mr-2"></i>Completed
-                    </button>
-                    <button class="btn-secondary bg-slate-100 text-textSecondary px-6 py-3 rounded-xl text-sm font-bold flex-1 hover:bg-slate-200" onclick="invoiceClient(this)">
-                        <i class="fas fa-file-invoice mr-2"></i>Send Invoice
-                    </button>
-                    <button class="bg-amber-100 text-amber-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-amber-200 transition-all" onclick="viewJobDetails(this)">
-                        <i class="fas fa-info-circle"></i>
-                    </button>
-                `;
-                
-                showNotification(`"${jobTitle}" marked as completed`, 'success');
-            }
-        }
-        
-        // Contact Client
-        function contactClient(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            const clientName = card.querySelector('.flex.flex-wrap span:first-child').textContent.replace('User', '').trim();
-            
-            showNotification(`Calling ${clientName} about "${jobTitle}"`, 'info');
-            // In a real app, this would initiate a phone call
-        }
-        
-        // Reschedule Job
-        function rescheduleJob(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            
-            showNotification(`Opening calendar to reschedule "${jobTitle}"`, 'info');
-            // In a real app, this would open a scheduling interface
-        }
-        
-        // Invoice Client
-        function invoiceClient(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            const budget = card.querySelector('.bg-gradient-to-br.from-emerald-500 .text-2xl').textContent;
-            
-            showNotification(`Invoice for ${budget} sent for "${jobTitle}"`, 'success');
-        }
-        
-        // View Job Details
-        function viewJobDetails(button) {
-            const card = button.closest('.job-card');
-            const jobTitle = card.querySelector('h3').textContent;
-            const status = card.getAttribute('data-status');
-            const budget = card.querySelector('.bg-gradient-to-br.from-emerald-500 .text-2xl').textContent;
-            const progress = card.getAttribute('data-progress');
-            const description = card.querySelector('p').textContent;
-            
-            // Create a modal with job details
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-textPrimary">Job Details</h3>
-                        <button class="text-textSecondary hover:text-textPrimary" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Job Title</h4>
-                            <p class="text-textSecondary">${jobTitle}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Status</h4>
-                            <p class="text-textSecondary capitalize">${status.replace('-', ' ')}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Budget</h4>
-                            <p class="text-textSecondary">${budget}</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Progress</h4>
-                            <p class="text-textSecondary">${progress}%</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-textPrimary mb-1">Description</h4>
-                            <p class="text-textSecondary">${description}</p>
-                        </div>
-                        <div class="pt-4 border-t border-border">
-                            <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-full py-3 rounded-xl font-bold" onclick="this.closest('.fixed').remove()">
-                                Close Details
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Show notification
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
-            
-            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-4 rounded-xl shadow-lg z-50 notification`;
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} mr-3"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            // Animate out and remove
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
+

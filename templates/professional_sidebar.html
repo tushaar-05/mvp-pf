@@ -1,0 +1,68 @@
+<nav class="flex-1 overflow-y-auto p-4 space-y-1 text-sm font-medium">
+    <ul class="space-y-1">
+        <li>
+            <a href="{{ url_for('professional_dashboard') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'dashboard' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_requests') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'requests' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-bell w-5 mr-3"></i>
+                <span class="flex-1">New Requests</span>
+                <span class="text-xs px-2 py-0.5 rounded-full {{ 'bg-white text-blue-600' if active_page == 'requests' else 'bg-red-100 text-red-600' }}">
+                    {{ requests|length if requests is defined else 0 }}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_active_jobs') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'active_jobs' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-tools w-5 mr-3"></i>
+                <span class="flex-1">Active Gigs</span>
+                <span class="text-xs px-2 py-0.5 rounded-full {{ 'bg-white text-blue-600' if active_page == 'active_jobs' else 'bg-blue-100 text-blue-700' }}">
+                    {{ active_jobs|length if active_jobs is defined else 0 }}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_completed_jobs') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'completed' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-check-circle w-5 mr-3"></i>
+                <span>Completed Jobs</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_earnings') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'earnings' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-wallet w-5 mr-3"></i>
+                <span>Earnings</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_schedule') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'schedule' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                <span>Schedule</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_services') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'services' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-briefcase w-5 mr-3"></i>
+                <span>Services</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_reviews') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'reviews' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-star w-5 mr-3"></i>
+                <span>Ratings &amp; Reviews</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('professional_settings') }}" class="nav-link flex items-center p-3 rounded-xl {{ 'nav-link-active' if active_page == 'settings' else 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fas fa-cog w-5 mr-3"></i>
+                <span>Settings</span>
+            </a>
+        </li>
+    </ul>
+    <a href="{{ url_for('logout') }}" class="nav-link flex items-center p-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600">
+        <i class="fas fa-sign-out-alt w-5 mr-3"></i>Logout
+    </a>
+</nav>
+

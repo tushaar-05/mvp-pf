@@ -750,7 +750,10 @@ def get_professional_dashboard_data(user_id, session_user=None):
                 """,
                 (prof_id,),
             )
-            data['completed_jobs'] = cursor.fetchall() or []
+            completed = cursor.fetchall() or []
+            for job in completed:
+                job['completed_at_display'] = format_datetime_display(job.get('updated_at'))
+            data['completed_jobs'] = completed
 
     except mysql.connector.Error as exc:
         print(f"Professional dashboard data fetch error: {exc}")
@@ -1523,18 +1526,21 @@ def create_gig():
             user=user_context
         )
 
+def _load_professional_dashboard_data():
+    session_user = {
+        'full_name': session.get('user_name', ''),
+        'email': session.get('user_email', ''),
+    }
+    return get_professional_dashboard_data(session['user_id'], session_user=session_user)
+
+
 @app.route('/professional/dashboard')
 def professional_dashboard():
     """Professional dashboard"""
     if 'user_id' not in session or session.get('user_type') != 'professional':
         return redirect(url_for('login'))
 
-    session_user = {
-        'full_name': session.get('user_name', ''),
-        'email': session.get('user_email', ''),
-    }
-
-    dashboard_data = get_professional_dashboard_data(session['user_id'], session_user=session_user)
+    dashboard_data = _load_professional_dashboard_data()
 
     return render_template(
         'professional_dashboard.html',
@@ -1547,6 +1553,152 @@ def professional_dashboard():
         completed_jobs=dashboard_data['completed_jobs'],
         schedule=dashboard_data['schedule'],
         reviews=dashboard_data['reviews'],
+        active_page='dashboard',
+        status_config=STATUS_CONFIG
+    )
+
+
+@app.route('/professional/requests')
+def professional_requests():
+    """Dedicated page for viewing new gig requests"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'new_request.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='requests'
+    )
+
+
+@app.route('/professional/active-jobs')
+def professional_active_jobs():
+    """Dedicated page for active jobs assigned to the professional"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'active_jobs.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        completed_jobs=dashboard_data['completed_jobs'],
+        active_page='active_jobs',
+        status_config=STATUS_CONFIG
+    )
+
+
+@app.route('/professional/services')
+def professional_services():
+    """Dedicated page for professionals to manage their services"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_services.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        services=dashboard_data['services'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        schedule=dashboard_data['schedule'],
+        active_page='services'
+    )
+
+
+@app.route('/professional/schedule')
+def professional_schedule():
+    """Dedicated page to view and manage professional schedules"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_schedule.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        schedule=dashboard_data['schedule'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='schedule'
+    )
+
+
+@app.route('/professional/completed-jobs')
+def professional_completed_jobs():
+    """Dedicated page for reviewing completed gigs"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_completed_jobs.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        completed_jobs=dashboard_data['completed_jobs'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='completed'
+    )
+
+
+@app.route('/professional/earnings')
+def professional_earnings():
+    """Dedicated page for tracking payouts and financials"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_earnings.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        completed_jobs=dashboard_data['completed_jobs'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='earnings'
+    )
+
+
+@app.route('/professional/reviews')
+def professional_reviews():
+    """Dedicated page for viewing ratings and reviews"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_reviews.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        reviews=dashboard_data['reviews'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='reviews'
+    )
+
+
+@app.route('/professional/settings')
+def professional_settings():
+    """Dedicated page for managing account settings"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    dashboard_data = _load_professional_dashboard_data()
+    return render_template(
+        'professional_settings.html',
+        user=dashboard_data['user'],
+        profile=dashboard_data['profile'],
+        stats=dashboard_data['stats'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        active_page='settings'
     )
 
 
