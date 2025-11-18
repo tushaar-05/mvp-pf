@@ -3,808 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worker Dashboard | NAME - Blue-Collar Service Marketplace</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Professional Dashboard - Blue Collar Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#4F46E5',
-                        background: '#F8F9FC',
-                        card: '#FFFFFF',
-                        border: '#E5E7EB',
-                        textPrimary: '#111827',
-                        textSecondary: '#6B7280',
-                        success: '#10B981',
-                        warning: '#F59E0B',
-                        error: '#EF4444',
-                        info: '#3B82F6'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif']
-                    },
-                    spacing: {
-                        '18': '4.5rem',
-                        '88': '22rem'
+                        primary: '#3b82f6',
+                        secondary: '#64748b',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        background: '#f8fafc',
+                        card: '#ffffff',
+                        border: '#e2e8f0',
+                        textPrimary: '#1e293b',
+                        textSecondary: '#64748b',
                     }
                 }
             }
         }
     </script>
-    <style>
-        .sidebar-item.active {
-            background-color: rgba(79, 70, 229, 0.05);
-            border-left: 3px solid #4F46E5;
-            color: #4F46E5;
-            font-weight: 500;
-        }
-        
-        .stat-card {
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        
-        .job-card {
-            transition: all 0.3s ease;
-        }
-        
-        .job-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .calendar-day.active {
-            background-color: #4F46E5;
-            color: white;
-        }
-        
-        .calendar-day.has-job {
-            background-color: rgba(79, 70, 229, 0.1);
-            color: #4F46E5;
-            font-weight: 500;
-        }
-        
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-        }
-        
-        .document-status.verified {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-        }
-        
-        .document-status.pending {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: #F59E0B;
-        }
-        
-        .document-status.rejected {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #EF4444;
-        }
-        
-        .document-status.review {
-            background-color: rgba(79, 70, 229, 0.1);
-            color: #4F46E5;
-        }
-        
-        .status-badge.arriving {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: #3B82F6;
-        }
-        
-        .status-badge.started {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: #F59E0B;
-        }
-        
-        .status-badge.pending-part {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #EF4444;
-        }
-        
-        .status-badge.completed {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-        }
-    </style>
 </head>
-<body class="bg-background text-textPrimary font-sans">
-    <!-- Dashboard Layout -->
+<body class="bg-background min-h-screen">
+    <!-- Main Layout -->
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-64 bg-card border-r border-border flex flex-col">
             <!-- Logo -->
             <div class="p-6 border-b border-border">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <span class="font-bold text-xl">NAME</span>
-                </div>
+                <h1 class="text-xl font-bold text-primary">BlueCollar Pro</h1>
+                <p class="text-sm text-textSecondary">Professional Dashboard</p>
             </div>
-
+            
             <!-- Navigation -->
-            <div class="flex-1 py-6">
-                <nav class="space-y-1 px-4">
-                    <a href="#" class="sidebar-item active flex items-center px-4 py-3 text-sm rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Dashboard
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        New Requests
-                        <span class="ml-auto bg-primary text-white text-xs rounded-full px-2 py-1">3</span>
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        Active Gigs
-                        <span class="ml-auto bg-warning text-white text-xs rounded-full px-2 py-1">2</span>
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        Completed Jobs
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                        </svg>
-                        Earnings
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Schedule
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                        Ratings & Reviews
-                    </a>
-                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-textSecondary rounded-lg hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Documents
-                    </a>
-                </nav>
-            </div>
-
-            <!-- Profile Section -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#dashboard" class="nav-link active flex items-center p-3 rounded-lg bg-primary text-white">
+                            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#requests" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-bell w-5 mr-3"></i>
+                            <span>New Requests</span>
+                            <span class="ml-auto bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#active-jobs" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-tools w-5 mr-3"></i>
+                            <span>Active Jobs</span>
+                            <span class="ml-auto bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#completed" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-check-circle w-5 mr-3"></i>
+                            <span>Completed Jobs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#earnings" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-wallet w-5 mr-3"></i>
+                            <span>Earnings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#schedule" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#reviews" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-star w-5 mr-3"></i>
+                            <span>Ratings & Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                            <i class="fas fa-cog w-5 mr-3"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- User Profile -->
             <div class="p-4 border-t border-border">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" class="w-full h-full object-cover">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-medium">
+                        {{ session.user_name[0] if session.user_name else 'U' }}
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-textPrimary truncate">Raj Sharma</p>
-                        <p class="text-xs text-textSecondary truncate">AC Technician</p>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-textPrimary">{{ session.user_name or 'User' }}</p>
+                        <p class="text-xs text-textSecondary">Professional</p>
                     </div>
-                    <button class="text-textSecondary hover:text-textPrimary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                    </button>
                 </div>
+                <a href="{{ url_for('logout') }}" class="mt-4 flex items-center text-textSecondary hover:text-primary text-sm">
+                    <i class="fas fa-sign-out-alt w-4 mr-2"></i>
+                    <span>Logout</span>
+                </a>
             </div>
         </div>
-
+        
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 overflow-auto">
             <!-- Header -->
-            <header class="bg-card border-b border-border py-4 px-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-textPrimary">Welcome Back, Raj</h1>
-                        <p class="text-textSecondary">Manage your jobs, earnings, and schedule from one place.</p>
-                    </div>
+            <header class="bg-card border-b border-border p-4">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-textPrimary">Dashboard</h1>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
-                            <input type="text" placeholder="Search jobs, customers..." class="pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-textSecondary absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                            <i class="fas fa-bell text-textSecondary text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">5</span>
                         </div>
-                        <button class="relative p-2 text-textSecondary hover:text-textPrimary rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                            <span class="absolute top-1 right-1 bg-error text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-                        </button>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" class="w-full h-full object-cover">
-                            </div>
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-textPrimary">{{ session.user_name or 'User' }}</p>
+                            <p class="text-xs text-textSecondary">Professional</p>
                         </div>
                     </div>
                 </div>
             </header>
-
+            
             <!-- Dashboard Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="p-6">
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="stat-card bg-card p-6 rounded-xl border border-border shadow-sm">
-                        <div class="flex items-center justify-between">
+                    <div class="bg-card rounded-xl p-6 border border-border">
+                        <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">Pending Requests</p>
-                                <p class="text-3xl font-bold text-textPrimary mt-2">3</p>
+                                <p class="text-textSecondary text-sm">Total Earnings</p>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">₹12,450</h3>
                             </div>
-                            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                            <div class="bg-primary/10 p-3 rounded-lg">
+                                <i class="fas fa-wallet text-primary text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-sm text-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                            <span>+2 from yesterday</span>
-                        </div>
+                        <p class="text-success text-sm mt-2">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            15% from last month
+                        </p>
                     </div>
-
-                    <div class="stat-card bg-card p-6 rounded-xl border border-border shadow-sm">
-                        <div class="flex items-center justify-between">
+                    
+                    <div class="bg-card rounded-xl p-6 border border-border">
+                        <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-textSecondary text-sm">Active Jobs</p>
-                                <p class="text-3xl font-bold text-textPrimary mt-2">2</p>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">2</h3>
                             </div>
-                            <div class="w-12 h-12 rounded-lg bg-warning/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
+                            <div class="bg-warning/10 p-3 rounded-lg">
+                                <i class="fas fa-tools text-warning text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-sm text-textSecondary">
-                            <span>2 in progress</span>
-                        </div>
+                        <p class="text-textSecondary text-sm mt-2">2 pending completion</p>
                     </div>
-
-                    <div class="stat-card bg-card p-6 rounded-xl border border-border shadow-sm">
-                        <div class="flex items-center justify-between">
+                    
+                    <div class="bg-card rounded-xl p-6 border border-border">
+                        <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">This Month's Earnings</p>
-                                <p class="text-3xl font-bold text-textPrimary mt-2">₹12,450</p>
+                                <p class="text-textSecondary text-sm">New Requests</p>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">3</h3>
                             </div>
-                            <div class="w-12 h-12 rounded-lg bg-success/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                </svg>
+                            <div class="bg-danger/10 p-3 rounded-lg">
+                                <i class="fas fa-bell text-danger text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-sm text-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
-                            <span>+15% from last month</span>
-                        </div>
+                        <p class="text-textSecondary text-sm mt-2">Awaiting your response</p>
                     </div>
-
-                    <div class="stat-card bg-card p-6 rounded-xl border border-border shadow-sm">
-                        <div class="flex items-center justify-between">
+                    
+                    <div class="bg-card rounded-xl p-6 border border-border">
+                        <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">Rating Score</p>
-                                <p class="text-3xl font-bold text-textPrimary mt-2">4.8</p>
+                                <p class="text-textSecondary text-sm">Rating</p>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">4.8</h3>
                             </div>
-                            <div class="w-12 h-12 rounded-lg bg-info/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                </svg>
+                            <div class="bg-success/10 p-3 rounded-lg">
+                                <i class="fas fa-star text-success text-xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-sm text-textSecondary">
-                            <span>Based on 47 reviews</span>
-                        </div>
+                        <p class="text-textSecondary text-sm mt-2">Based on 24 reviews</p>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Left Column -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <!-- New Requests Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
+                    <div class="space-y-6">
+                        <!-- New Customer Requests -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-xl font-bold text-textPrimary">New Customer Requests</h2>
-                                <button class="text-primary text-sm font-medium">View All</button>
+                                <a href="#requests" class="text-primary text-sm font-medium">View All</a>
                             </div>
-
+                            
                             <div class="space-y-4">
-                                <!-- Request Card 1 -->
-                                <div class="job-card bg-background border border-border rounded-lg p-4">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between">
-                                                <h3 class="font-semibold text-textPrimary">AC Gas Refilling</h3>
-                                                <span class="text-sm text-textSecondary">2.3 km away</span>
-                                            </div>
-                                            <p class="text-textSecondary text-sm mt-1">Amit Kumar • Sector 15, Noida</p>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <span class="text-textSecondary">Budget:</span>
-                                                <span class="font-medium ml-1">₹1,200 - ₹1,500</span>
-                                            </div>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-textSecondary mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span class="text-textSecondary">Today, 2:00 PM</span>
+                                <!-- Request 1 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">AC Repair Service</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Rahul Sharma • 5 km away</p>
+                                            <div class="flex items-center mt-2">
+                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">AC Repair</span>
+                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>2 hours ago</span>
                                             </div>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">₹800</span>
                                     </div>
-                                    <div class="flex space-x-3 mt-4">
-                                        <button class="accept-job bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept Job</button>
-                                        <button class="decline-job bg-background border border-border text-textPrimary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
+                                    <div class="flex space-x-2 mt-4">
+                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
+                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
                                     </div>
                                 </div>
-
-                                <!-- Request Card 2 -->
-                                <div class="job-card bg-background border border-border rounded-lg p-4">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between">
-                                                <h3 class="font-semibold text-textPrimary">AC Installation</h3>
-                                                <span class="text-sm text-textSecondary">4.1 km away</span>
-                                            </div>
-                                            <p class="text-textSecondary text-sm mt-1">Priya Singh • DLF Phase 2, Gurgaon</p>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <span class="text-textSecondary">Budget:</span>
-                                                <span class="font-medium ml-1">₹2,000 - ₹2,500</span>
-                                            </div>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-textSecondary mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span class="text-textSecondary">Tomorrow, 10:00 AM</span>
+                                
+                                <!-- Request 2 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">Electrical Wiring</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Priya Patel • 3 km away</p>
+                                            <div class="flex items-center mt-2">
+                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">Electrical</span>
+                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>1 hour ago</span>
                                             </div>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">₹1,200</span>
                                     </div>
-                                    <div class="flex space-x-3 mt-4">
-                                        <button class="accept-job bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept Job</button>
-                                        <button class="decline-job bg-background border border-border text-textPrimary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
+                                    <div class="flex space-x-2 mt-4">
+                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
+                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Request 3 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">Plumbing Fix</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Amit Kumar • 7 km away</p>
+                                            <div class="flex items-center mt-2">
+                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">Plumbing</span>
+                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>30 mins ago</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm font-medium text-textPrimary">₹600</span>
+                                    </div>
+                                    <div class="flex space-x-2 mt-4">
+                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
+                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-
-                        <!-- Active Gigs Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-textPrimary">Your Active Jobs</h2>
-                                <button class="text-primary text-sm font-medium">View All</button>
+                        </div>
+                        
+                        <!-- Active Jobs -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-textPrimary">Active Jobs</h2>
+                                <a href="#active-jobs" class="text-primary text-sm font-medium">View All</a>
                             </div>
-
+                            
                             <div class="space-y-4">
-                                <!-- Active Job 1 -->
-                                <div class="job-card bg-background border border-border rounded-lg p-4">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between">
-                                                <h3 class="font-semibold text-textPrimary">AC Repair - No Cooling</h3>
-                                                <span class="status-badge arriving px-3 py-1 rounded-full text-xs font-medium">Arriving</span>
-                                            </div>
-                                            <p class="text-textSecondary text-sm mt-1">Rohit Verma • GK 1, Delhi</p>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-textSecondary mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <span class="text-textSecondary">3.2 km away</span>
-                                            </div>
-                                            <div class="mt-4">
-                                                <div class="flex justify-between text-sm text-textSecondary mb-1">
-                                                    <span>Progress</span>
-                                                    <span>25%</span>
-                                                </div>
-                                                <div class="w-full bg-border rounded-full h-2">
-                                                    <div class="progress-bar bg-primary h-2 rounded-full" style="width: 25%"></div>
-                                                </div>
+                                <!-- Job 1 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">Kitchen Plumbing Repair</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Neha Gupta • Scheduled for Today, 2 PM</p>
+                                            <div class="flex items-center mt-2">
+                                                <span class="bg-warning/10 text-warning text-xs px-2 py-1 rounded">In Progress</span>
+                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>4 km away</span>
                                             </div>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">₹1,500</span>
                                     </div>
-                                    <div class="flex space-x-3 mt-4">
-                                        <button class="update-status bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Start Job</button>
-                                        <button class="bg-background border border-border text-textPrimary px-4 py-2 rounded-lg text-sm font-medium flex-1">View Details</button>
+                                    <div class="mt-4">
+                                        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">Update Status</button>
                                     </div>
                                 </div>
-
-                                <!-- Active Job 2 -->
-                                <div class="job-card bg-background border border-border rounded-lg p-4">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between">
-                                                <h3 class="font-semibold text-textPrimary">AC Servicing - Regular Maintenance</h3>
-                                                <span class="status-badge started px-3 py-1 rounded-full text-xs font-medium">Work Started</span>
-                                            </div>
-                                            <p class="text-textSecondary text-sm mt-1">Neha Gupta • Mayur Vihar, Delhi</p>
-                                            <div class="flex items-center mt-2 text-sm">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-textSecondary mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <span class="text-textSecondary">5.7 km away</span>
-                                            </div>
-                                            <div class="mt-4">
-                                                <div class="flex justify-between text-sm text-textSecondary mb-1">
-                                                    <span>Progress</span>
-                                                    <span>60%</span>
-                                                </div>
-                                                <div class="w-full bg-border rounded-full h-2">
-                                                    <div class="progress-bar bg-primary h-2 rounded-full" style="width: 60%"></div>
-                                                </div>
+                                
+                                <!-- Job 2 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">AC Installation</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Rajesh Mehta • Scheduled for Tomorrow, 10 AM</p>
+                                            <div class="flex items-center mt-2">
+                                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Scheduled</span>
+                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>6 km away</span>
                                             </div>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">₹3,000</span>
                                     </div>
-                                    <div class="flex space-x-3 mt-4">
-                                        <button class="update-status bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Update Status</button>
-                                        <button class="bg-background border border-border text-textPrimary px-4 py-2 rounded-lg text-sm font-medium flex-1">View Details</button>
+                                    <div class="mt-4">
+                                        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">Update Status</button>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-
-                        <!-- Earnings Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-textPrimary">Earnings Summary</h2>
-                                <div class="flex space-x-2">
-                                    <button class="bg-primary text-white px-3 py-1 rounded-lg text-sm font-medium">This Week</button>
-                                    <button class="bg-background border border-border text-textPrimary px-3 py-1 rounded-lg text-sm font-medium">This Month</button>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                <div class="bg-background border border-border rounded-lg p-4 text-center">
-                                    <p class="text-textSecondary text-sm">This Week</p>
-                                    <p class="text-2xl font-bold text-textPrimary mt-1">₹4,250</p>
-                                </div>
-                                <div class="bg-background border border-border rounded-lg p-4 text-center">
-                                    <p class="text-textSecondary text-sm">This Month</p>
-                                    <p class="text-2xl font-bold text-textPrimary mt-1">₹12,450</p>
-                                </div>
-                                <div class="bg-background border border-border rounded-lg p-4 text-center">
-                                    <p class="text-textSecondary text-sm">Pending Payouts</p>
-                                    <p class="text-2xl font-bold text-textPrimary mt-1">₹3,800</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="font-semibold text-textPrimary mb-4">Recent Transactions</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full">
-                                        <thead>
-                                            <tr class="border-b border-border">
-                                                <th class="text-left py-3 text-textSecondary text-sm font-medium">Date</th>
-                                                <th class="text-left py-3 text-textSecondary text-sm font-medium">Job ID</th>
-                                                <th class="text-left py-3 text-textSecondary text-sm font-medium">Amount</th>
-                                                <th class="text-left py-3 text-textSecondary text-sm font-medium">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="border-b border-border">
-                                                <td class="py-3 text-sm">15 Mar 2024</td>
-                                                <td class="py-3 text-sm">#AC7824</td>
-                                                <td class="py-3 text-sm font-medium">₹1,200</td>
-                                                <td class="py-3 text-sm">
-                                                    <span class="text-success">Paid</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b border-border">
-                                                <td class="py-3 text-sm">14 Mar 2024</td>
-                                                <td class="py-3 text-sm">#AC7819</td>
-                                                <td class="py-3 text-sm font-medium">₹1,800</td>
-                                                <td class="py-3 text-sm">
-                                                    <span class="text-warning">Pending</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b border-border">
-                                                <td class="py-3 text-sm">12 Mar 2024</td>
-                                                <td class="py-3 text-sm">#AC7805</td>
-                                                <td class="py-3 text-sm font-medium">₹2,500</td>
-                                                <td class="py-3 text-sm">
-                                                    <span class="text-success">Paid</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="py-3 text-sm">10 Mar 2024</td>
-                                                <td class="py-3 text-sm">#AC7798</td>
-                                                <td class="py-3 text-sm font-medium">₹1,500</td>
-                                                <td class="py-3 text-sm">
-                                                    <span class="text-error">Cancelled</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
+                        </div>
                     </div>
-
+                    
                     <!-- Right Column -->
                     <div class="space-y-6">
-                        <!-- Schedule Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-textPrimary">Your Upcoming Schedule</h2>
-                                <button class="text-primary text-sm font-medium">View Calendar</button>
+                        <!-- Upcoming Schedule -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-textPrimary">Today's Schedule</h2>
+                                <a href="#schedule" class="text-primary text-sm font-medium">View Calendar</a>
                             </div>
-
-                            <div class="bg-background border border-border rounded-lg p-4 mb-4">
-                                <div class="flex items-center justify-between mb-4">
-                                    <button class="text-textSecondary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                        </svg>
-                                    </button>
-                                    <h3 class="font-semibold text-textPrimary">March 2024</h3>
-                                    <button class="text-textSecondary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div class="grid grid-cols-7 gap-1 mb-2">
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">S</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">M</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">T</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">W</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">T</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">F</div>
-                                    <div class="text-center text-textSecondary text-sm font-medium py-2">S</div>
-                                </div>
-
-                                <div class="grid grid-cols-7 gap-1">
-                                    <!-- Calendar days would be dynamically generated -->
-                                    <div class="calendar-day text-center text-sm py-2 rounded">25</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">26</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">27</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">28</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">29</div>
-                                    <div class="calendar-day has-job text-center text-sm py-2 rounded cursor-pointer">1</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">2</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">3</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">4</div>
-                                    <div class="calendar-day has-job text-center text-sm py-2 rounded cursor-pointer">5</div>
-                                    <div class="calendar-day has-job text-center text-sm py-2 rounded cursor-pointer">6</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">7</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">8</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">9</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">10</div>
-                                    <div class="calendar-day has-job text-center text-sm py-2 rounded cursor-pointer">11</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">12</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">13</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">14</div>
-                                    <div class="calendar-day active text-center text-sm py-2 rounded cursor-pointer">15</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">16</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">17</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">18</div>
-                                    <div class="calendar-day has-job text-center text-sm py-2 rounded cursor-pointer">19</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">20</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">21</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">22</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">23</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">24</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">25</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">26</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">27</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">28</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">29</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">30</div>
-                                    <div class="calendar-day text-center text-sm py-2 rounded">31</div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="font-semibold text-textPrimary mb-3">Today's Jobs</h3>
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                        <div>
-                                            <p class="font-medium text-sm">AC Gas Refilling</p>
-                                            <p class="text-textSecondary text-xs">2:00 PM • Amit Kumar</p>
-                                        </div>
-                                        <span class="status-badge arriving px-2 py-1 rounded-full text-xs">Arriving</span>
-                                    </div>
-                                    <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                        <div>
-                                            <p class="font-medium text-sm">AC Servicing</p>
-                                            <p class="text-textSecondary text-xs">4:30 PM • Neha Gupta</p>
-                                        </div>
-                                        <span class="status-badge started px-2 py-1 rounded-full text-xs">Started</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Ratings Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-textPrimary">Your Ratings & Reviews</h2>
-                                <div class="flex space-x-1">
-                                    <button class="bg-primary text-white px-2 py-1 rounded text-xs font-medium">Latest</button>
-                                    <button class="bg-background border border-border text-textPrimary px-2 py-1 rounded text-xs font-medium">Highest</button>
-                                </div>
-                            </div>
-
-                            <div class="text-center mb-6">
-                                <div class="text-4xl font-bold text-textPrimary mb-2">4.8</div>
-                                <div class="flex items-center justify-center mb-1">
-                                    <!-- Stars -->
-                                    <div class="flex">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p class="text-textSecondary text-sm">Based on 47 reviews</p>
-                            </div>
-
+                            
                             <div class="space-y-4">
-                                <div class="border-b border-border pb-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="font-medium text-sm">Vikram Mehta</div>
-                                        <div class="flex items-center text-xs text-textSecondary">
-                                            <span>AC Repair</span>
-                                            <span class="mx-1">•</span>
-                                            <span>2 days ago</span>
+                                <!-- Schedule Item 1 -->
+                                <div class="p-4 border-l-4 border-primary bg-background rounded-r-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">Kitchen Plumbing Repair</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Neha Gupta</p>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">2:00 PM</span>
                                     </div>
-                                    <div class="flex mb-2">
-                                        <!-- 5 stars -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
+                                    <div class="flex items-center mt-2">
+                                        <span class="text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>4 km away</span>
+                                        <span class="ml-3 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>2 hours estimated</span>
                                     </div>
-                                    <p class="text-textSecondary text-sm">Excellent service! Raj was punctual and fixed my AC issue quickly. Highly recommended.</p>
                                 </div>
-
-                                <div class="border-b border-border pb-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="font-medium text-sm">Priya Sharma</div>
-                                        <div class="flex items-center text-xs text-textSecondary">
-                                            <span>AC Installation</span>
-                                            <span class="mx-1">•</span>
-                                            <span>1 week ago</span>
+                                
+                                <!-- Schedule Item 2 -->
+                                <div class="p-4 border-l-4 border-warning bg-background rounded-r-lg">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-textPrimary">Electrical Checkup</h3>
+                                            <p class="text-textSecondary text-sm mt-1">Vikram Singh</p>
                                         </div>
+                                        <span class="text-sm font-medium text-textPrimary">4:30 PM</span>
                                     </div>
-                                    <div class="flex mb-2">
-                                        <!-- 4 stars -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-border" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
+                                    <div class="flex items-center mt-2">
+                                        <span class="text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>3 km away</span>
+                                        <span class="ml-3 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>1 hour estimated</span>
                                     </div>
-                                    <p class="text-textSecondary text-sm">Professional installation service. Took a bit longer than expected but quality work.</p>
                                 </div>
                             </div>
-                        </section>
-
-                        <!-- Documents Section -->
-                        <section class="bg-card rounded-xl border border-border p-6">
-                            <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-textPrimary">Your Verification Documents</h2>
-                                <button class="text-primary text-sm font-medium">Manage</button>
-                            </div>
-
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-sm">Aadhaar Card</p>
-                                            <p class="text-textSecondary text-xs">ID Verification</p>
-                                        </div>
-                                    </div>
-                                    <span class="document-status verified px-2 py-1 rounded-full text-xs font-medium">Verified</span>
-                                </div>
-
-                                <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-sm">PAN Card</p>
-                                            <p class="text-textSecondary text-xs">Tax Verification</p>
-                                        </div>
-                                    </div>
-                                    <span class="document-status verified px-2 py-1 rounded-full text-xs font-medium">Verified</span>
-                                </div>
-
-                                <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-sm">Address Proof</p>
-                                            <p class="text-textSecondary text-xs">Utility Bill</p>
-                                        </div>
-                                    </div>
-                                    <span class="document-status review px-2 py-1 rounded-full text-xs font-medium">Under Review</span>
-                                </div>
-
-                                <div class="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-sm">Police Verification</p>
-                                            <p class="text-textSecondary text-xs">Background Check</p>
-                                        </div>
-                                    </div>
-                                    <span class="document-status pending px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                            
+                            <!-- Mini Calendar -->
+                            <div class="mt-6 pt-4 border-t border-border">
+                                <h3 class="font-medium text-textPrimary mb-3">This Week</h3>
+                                <div class="grid grid-cols-7 gap-1 text-center">
+                                    <div class="text-xs text-textSecondary py-1">Mon</div>
+                                    <div class="text-xs text-textSecondary py-1">Tue</div>
+                                    <div class="text-xs text-textSecondary py-1">Wed</div>
+                                    <div class="text-xs text-textSecondary py-1">Thu</div>
+                                    <div class="text-xs text-textSecondary py-1">Fri</div>
+                                    <div class="text-xs text-textSecondary py-1">Sat</div>
+                                    <div class="text-xs text-textSecondary py-1">Sun</div>
+                                    
+                                    <div class="py-1 text-sm">25</div>
+                                    <div class="py-1 text-sm">26</div>
+                                    <div class="py-1 text-sm">27</div>
+                                    <div class="py-1 text-sm">28</div>
+                                    <div class="py-1 text-sm bg-primary text-white rounded-full">29</div>
+                                    <div class="py-1 text-sm">30</div>
+                                    <div class="py-1 text-sm">1</div>
                                 </div>
                             </div>
-                        </section>
+                        </div>
+                        
+                        <!-- Ratings & Reviews -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-textPrimary">Ratings & Reviews</h2>
+                                <a href="#reviews" class="text-primary text-sm font-medium">View All</a>
+                            </div>
+                            
+                            <div class="flex items-center mb-4">
+                                <div class="text-3xl font-bold text-textPrimary mr-4">4.8</div>
+                                <div>
+                                    <div class="flex items-center">
+                                        <div class="flex text-warning">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <span class="ml-2 text-sm text-textSecondary">24 reviews</span>
+                                    </div>
+                                    <p class="text-sm text-textSecondary mt-1">Based on last 30 days</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Review 1 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium">S</div>
+                                            <div class="ml-2">
+                                                <p class="text-sm font-medium text-textPrimary">Sanjay Verma</p>
+                                                <div class="flex text-warning text-xs">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs text-textSecondary">2 days ago</span>
+                                    </div>
+                                    <p class="text-sm text-textPrimary mt-2">Excellent service! Fixed my AC quickly and explained everything clearly.</p>
+                                </div>
+                                
+                                <!-- Review 2 -->
+                                <div class="p-4 border border-border rounded-lg">
+                                    <div class="flex justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-success text-white flex items-center justify-center text-sm font-medium">P</div>
+                                            <div class="ml-2">
+                                                <p class="text-sm font-medium text-textPrimary">Priya Sharma</p>
+                                                <div class="flex text-warning text-xs">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs text-textSecondary">1 week ago</span>
+                                    </div>
+                                    <p class="text-sm text-textPrimary mt-2">Very professional and punctual. Will definitely hire again!</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Earnings Summary -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <h2 class="text-xl font-bold text-textPrimary mb-4">Earnings Summary</h2>
+                            
+                            <div class="space-y-4">
+                                <div class="flex justify-between">
+                                    <span class="text-textSecondary">This Week</span>
+                                    <span class="font-medium text-textPrimary">₹4,200</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-textSecondary">This Month</span>
+                                    <span class="font-medium text-textPrimary">₹12,450</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-textSecondary">Last Month</span>
+                                    <span class="font-medium text-textPrimary">₹10,800</span>
+                                </div>
+                                <div class="flex justify-between pt-3 border-t border-border">
+                                    <span class="text-textSecondary font-medium">Total Earnings</span>
+                                    <span class="font-bold text-textPrimary">₹68,900</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <a href="#earnings" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full block text-center">View Detailed Report</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -812,267 +476,80 @@
     </div>
 
     <script>
-        // Initialize GSAP animations
+        // Navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Register ScrollTrigger plugin
-            gsap.registerPlugin(ScrollTrigger);
+            // Navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
             
-            // Animate stat cards on page load
-            gsap.from(".stat-card", {
-                duration: 0.6,
-                opacity: 0,
-                y: 20,
-                stagger: 0.1,
-                ease: "power2.out"
-            });
-            
-            // Animate job cards on scroll
-            gsap.from(".job-card", {
-                duration: 0.5,
-                opacity: 0,
-                y: 20,
-                stagger: 0.1,
-                scrollTrigger: {
-                    trigger: ".job-card",
-                    start: "top 90%",
-                    toggleActions: "play none none none"
-                }
-            });
-            
-            // Initialize dashboard functionality
-            initializeDashboard();
-        });
-        
-        function initializeDashboard() {
-            // Accept/Decline Job Functionality
-            document.querySelectorAll('.accept-job').forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobCard = this.closest('.job-card');
-                    gsap.to(jobCard, {
-                        duration: 0.3,
-                        opacity: 0,
-                        y: -10,
-                        onComplete: () => {
-                            jobCard.remove();
-                            updatePendingRequestsCount();
-                            showNotification('Job accepted successfully!', 'success');
-                        }
-                    });
-                });
-            });
-            
-            document.querySelectorAll('.decline-job').forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobCard = this.closest('.job-card');
-                    gsap.to(jobCard, {
-                        duration: 0.3,
-                        opacity: 0,
-                        x: -20,
-                        onComplete: () => {
-                            jobCard.remove();
-                            updatePendingRequestsCount();
-                            showNotification('Job declined', 'info');
-                        }
-                    });
-                });
-            });
-            
-            // Update Job Status Functionality
-            document.querySelectorAll('.update-status').forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobCard = this.closest('.job-card');
-                    const statusBadge = jobCard.querySelector('.status-badge');
-                    const progressBar = jobCard.querySelector('.progress-bar');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
                     
-                    // Cycle through statuses
-                    if (statusBadge.classList.contains('arriving')) {
-                        statusBadge.textContent = 'Work Started';
-                        statusBadge.className = 'status-badge started px-3 py-1 rounded-full text-xs font-medium';
-                        progressBar.style.width = '50%';
-                        this.textContent = 'Update Status';
-                        showNotification('Job status updated to Work Started', 'info');
-                    } else if (statusBadge.classList.contains('started')) {
-                        statusBadge.textContent = 'Part Pending';
-                        statusBadge.className = 'status-badge pending-part px-3 py-1 rounded-full text-xs font-medium';
-                        progressBar.style.width = '75%';
-                        this.textContent = 'Update Status';
-                        showNotification('Job status updated to Part Pending', 'warning');
-                    } else if (statusBadge.classList.contains('pending-part')) {
-                        statusBadge.textContent = 'Completed';
-                        statusBadge.className = 'status-badge completed px-3 py-1 rounded-full text-xs font-medium';
-                        progressBar.style.width = '100%';
-                        this.textContent = 'Job Completed';
-                        this.classList.add('bg-success');
-                        this.classList.remove('bg-primary');
-                        showNotification('Job completed successfully!', 'success');
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active', 'bg-primary', 'text-white'));
+                    navLinks.forEach(l => l.classList.add('text-textPrimary', 'hover:bg-background'));
+                    
+                    // Add active class to clicked link
+                    this.classList.remove('text-textPrimary', 'hover:bg-background');
+                    this.classList.add('active', 'bg-primary', 'text-white');
+                    
+                    // In a real app, you would load the corresponding content here
+                    // For this demo, we'll just show an alert
+                    const pageName = this.querySelector('span').textContent;
+                    alert(`Loading ${pageName} page...`);
+                });
+            });
+            
+            // Job request buttons
+            const acceptButtons = document.querySelectorAll('.accept-btn');
+            const declineButtons = document.querySelectorAll('.decline-btn');
+            
+            acceptButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobCard = this.closest('.p-4.border');
+                    const jobTitle = jobCard.querySelector('h3').textContent;
+                    
+                    // Show confirmation
+                    if (confirm(`Accept job: ${jobTitle}?`)) {
+                        // In a real app, you would send an API request here
+                        jobCard.style.opacity = '0.5';
+                        setTimeout(() => {
+                            jobCard.remove();
+                            // Update counters
+                            updateRequestCount();
+                        }, 500);
                     }
                 });
             });
             
-            // Calendar functionality
-            document.querySelectorAll('.calendar-day.has-job').forEach(day => {
-                day.addEventListener('click', function() {
-                    // Remove active class from all days
-                    document.querySelectorAll('.calendar-day').forEach(d => {
-                        d.classList.remove('active');
-                    });
-                    // Add active class to clicked day
-                    this.classList.add('active');
+            declineButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const jobCard = this.closest('.p-4.border');
+                    const jobTitle = jobCard.querySelector('h3').textContent;
                     
-                    // In a real app, this would fetch and display jobs for the selected date
-                    showNotification(`Showing jobs for ${this.textContent} March 2024`, 'info');
+                    // Show confirmation
+                    if (confirm(`Decline job: ${jobTitle}?`)) {
+                        // In a real app, you would send an API request here
+                        jobCard.style.opacity = '0.5';
+                        setTimeout(() => {
+                            jobCard.remove();
+                            // Update counters
+                            updateRequestCount();
+                        }, 500);
+                    }
                 });
             });
             
-            // Search functionality
-            const searchInput = document.querySelector('input[type="text"]');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const jobCards = document.querySelectorAll('.job-card');
+            function updateRequestCount() {
+                const requestCount = document.querySelector('a[href="#requests"] .bg-danger');
+                const currentCount = parseInt(requestCount.textContent);
                 
-                jobCards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        card.style.display = 'block';
-                        gsap.fromTo(card, 
-                            { opacity: 0, y: 10 }, 
-                            { opacity: 1, y: 0, duration: 0.3 }
-                        );
-                    } else {
-                        gsap.to(card, {
-                            opacity: 0,
-                            y: -10,
-                            duration: 0.3,
-                            onComplete: () => {
-                                card.style.display = 'none';
-                            }
-                        });
-                    }
-                });
-            });
-            
-            // Rating filter functionality
-            document.querySelectorAll('.bg-background.border').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active state from all filter buttons
-                    document.querySelectorAll('.bg-background.border').forEach(btn => {
-                        btn.classList.remove('bg-primary', 'text-white');
-                        btn.classList.add('bg-background', 'border-border', 'text-textPrimary');
-                    });
-                    
-                    // Add active state to clicked button
-                    this.classList.remove('bg-background', 'border-border', 'text-textPrimary');
-                    this.classList.add('bg-primary', 'text-white');
-                    
-                    // In a real app, this would filter reviews based on selection
-                    const filterType = this.textContent;
-                    showNotification(`Showing ${filterType.toLowerCase()} reviews`, 'info');
-                });
-            });
-            
-            // Earnings period toggle
-            document.querySelectorAll('.bg-background.border').forEach(button => {
-                if (button.textContent === 'This Week' || button.textContent === 'This Month') {
-                    button.addEventListener('click', function() {
-                        // Remove active state from both buttons
-                        document.querySelectorAll('.bg-background.border').forEach(btn => {
-                            if (btn.textContent === 'This Week' || btn.textContent === 'This Month') {
-                                btn.classList.remove('bg-primary', 'text-white');
-                                btn.classList.add('bg-background', 'border-border', 'text-textPrimary');
-                            }
-                        });
-                        
-                        // Add active state to clicked button
-                        this.classList.remove('bg-background', 'border-border', 'text-textPrimary');
-                        this.classList.add('bg-primary', 'text-white');
-                        
-                        // In a real app, this would update earnings data
-                        const period = this.textContent;
-                        showNotification(`Showing earnings for ${period.toLowerCase()}`, 'info');
-                    });
+                if (currentCount > 1) {
+                    requestCount.textContent = currentCount - 1;
+                } else {
+                    requestCount.remove();
                 }
-            });
-            
-            // Initialize with "This Week" as active
-            document.querySelectorAll('.bg-background.border').forEach(button => {
-                if (button.textContent === 'This Week') {
-                    button.classList.remove('bg-background', 'border-border', 'text-textPrimary');
-                    button.classList.add('bg-primary', 'text-white');
-                }
-            });
-        }
-        
-        function updatePendingRequestsCount() {
-            const pendingRequests = document.querySelectorAll('.job-card').length;
-            const pendingBadge = document.querySelector('.sidebar-item:nth-child(2) span');
-            if (pendingBadge) {
-                pendingBadge.textContent = pendingRequests;
             }
-            
-            // Update stat card
-            const statCard = document.querySelector('.stat-card:first-child .text-3xl');
-            if (statCard) {
-                statCard.textContent = pendingRequests;
-            }
-        }
-        
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border ${
-                type === 'success' ? 'bg-success/10 border-success/20 text-success' :
-                type === 'warning' ? 'bg-warning/10 border-warning/20 text-warning' :
-                type === 'error' ? 'bg-error/10 border-error/20 text-error' :
-                'bg-info/10 border-info/20 text-info'
-            }`;
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            // Add to page
-            document.body.appendChild(notification);
-            
-            // Animate in
-            gsap.fromTo(notification, 
-                { opacity: 0, y: -20 }, 
-                { opacity: 1, y: 0, duration: 0.3 }
-            );
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                gsap.to(notification, {
-                    opacity: 0,
-                    y: -20,
-                    duration: 0.3,
-                    onComplete: () => {
-                        notification.remove();
-                    }
-                });
-            }, 3000);
-        }
-        
-        // Add hover animations to cards
-        document.querySelectorAll('.stat-card, .job-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                gsap.to(this, {
-                    scale: 1.02,
-                    duration: 0.2,
-                    ease: "power2.out"
-                });
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                gsap.to(this, {
-                    scale: 1,
-                    duration: 0.2,
-                    ease: "power2.out"
-                });
-            });
         });
     </script>
 </body>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Login | ServiceHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        textGrey: '#4A4F59',
+                        heading: '#0F1115',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f6f7fb;
+        }
+        .glass-nav {
+            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(15, 17, 21, 0.08);
+        }
+        .hero-gradient-bg {
+            background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 50%, #ecfeff 100%);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(79, 70, 229, 0.12);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+            color: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 15px 30px rgba(79, 70, 229, 0.3);
+        }
+        .input-field {
+            border: 1.5px solid rgba(79, 70, 229, 0.2);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-white text-heading">
+    <header class="fixed top-0 inset-x-0 z-50 glass-nav">
+        <div class="max-w-[80vw] mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center">
+                    <div class="w-4 h-4 rounded-full bg-primary"></div>
+                </div>
+                <span class="font-semibold text-lg tracking-tight text-heading">ServiceHub Pros</span>
+            </div>
+            <div class="hidden lg:flex items-center space-x-4">
+                <a href="{{ url_for('index') }}" class="px-5 py-2 rounded-xl text-textGrey font-medium hover:text-heading">
+                    Back to Home
+                </a>
+                <a href="{{ url_for('professional_signup') }}" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
+                    Join as Professional
+                </a>
+            </div>
+            <button id="mobileToggle" class="lg:hidden w-10 h-10 rounded-xl border border-black/10 flex flex-col justify-center items-center space-y-1.5">
+                <span class="block w-6 h-0.5 bg-heading"></span>
+                <span class="block w-6 h-0.5 bg-heading"></span>
+                <span class="block w-6 h-0.5 bg-heading"></span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="lg:hidden bg-white border-t border-black/5 shadow-lg origin-top scale-y-0 opacity-0 absolute left-0 right-0 top-full overflow-hidden transform-gpu transition-transform duration-200">
+            <div class="px-6 py-4 space-y-4 text-textGrey font-medium">
+                <a href="{{ url_for('index') }}" class="block">Back to Home</a>
+                <a href="{{ url_for('professional_signup') }}" class="block">Join as Professional</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 min-h-screen hero-gradient-bg flex items-center justify-center px-6 py-14">
+        <div class="w-full max-w-md">
+            <div class="card rounded-3xl p-8 lg:p-10 space-y-6">
+                <div class="text-center space-y-3">
+                    <p class="inline-flex items-center px-3 py-1 rounded-full text-xs uppercase tracking-[0.35em] bg-primary/10 text-primary font-semibold">Verified access</p>
+                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+                        Welcome back, Pro
+                    </h1>
+                    <p class="text-gray-600">
+                        Sign in to manage jobs, payouts, and your profile
+                    </p>
+                </div>
+
+                <form class="space-y-5" id="professionalLoginForm" method="POST" action="{{ url_for('professional_login') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-semibold text-gray-700">
+                            Registered email address
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            placeholder="you@servicehub.com"
+                            class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label for="password" class="block text-sm font-semibold text-gray-700">
+                                Password
+                            </label>
+                            <a href="#" class="text-sm text-primary font-medium hover:text-indigo-700">
+                                Forgot password?
+                            </a>
+                        </div>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            placeholder="Enter your password"
+                            class="input-field w-full rounded-2xl px-5 py-4 text-gray-700 bg-white font-medium placeholder:text-gray-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            id="remember"
+                            name="remember"
+                            class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <label for="remember" class="text-sm text-gray-600 font-medium">
+                            Keep me signed in on this device
+                        </label>
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="submitBtn"
+                        class="btn-primary w-full px-6 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-2"
+                    >
+                        <span id="submitText">Sign in to your workspace</span>
+                        <span id="submitLoader" class="hidden">Please wait…</span>
+                    </button>
+                    <div id="errorMessage" class="hidden text-red-600 text-sm mt-2 text-center"></div>
+                    <div id="successMessage" class="hidden text-green-600 text-sm mt-2 text-center"></div>
+                </form>
+
+                <div class="bg-indigo-50 rounded-2xl p-4 text-sm text-indigo-900">
+                    New to ServiceHub?
+                    <a href="{{ url_for('professional_signup') }}" class="font-semibold underline underline-offset-4">Complete the professional onboarding</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const professionalLoginEndpoint = "{{ url_for('professional_login') }}";
+
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('scale-y-0');
+            mobileMenu.classList.toggle('opacity-0');
+        });
+
+        document.getElementById('professionalLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitLoader = document.getElementById('submitLoader');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            submitBtn.disabled = true;
+            submitText.classList.add('hidden');
+            submitLoader.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+
+            try {
+                const formData = new FormData(this);
+
+                const response = await fetch(professionalLoginEndpoint, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    successMessage.textContent = result.message;
+                    successMessage.classList.remove('hidden');
+
+                    if (result.redirect) {
+                        setTimeout(() => {
+                            window.location.href = result.redirect;
+                        }, 800);
+                    }
+                } else {
+                    errorMessage.textContent = result.message || 'Login failed. Please try again.';
+                    errorMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Professional login error:', error);
+                errorMessage.textContent = 'An unexpected error occurred. Please try again.';
+                errorMessage.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitText.classList.remove('hidden');
+                submitLoader.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+

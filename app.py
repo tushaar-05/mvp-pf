@@ -4,6 +4,8 @@ import mysql.connector
 import re
 import os
 import uuid
+from datetime import datetime
+from collections import Counter
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
@@ -29,6 +31,15 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
 MAX_FILE_SIZE = 4 * 1024 * 1024  # 4MB
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+STATUS_CONFIG = {
+    'new': {'label': 'New', 'badge_class': 'status-new'},
+    'waiting': {'label': 'Waiting', 'badge_class': 'status-waiting'},
+    'assigned': {'label': 'Assigned', 'badge_class': 'status-assigned'},
+    'progress': {'label': 'In Progress', 'badge_class': 'status-progress'},
+    'completed': {'label': 'Completed', 'badge_class': 'status-completed'},
+    'cancelled': {'label': 'Cancelled', 'badge_class': 'status-cancelled'},
+}
 
 def get_db_connection():
     """Create and return database connection"""
@@ -160,6 +171,52 @@ def init_database():
                     FOREIGN KEY (professional_id) REFERENCES professional_profiles(id) ON DELETE CASCADE
                 )
             ''')
+
+            # Customer gigs table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS customer_gigs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    title VARCHAR(255) NOT NULL,
+                    description TEXT,
+                    category VARCHAR(100),
+                    status ENUM('new', 'waiting', 'assigned', 'progress', 'completed', 'cancelled') DEFAULT 'new',
+                    posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            ''')
+
+            # Gig activity timeline
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS gig_activity_logs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    gig_id INT,
+                    user_id INT NOT NULL,
+                    message TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (gig_id) REFERENCES customer_gigs(id) ON DELETE SET NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            ''')
+
+            # Saved addresses
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS customer_addresses (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    label ENUM('home', 'work', 'other') DEFAULT 'home',
+                    address_line1 VARCHAR(255),
+                    address_line2 VARCHAR(255),
+                    city VARCHAR(100),
+                    state VARCHAR(100),
+                    pincode VARCHAR(12),
+                    is_default BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            ''')
             
             conn.commit()
             cursor.close()
@@ -213,12 +270,195 @@ def save_uploaded_file(file, subfolder):
         return filename
     return None
 
+
+def format_datetime_display(value, fmt='%b %d, %Y'):
+    """Format datetime objects for display"""
+    if not value:
+        return ''
+    if isinstance(value, datetime):
+        return value.strftime(fmt)
+    return str(value)
+
+
+def format_relative_time(value):
+    """Return human readable relative time"""
+    if not value:
+        return ''
+
+    if isinstance(value, datetime):
+        base = datetime.now(tz=value.tzinfo) if value.tzinfo else datetime.utcnow()
+        delta = base - value
+    else:
+        return str(value)
+
+    seconds = max(int(delta.total_seconds()), 0)
+    if seconds < 60:
+        return "just now"
+    if seconds < 3600:
+        minutes = seconds // 60
+        return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+    if seconds < 86400:
+        hours = seconds // 3600
+        return f"{hours} hour{'s' if hours != 1 else ''} ago"
+    if seconds < 604800:
+        days = seconds // 86400
+        return f"{days} day{'s' if days != 1 else ''} ago"
+    return value.strftime('%b %d, %Y')
+
+
+def build_initials(first_name='', last_name='', fallback_name=''):
+    """Create initials from provided name parts"""
+    name_parts = []
+    if first_name:
+        name_parts.append(first_name.strip())
+    if last_name:
+        name_parts.append(last_name.strip())
+    if not name_parts and fallback_name:
+        name_parts = fallback_name.strip().split()
+    initials = ''.join([part[0].upper() for part in name_parts if part][:2])
+    return initials or 'U'
+
+
+def get_customer_dashboard_data(user_id, session_user=None):
+    """Fetch dashboard data for a customer"""
+    fallback_full_name = session_user.get('full_name') if session_user else ''
+    fallback_email = session_user.get('email') if session_user else ''
+
+    data = {
+        'user': {
+            'id': user_id,
+            'first_name': '',
+            'last_name': '',
+            'full_name': fallback_full_name,
+            'email': fallback_email,
+            'phone': '',
+            'initials': build_initials(fallback_name=fallback_full_name)
+        },
+        'stats': {
+            'active_gigs': 0,
+            'in_progress_services': 0,
+            'completed_gigs': 0,
+            'pending_approvals': 0
+        },
+        'gigs': [],
+        'activities': [],
+        'addresses': [],
+        'status_counts': {
+            'all': 0,
+            'new': 0,
+            'in_progress': 0,
+            'completed': 0
+        }
+    }
+
+    conn = get_db_connection()
+    if not conn:
+        return data
+
+    cursor = conn.cursor(dictionary=True)
+    try:
+        # Fetch user profile
+        cursor.execute(
+            "SELECT id, first_name, last_name, email, phone FROM users WHERE id = %s",
+            (user_id,)
+        )
+        user_row = cursor.fetchone()
+        if user_row:
+            full_name = f"{user_row.get('first_name', '').strip()} {user_row.get('last_name', '').strip()}".strip()
+            user_row['full_name'] = full_name or fallback_full_name
+            user_row['initials'] = build_initials(user_row.get('first_name'), user_row.get('last_name'), fallback_name=fallback_full_name)
+            data['user'].update(user_row)
+
+        # Stats
+        cursor.execute("""
+            SELECT
+                COALESCE(SUM(CASE WHEN status IN ('new', 'waiting', 'assigned', 'progress') THEN 1 ELSE 0 END), 0) AS active_gigs,
+                COALESCE(SUM(CASE WHEN status IN ('assigned', 'progress') THEN 1 ELSE 0 END), 0) AS in_progress_services,
+                COALESCE(SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END), 0) AS completed_gigs,
+                COALESCE(SUM(CASE WHEN status = 'waiting' THEN 1 ELSE 0 END), 0) AS pending_approvals
+            FROM customer_gigs
+            WHERE user_id = %s
+        """, (user_id,))
+        stats_row = cursor.fetchone()
+        if stats_row:
+            data['stats'].update({key: int(value or 0) for key, value in stats_row.items()})
+
+        # Recent gigs
+        cursor.execute("""
+            SELECT id, title, description, category, status, posted_at, updated_at
+            FROM customer_gigs
+            WHERE user_id = %s
+            ORDER BY posted_at DESC
+            LIMIT 10
+        """, (user_id,))
+        gig_rows = cursor.fetchall() or []
+        status_counter = Counter()
+        for gig in gig_rows:
+            status_key = gig.get('status', 'new')
+            status_counter.update([status_key])
+            gig['status_meta'] = STATUS_CONFIG.get(status_key, STATUS_CONFIG['new'])
+            gig['posted_at_display'] = format_datetime_display(gig.get('posted_at'))
+            gig['posted_at_relative'] = format_relative_time(gig.get('posted_at'))
+            data['gigs'].append(gig)
+        data['status_counts']['all'] = len(gig_rows)
+        data['status_counts']['new'] = status_counter.get('new', 0)
+        data['status_counts']['in_progress'] = status_counter.get('assigned', 0) + status_counter.get('progress', 0)
+        data['status_counts']['completed'] = status_counter.get('completed', 0)
+
+        # Recent activity
+        cursor.execute("""
+            SELECT gal.id, gal.message, gal.created_at, cg.title
+            FROM gig_activity_logs gal
+            LEFT JOIN customer_gigs cg ON cg.id = gal.gig_id
+            WHERE gal.user_id = %s
+            ORDER BY gal.created_at DESC
+            LIMIT 5
+        """, (user_id,))
+        activity_rows = cursor.fetchall() or []
+        for activity in activity_rows:
+            activity['timestamp_display'] = format_relative_time(activity.get('created_at'))
+            activity['created_at_display'] = format_datetime_display(activity.get('created_at'), '%b %d, %Y %I:%M %p')
+            data['activities'].append(activity)
+
+        # Saved addresses
+        cursor.execute("""
+            SELECT id, label, address_line1, address_line2, city, state, pincode, is_default, created_at
+            FROM customer_addresses
+            WHERE user_id = %s
+            ORDER BY is_default DESC, created_at DESC
+            LIMIT 3
+        """, (user_id,))
+        address_rows = cursor.fetchall() or []
+        for address in address_rows:
+            data['addresses'].append(address)
+
+    except mysql.connector.Error as exc:
+        print(f"Dashboard data fetch error: {exc}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    if not data['user'].get('initials'):
+        data['user']['initials'] = build_initials(
+            data['user'].get('first_name'),
+            data['user'].get('last_name'),
+            fallback_name=data['user'].get('full_name', '')
+        )
+
+    return data
+
 # ========== REGULAR USER ROUTES ==========
 
 @app.route('/')
 def index():
     """Home page route"""
     return render_template('index.html')
+
+
+@app.route('/get-started')
+def get_started():
+    """Friendly alias used across the marketing site"""
+    return redirect(url_for('signup'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -357,6 +597,15 @@ def login():
     
     return render_template('login.html')
 
+
+@app.route('/professional/login', methods=['GET', 'POST'])
+def professional_login():
+    """Professional login page route"""
+    if request.method == 'POST':
+        return handle_login()
+
+    return render_template('professional_login.html')
+
 def handle_login():
     """Handle login form submission"""
     try:
@@ -410,8 +659,24 @@ def dashboard():
     """Customer dashboard"""
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
-    return f"Welcome to your dashboard, {session['user_name']}!"
+
+    session_user = {
+        'full_name': session.get('user_name', ''),
+        'email': session.get('user_email', '')
+    }
+
+    dashboard_data = get_customer_dashboard_data(session['user_id'], session_user=session_user)
+
+    return render_template(
+        'user_dashboard.html',
+        user=dashboard_data['user'],
+        stats=dashboard_data['stats'],
+        gigs=dashboard_data['gigs'],
+        activities=dashboard_data['activities'],
+        addresses=dashboard_data['addresses'],
+        status_counts=dashboard_data['status_counts'],
+        status_config=STATUS_CONFIG
+    )
 
 @app.route('/professional/dashboard')
 def professional_dashboard():

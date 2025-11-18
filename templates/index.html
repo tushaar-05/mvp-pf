@@ -20,11 +20,11 @@
           <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center">
             <div class="w-4 h-4 rounded-full bg-primary"></div>
           </div>
-<<<<<<< HEAD:template/index.html
+          
           <span class="font-bold text-2xl tracking-tight text-heading">Crewz</span>
-=======
+          
           <span class="font-semibold text-lg tracking-tight text-heading">CREWZ</span>
->>>>>>> b5b2d268cfda3dab3322e1ebacfc9f933448c0ca:templates/index.html
+          
         </div>
         <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium text-textGrey">
           <a href="#services" class="interactive-link">Services</a>
@@ -35,10 +35,10 @@
           <a href="#contact" class="interactive-link">Contact</a>
         </nav>
         <div class="hidden lg:flex items-center space-x-4">
-          <a href="/login" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
+          <a href="{{ url_for('login') }}" class="px-5 py-2 rounded-xl border border-primary text-primary font-semibold">
             Login
           </a>
-          <a href="/get-started" class="px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-glass">
+          <a href="{{ url_for('get_started') }}" class="px-5 py-2 rounded-xl bg-primary text-white font-semibold shadow-glass">
             Get Started
           </a>
         </div>
@@ -57,10 +57,10 @@
           <a href="#about" class="block interactive-link">About</a>
           <a href="#contact" class="block interactive-link">Contact</a>
           <div class="flex space-x-3 pt-2">
-            <a href="/login" class="flex-1 px-5 py-2 rounded-xl border border-primary text-primary font-semibold text-center">
+            <a href="{{ url_for('login') }}" class="flex-1 px-5 py-2 rounded-xl border border-primary text-primary font-semibold text-center">
               Login
             </a>
-            <a href="/get-started" class="flex-1 px-5 py-2 rounded-xl bg-primary text-white font-semibold text-center">
+            <a href="{{ url_for('get_started') }}" class="flex-1 px-5 py-2 rounded-xl bg-primary text-white font-semibold text-center">
               Get Started
             </a>
           </div>
@@ -117,10 +117,14 @@
                 <button class="btn-primary flex-1 px-6 py-4 rounded-2xl text-white font-semibold">
                   Book a Service
                 </button>
-                <button class="btn-secondary flex-1 px-6 py-4 rounded-2xl font-semibold">
+                <a href="{{ url_for('professional_signup') }}" class="btn-secondary flex-1 px-6 py-4 rounded-2xl font-semibold text-center">
                   Become a Worker
-                </button>
+                </a>
               </div>
+              <p class="text-sm text-gray-500 text-center">
+                Already part of the pro network?
+                <a href="{{ url_for('professional_login') }}" class="text-primary font-semibold">Sign in here</a>
+              </p>
             </div>
     
             <!-- Stats -->
@@ -1079,7 +1083,7 @@
           <p class="text-lg text-black/80">
             NAME keeps both customers and workers in sync with real-time operations, verified profiles, and instant payouts.
           </p>
-          <a href="/get-started" class="inline-block px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass">
+          <a href="{{ url_for('get_started') }}" class="inline-block px-8 py-4 rounded-2xl bg-white text-primary font-semibold text-lg shadow-glass">
             Get Started
           </a>
         </div>

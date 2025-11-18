@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceHub | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-active {
+            background-color: rgba(79, 70, 229, 0.05);
+            border-left: 3px solid #4F46E5;
+        }
+        .stat-card, .gig-card, .provider-card, .service-card, .address-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover, .gig-card:hover, .provider-card:hover, .service-card:hover, .address-card:hover {
+            transform: translateY(-2px);
+        }
+        .status-new {
+            background-color: #F8FAFC;
+            color: #475569;
+            border: 1px solid #E2E8F0;
+        }
+        .status-waiting {
+            background-color: #FFFBEB;
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+        .status-assigned {
+            background-color: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+        .status-progress {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+            border: 1px solid #A5B4FC;
+        }
+        .status-completed {
+            background-color: #F0FDF4;
+            color: #15803D;
+            border: 1px solid #86EFAC;
+        }
+        .status-cancelled {
+            background-color: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FCA5A5;
+        }
+        .timeline-item:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 32px;
+            bottom: -24px;
+            width: 1px;
+            background-color: #E5E7EB;
+        }
+        .scroll-container {
+            scrollbar-width: thin;
+            scrollbar-color: #CBD5E1 #F1F5F9;
+        }
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 3px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: #CBD5E1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex h-screen">
+    <!-- Left Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center mr-2">
+                    <span class="text-white font-bold text-sm">SH</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">ServiceHub</span>
+            </div>
+        </div>
+        
+        <nav class="flex-1 p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="{{ url_for('dashboard') }}" class="flex items-center px-4 py-3 sidebar-active text-indigo-700 font-medium rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#gigs" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        My Gigs
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#gig-actions" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Gig
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#activity" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#payments" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Payments
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#settings" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-gray-600 text-sm font-medium">{{ user.initials }}</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-800">{{ user.full_name or 'Your Account' }}</p>
+                    <p class="text-xs text-gray-500">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex-1 overflow-y-auto">
+        <!-- Header Section -->
+        <div class="bg-white border-b border-gray-200 px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Welcome back, {{ user.full_name or 'there' }}!</h1>
+                    <p class="text-gray-600 mt-1">Here’s the latest on your gigs and activity.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search gigs or categories..." 
+                            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64 transition-colors"
+                        >
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span class="text-gray-600 text-sm font-medium">{{ user.initials }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-8 py-6">
+            <!-- Stats Cards -->
+            
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Stats + Active Gigs -->
+    <div class="lg:col-span-2 space-y-8">
+        <!-- Stats Cards (unchanged) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.active_gigs }}</h3>
+                <p class="text-gray-600">Active Gigs</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-600 w-3/4"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.in_progress_services }}</h3>
+                <p class="text-gray-600">In-Progress Services</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 w-2/3"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.completed_gigs }}</h3>
+                <p class="text-gray-600">Completed Gigs</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 w-full"></div>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.pending_approvals }}</h3>
+                <p class="text-gray-600">Pending Approvals</p>
+                <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-amber-500 w-1/4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Gigs Section (unchanged) -->
+        <div id="gigs" class="gig-section bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">Your Active Gigs</h2>
+                <div class="flex space-x-2">
+                    <button class="filter-btn active px-3 py-1 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg" data-filter="all">
+                        All ({{ status_counts['all'] }})
+                    </button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="new">
+                        New ({{ status_counts['new'] }})
+                    </button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="progress">
+                        In Progress ({{ status_counts['in_progress'] }})
+                    </button>
+                    <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="completed">
+                        Completed ({{ status_counts['completed'] }})
+                    </button>
+                </div>
+            </div>
+            <div class="divide-y divide-gray-200">
+                {% if gigs %}
+                    {% for gig in gigs %}
+                    <div class="gig-item p-6" data-status="{{ gig.status }}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <h3 class="text-lg font-medium text-gray-900 mr-3">{{ gig.title }}</h3>
+                                    <span class="{{ gig.status_meta['badge_class'] }} text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                        {{ gig.status_meta['label'] }}
+                                    </span>
+                                </div>
+                                <p class="text-gray-600 mb-3">{{ gig.description or 'No additional details provided.' }}</p>
+                                <div class="flex flex-wrap items-center text-sm text-gray-500 gap-2">
+                                    <span class="mr-4">{{ gig.category or 'General' }}</span>
+                                    <span>Posted: {{ gig.posted_at_relative or gig.posted_at_display }}</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="view-btn px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View</button>
+                                <button class="edit-btn px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="p-6 text-center text-gray-500">
+                        You haven’t posted any gigs yet. <a href="#" class="text-indigo-600 font-medium">Create one now.</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div id="gig-actions" class="px-6 py-4 border-t border-gray-200 flex flex-col md:flex-row gap-3">
+                <a href="{{ url_for('dashboard') }}#gigs" class="flex-1 text-center py-2.5 text-sm font-medium text-indigo-700 border border-indigo-100 rounded-lg hover:bg-indigo-50 transition-colors">View All Gigs</a>
+                <a href="{{ url_for('dashboard') }}#gig-actions" class="flex-1 text-center py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">Create New Gig</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Recent Activity + Expanded Support -->
+    <div class="space-y-8">
+        <!-- Recent Activity -->
+        <div id="activity" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-6">
+                    {% if activities %}
+                        {% for activity in activities %}
+                        <div class="timeline-item relative pl-8">
+                            <div class="absolute left-0 top-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                            </div>
+                            <p class="text-sm text-gray-900 mb-1">
+                                {{ activity.message }}
+                                {% if activity.title %}
+                                    <span class="text-gray-500">— {{ activity.title }}</span>
+                                {% endif %}
+                            </p>
+                            <span class="text-xs text-gray-500">{{ activity.timestamp_display }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-gray-500 text-sm">
+                            No recent activity yet. Once you start posting gigs, updates will appear here.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Overview -->
+        <div id="payments" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-900">Payments & Billing</h2>
+                <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">Secure</span>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Completed gigs</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ stats.completed_gigs }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">Pending approvals</p>
+                        <p class="text-xl font-semibold text-amber-600">{{ stats.pending_approvals }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-3 text-sm text-gray-600">
+                    <div class="flex items-center justify-between">
+                        <span>Next payout window</span>
+                        <span class="font-medium text-gray-900">Within 2 business days</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Preferred method</span>
+                        <span class="font-medium text-gray-900">UPI / Bank transfer</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Recent amount</span>
+                        <span class="font-medium text-gray-900">₹{{ (stats.completed_gigs * 500)|int }}</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('dashboard') }}#payments" class="block text-center py-2.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View payment history</a>
+            </div>
+        </div>
+
+        <!-- Saved Addresses -->
+        <div id="addresses" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-900">Saved Addresses</h2>
+                <button class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Manage</button>
+            </div>
+            <div class="p-6 space-y-4">
+                {% if addresses %}
+                    {% for address in addresses %}
+                    <div class="address-card border border-gray-200 rounded-xl p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900 capitalize">{{ address.label }}</p>
+                                <p class="text-gray-600 text-sm">
+                                    {{ address.address_line1 or 'Not provided' }}
+                                    {% if address.address_line2 %}<br>{{ address.address_line2 }}{% endif %}
+                                </p>
+                                <p class="text-gray-500 text-sm">
+                                    {{ address.city or '' }}{% if address.city and address.state %}, {% endif %}{{ address.state or '' }} {{ address.pincode or '' }}
+                                </p>
+                            </div>
+                            {% if address.is_default %}
+                            <span class="px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">Default</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex space-x-2 text-sm">
+                            <button class="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">Set Default</button>
+                            <button class="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">Edit</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-gray-500 text-sm">
+                        Add your frequently used service locations to access them quickly.
+                    </div>
+                {% endif %}
+                <button class="w-full py-2.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">Add New Address</button>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div id="settings" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Account Settings</h2>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-gray-600">
+                <div class="flex items-center justify-between">
+                    <span>Full name</span>
+                    <span class="font-medium text-gray-900">{{ user.full_name or 'Not provided' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>Email</span>
+                    <span class="font-medium text-gray-900">{{ user.email or 'Not provided' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>Phone</span>
+                    <span class="font-medium text-gray-900">{{ user.phone or 'Add phone' }}</span>
+                </div>
+                <a href="{{ url_for('dashboard') }}#settings" class="block text-center py-2.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">Manage profile</a>
+            </div>
+        </div>
+
+        <!-- Expanded Support Section -->
+        <div id="support" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-3">Need Assistance?</h2>
+                <p class="text-gray-600 mb-6">Our support team is ready to help you with any questions, gig issues, payments, or technical problems. We're just a click away!</p>
+                <div class="space-y-4">
+                    <button class="w-full py-3 text-sm font-semibold text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.444-.983 2.67-2.31 2.946l-.001.001-.002.002-.006.004-.02.01a8.28 8.28 0 01-2.35.337h-.01c-.386 0-.77-.02-1.15-.06-.36-.035-.713-.094-1.055-.175a8.37 8.37 0 01-1.417-.473l-.002-.001-.001-.001C8.93 11.67 8.4 10.445 8.228 9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm5.536-3.014a9.953 9.953 0 011.605 1.013 1 1 0 010 1.57 9.953 9.953 0 01-1.605 1.013 1 1 0 01-.894-1.773 7.96 7.96 0 000-.816 1 1 0 01.894-1.773zM4.536 9.973a1 1 0 01.894-1.773 9.953 9.953 0 011.605-1.013 1 1 0 010 1.57A9.953 9.953 0 015.43 10.97a1 1 0 01-.894-1.773z"></path>
+                        </svg>
+                        View Help Center & FAQs
+                    </button>
+                    <button class="w-full py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Contact Support Team
+                    </button>
+                </div>
+                <div class="mt-6 text-center text-xs text-gray-500">
+                    Response time: Usually within 2 hours
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
