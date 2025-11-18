@@ -51,14 +51,14 @@
                         <a href="#requests" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
                             <i class="fas fa-bell w-5 mr-3"></i>
                             <span>New Requests</span>
-                            <span class="ml-auto bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                            <span class="ml-auto bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ requests|length }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="#active-jobs" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
                             <i class="fas fa-tools w-5 mr-3"></i>
                             <span>Active Jobs</span>
-                            <span class="ml-auto bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                            <span class="ml-auto bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ active_jobs|length }}</span>
                         </a>
                     </li>
                     <li>
@@ -98,10 +98,10 @@
             <div class="p-4 border-t border-border">
                 <div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-medium">
-                        {{ session.user_name[0] if session.user_name else 'U' }}
+                        {{ (user.full_name or 'U')[0] if user.full_name else 'U' }}
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-textPrimary">{{ session.user_name or 'User' }}</p>
+                        <p class="text-sm font-medium text-textPrimary">{{ user.full_name or 'Professional' }}</p>
                         <p class="text-xs text-textSecondary">Professional</p>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                             <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">5</span>
                         </div>
                         <div class="text-right">
-                            <p class="text-sm font-medium text-textPrimary">{{ session.user_name or 'User' }}</p>
+                            <p class="text-sm font-medium text-textPrimary">{{ user.full_name or 'Professional' }}</p>
                             <p class="text-xs text-textSecondary">Professional</p>
                         </div>
                     </div>
@@ -139,55 +139,54 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-textSecondary text-sm">Total Earnings</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">₹12,450</h3>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">₹{{ stats.total_earnings or 0 }}</h3>
                             </div>
                             <div class="bg-primary/10 p-3 rounded-lg">
                                 <i class="fas fa-wallet text-primary text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-success text-sm mt-2">
-                            <i class="fas fa-arrow-up mr-1"></i>
-                            15% from last month
-                        </p>
+                        <p class="text-textSecondary text-sm mt-2">Track your payouts in the Earnings tab</p>
                     </div>
                     
                     <div class="bg-card rounded-xl p-6 border border-border">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-textSecondary text-sm">Active Jobs</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">2</h3>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.active_jobs or active_jobs|length }}</h3>
                             </div>
                             <div class="bg-warning/10 p-3 rounded-lg">
                                 <i class="fas fa-tools text-warning text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">2 pending completion</p>
+                        <p class="text-textSecondary text-sm mt-2">
+                            {{ active_jobs|length }} job{{ '' if active_jobs|length == 1 else 's' }} scheduled or in progress
+                        </p>
                     </div>
                     
                     <div class="bg-card rounded-xl p-6 border border-border">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-textSecondary text-sm">New Requests</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">3</h3>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.new_requests or requests|length }}</h3>
                             </div>
                             <div class="bg-danger/10 p-3 rounded-lg">
                                 <i class="fas fa-bell text-danger text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">Awaiting your response</p>
+                        <p class="text-textSecondary text-sm mt-2">Respond quickly to secure new work</p>
                     </div>
                     
                     <div class="bg-card rounded-xl p-6 border border-border">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-textSecondary text-sm">Rating</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">4.8</h3>
+                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.rating or '-' }}</h3>
                             </div>
                             <div class="bg-success/10 p-3 rounded-lg">
                                 <i class="fas fa-star text-success text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">Based on 24 reviews</p>
+                        <p class="text-textSecondary text-sm mt-2">Based on {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}</p>
                     </div>
                 </div>
                 
@@ -195,6 +194,38 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Left Column -->
                     <div class="space-y-6">
+                        <!-- Services Offered -->
+                        <div class="bg-card rounded-xl p-6 border border-border">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-textPrimary">Services</h2>
+                                <a href="#settings" class="text-primary text-sm font-medium">Manage</a>
+                            </div>
+                            {% if services %}
+                                <div class="space-y-3">
+                                    {% for service in services %}
+                                        <div class="flex justify-between items-start p-3 border border-border rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-textPrimary">{{ service.sub_service or service.primary_service }}</p>
+                                                <p class="text-xs text-textSecondary">
+                                                    {{ service.primary_service }}
+                                                    {% if service.price_type %}
+                                                        • {{ service.price_type|replace('_', ' ')|title }}
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                            {% if service.base_price %}
+                                                <span class="text-sm font-medium text-textPrimary">₹{{ service.base_price }}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="p-4 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
+                                    You have not added any services yet.
+                                </div>
+                            {% endif %}
+                        </div>
+
                         <!-- New Customer Requests -->
                         <div class="bg-card rounded-xl p-6 border border-border">
                             <div class="flex justify-between items-center mb-4">
@@ -203,62 +234,48 @@
                             </div>
                             
                             <div class="space-y-4">
-                                <!-- Request 1 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">AC Repair Service</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Rahul Sharma • 5 km away</p>
-                                            <div class="flex items-center mt-2">
-                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">AC Repair</span>
-                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>2 hours ago</span>
+                                {% if requests %}
+                                    {% for req in requests %}
+                                        <div class="p-4 border border-border rounded-lg">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h3 class="font-medium text-textPrimary">{{ req.title or 'Service Request' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1">
+                                                        {{ req.customer_name or 'Customer' }}
+                                                        {% if req.distance_km %}
+                                                            • {{ req.distance_km }} km away
+                                                        {% endif %}
+                                                    </p>
+                                                    <div class="flex items-center mt-2 text-xs text-textSecondary">
+                                                        {% if req.category %}
+                                                            <span class="bg-background text-textSecondary px-2 py-1 rounded">{{ req.category }}</span>
+                                                        {% endif %}
+                                                        {% if req.requested_at_relative or req.requested_at_display %}
+                                                            <span class="ml-2 flex items-center">
+                                                                <i class="fas fa-clock mr-1"></i>
+                                                                {{ req.requested_at_relative or req.requested_at_display }}
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% if req.budget %}
+                                                    <span class="text-sm font-medium text-textPrimary">₹{{ req.budget }}</span>
+                                                {% endif %}
+                                            </div>
+                                            {% if req.notes %}
+                                                <p class="text-sm text-textSecondary mt-2">{{ req.notes }}</p>
+                                            {% endif %}
+                                            <div class="flex space-x-2 mt-4">
+                                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
+                                                <button class="bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
                                             </div>
                                         </div>
-                                        <span class="text-sm font-medium text-textPrimary">₹800</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
+                                        No new customer requests right now. Keep your availability up to date to get more matches.
                                     </div>
-                                    <div class="flex space-x-2 mt-4">
-                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
-                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Request 2 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">Electrical Wiring</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Priya Patel • 3 km away</p>
-                                            <div class="flex items-center mt-2">
-                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">Electrical</span>
-                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>1 hour ago</span>
-                                            </div>
-                                        </div>
-                                        <span class="text-sm font-medium text-textPrimary">₹1,200</span>
-                                    </div>
-                                    <div class="flex space-x-2 mt-4">
-                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
-                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Request 3 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">Plumbing Fix</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Amit Kumar • 7 km away</p>
-                                            <div class="flex items-center mt-2">
-                                                <span class="bg-background text-textSecondary text-xs px-2 py-1 rounded">Plumbing</span>
-                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>30 mins ago</span>
-                                            </div>
-                                        </div>
-                                        <span class="text-sm font-medium text-textPrimary">₹600</span>
-                                    </div>
-                                    <div class="flex space-x-2 mt-4">
-                                        <button class="accept-btn bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
-                                        <button class="decline-btn bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
-                                    </div>
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         
@@ -270,41 +287,45 @@
                             </div>
                             
                             <div class="space-y-4">
-                                <!-- Job 1 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">Kitchen Plumbing Repair</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Neha Gupta • Scheduled for Today, 2 PM</p>
-                                            <div class="flex items-center mt-2">
-                                                <span class="bg-warning/10 text-warning text-xs px-2 py-1 rounded">In Progress</span>
-                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>4 km away</span>
+                                {% if active_jobs %}
+                                    {% for job in active_jobs %}
+                                        <div class="p-4 border border-border rounded-lg">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h3 class="font-medium text-textPrimary">{{ job.title or 'Job' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1">
+                                                        {{ job.customer_name or 'Customer' }}
+                                                        {% if job.scheduled_for_display %}
+                                                            • {{ job.scheduled_for_display }}
+                                                        {% endif %}
+                                                    </p>
+                                                    <div class="flex items-center mt-2 text-xs text-textSecondary space-x-2">
+                                                        {% if job.status_label %}
+                                                            <span class="{% if job.status_badge_class %}{{ job.status_badge_class }}{% else %}bg-warning/10 text-warning{% endif %} px-2 py-1 rounded">
+                                                                {{ job.status_label }}
+                                                            </span>
+                                                        {% endif %}
+                                                        {% if job.distance_km %}
+                                                            <span><i class="fas fa-map-marker-alt mr-1"></i>{{ job.distance_km }} km away</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% if job.budget %}
+                                                    <span class="text-sm font-medium text-textPrimary">₹{{ job.budget }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="mt-4">
+                                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">
+                                                    Update Status
+                                                </button>
                                             </div>
                                         </div>
-                                        <span class="text-sm font-medium text-textPrimary">₹1,500</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
+                                        You have no active jobs. Accept requests to fill your schedule.
                                     </div>
-                                    <div class="mt-4">
-                                        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">Update Status</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Job 2 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">AC Installation</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Rajesh Mehta • Scheduled for Tomorrow, 10 AM</p>
-                                            <div class="flex items-center mt-2">
-                                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">Scheduled</span>
-                                                <span class="ml-2 text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>6 km away</span>
-                                            </div>
-                                        </div>
-                                        <span class="text-sm font-medium text-textPrimary">₹3,000</span>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">Update Status</button>
-                                    </div>
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -319,57 +340,33 @@
                             </div>
                             
                             <div class="space-y-4">
-                                <!-- Schedule Item 1 -->
-                                <div class="p-4 border-l-4 border-primary bg-background rounded-r-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">Kitchen Plumbing Repair</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Neha Gupta</p>
+                                {% if schedule %}
+                                    {% for slot in schedule %}
+                                        <div class="p-4 border-l-4 border-primary bg-background rounded-r-lg">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h3 class="font-medium text-textPrimary">{{ slot.title or 'Job' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1">{{ slot.customer_name or '' }}</p>
+                                                </div>
+                                                {% if slot.time_display %}
+                                                    <span class="text-sm font-medium text-textPrimary">{{ slot.time_display }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex items-center mt-2 text-xs text-textSecondary space-x-3">
+                                                {% if slot.distance_km %}
+                                                    <span><i class="fas fa-map-marker-alt mr-1"></i>{{ slot.distance_km }} km away</span>
+                                                {% endif %}
+                                                {% if slot.estimated_duration %}
+                                                    <span><i class="fas fa-clock mr-1"></i>{{ slot.estimated_duration }}</span>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        <span class="text-sm font-medium text-textPrimary">2:00 PM</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
+                                        No jobs scheduled for today.
                                     </div>
-                                    <div class="flex items-center mt-2">
-                                        <span class="text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>4 km away</span>
-                                        <span class="ml-3 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>2 hours estimated</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Schedule Item 2 -->
-                                <div class="p-4 border-l-4 border-warning bg-background rounded-r-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-medium text-textPrimary">Electrical Checkup</h3>
-                                            <p class="text-textSecondary text-sm mt-1">Vikram Singh</p>
-                                        </div>
-                                        <span class="text-sm font-medium text-textPrimary">4:30 PM</span>
-                                    </div>
-                                    <div class="flex items-center mt-2">
-                                        <span class="text-xs text-textSecondary"><i class="fas fa-map-marker-alt mr-1"></i>3 km away</span>
-                                        <span class="ml-3 text-xs text-textSecondary"><i class="fas fa-clock mr-1"></i>1 hour estimated</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Mini Calendar -->
-                            <div class="mt-6 pt-4 border-t border-border">
-                                <h3 class="font-medium text-textPrimary mb-3">This Week</h3>
-                                <div class="grid grid-cols-7 gap-1 text-center">
-                                    <div class="text-xs text-textSecondary py-1">Mon</div>
-                                    <div class="text-xs text-textSecondary py-1">Tue</div>
-                                    <div class="text-xs text-textSecondary py-1">Wed</div>
-                                    <div class="text-xs text-textSecondary py-1">Thu</div>
-                                    <div class="text-xs text-textSecondary py-1">Fri</div>
-                                    <div class="text-xs text-textSecondary py-1">Sat</div>
-                                    <div class="text-xs text-textSecondary py-1">Sun</div>
-                                    
-                                    <div class="py-1 text-sm">25</div>
-                                    <div class="py-1 text-sm">26</div>
-                                    <div class="py-1 text-sm">27</div>
-                                    <div class="py-1 text-sm">28</div>
-                                    <div class="py-1 text-sm bg-primary text-white rounded-full">29</div>
-                                    <div class="py-1 text-sm">30</div>
-                                    <div class="py-1 text-sm">1</div>
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         
@@ -381,64 +378,59 @@
                             </div>
                             
                             <div class="flex items-center mb-4">
-                                <div class="text-3xl font-bold text-textPrimary mr-4">4.8</div>
+                                <div class="text-3xl font-bold text-textPrimary mr-4">{{ stats.rating or '-' }}</div>
                                 <div>
                                     <div class="flex items-center">
                                         <div class="flex text-warning">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
+                                            {% set rounded_rating = (stats.rating or 0)|round(0, 'floor') %}
+                                            {% for i in range(rounded_rating|int) %}
+                                                <i class="fas fa-star"></i>
+                                            {% endfor %}
+                                            {% if rounded_rating == 0 %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
                                         </div>
-                                        <span class="ml-2 text-sm text-textSecondary">24 reviews</span>
+                                        <span class="ml-2 text-sm text-textSecondary">
+                                            {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}
+                                        </span>
                                     </div>
-                                    <p class="text-sm text-textSecondary mt-1">Based on last 30 days</p>
+                                    <p class="text-sm text-textSecondary mt-1">Keep delighting customers to grow your rating</p>
                                 </div>
                             </div>
                             
                             <div class="space-y-4">
-                                <!-- Review 1 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium">S</div>
-                                            <div class="ml-2">
-                                                <p class="text-sm font-medium text-textPrimary">Sanjay Verma</p>
-                                                <div class="flex text-warning text-xs">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
+                                {% if reviews %}
+                                    {% for review in reviews %}
+                                        <div class="p-4 border border-border rounded-lg">
+                                            <div class="flex justify-between">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium">
+                                                        {{ (review.reviewer_name or 'U')[0] }}
+                                                    </div>
+                                                    <div class="ml-2">
+                                                        <p class="text-sm font-medium text-textPrimary">{{ review.reviewer_name or 'Customer' }}</p>
+                                                        <div class="flex text-warning text-xs">
+                                                            {% for i in range((review.rating or 0)|int) %}
+                                                                <i class="fas fa-star"></i>
+                                                            {% endfor %}
+                                                            {% if (review.rating or 0)|int == 0 %}
+                                                                <i class="far fa-star"></i>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <span class="text-xs text-textSecondary">
+                                                    {{ review.created_at_relative or review.created_at_display or '' }}
+                                                </span>
                                             </div>
+                                            <p class="text-sm text-textPrimary mt-2">{{ review.comment or 'No review text provided.' }}</p>
                                         </div>
-                                        <span class="text-xs text-textSecondary">2 days ago</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
+                                        You have not received any reviews yet.
                                     </div>
-                                    <p class="text-sm text-textPrimary mt-2">Excellent service! Fixed my AC quickly and explained everything clearly.</p>
-                                </div>
-                                
-                                <!-- Review 2 -->
-                                <div class="p-4 border border-border rounded-lg">
-                                    <div class="flex justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 rounded-full bg-success text-white flex items-center justify-center text-sm font-medium">P</div>
-                                            <div class="ml-2">
-                                                <p class="text-sm font-medium text-textPrimary">Priya Sharma</p>
-                                                <div class="flex text-warning text-xs">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="text-xs text-textSecondary">1 week ago</span>
-                                    </div>
-                                    <p class="text-sm text-textPrimary mt-2">Very professional and punctual. Will definitely hire again!</p>
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         
@@ -449,19 +441,19 @@
                             <div class="space-y-4">
                                 <div class="flex justify-between">
                                     <span class="text-textSecondary">This Week</span>
-                                    <span class="font-medium text-textPrimary">₹4,200</span>
+                                    <span class="font-medium text-textPrimary">₹{{ stats.this_week_earnings or 0 }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-textSecondary">This Month</span>
-                                    <span class="font-medium text-textPrimary">₹12,450</span>
+                                    <span class="font-medium text-textPrimary">₹{{ stats.this_month_earnings or 0 }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-textSecondary">Last Month</span>
-                                    <span class="font-medium text-textPrimary">₹10,800</span>
+                                    <span class="font-medium text-textPrimary">₹{{ stats.last_month_earnings or 0 }}</span>
                                 </div>
                                 <div class="flex justify-between pt-3 border-t border-border">
                                     <span class="text-textSecondary font-medium">Total Earnings</span>
-                                    <span class="font-bold text-textPrimary">₹68,900</span>
+                                    <span class="font-bold text-textPrimary">₹{{ stats.total_earnings or 0 }}</span>
                                 </div>
                             </div>
                             
@@ -476,80 +468,17 @@
     </div>
 
     <script>
-        // Navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Navigation links
             const navLinks = document.querySelectorAll('.nav-link');
-            
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all links
                     navLinks.forEach(l => l.classList.remove('active', 'bg-primary', 'text-white'));
                     navLinks.forEach(l => l.classList.add('text-textPrimary', 'hover:bg-background'));
-                    
-                    // Add active class to clicked link
                     this.classList.remove('text-textPrimary', 'hover:bg-background');
                     this.classList.add('active', 'bg-primary', 'text-white');
-                    
-                    // In a real app, you would load the corresponding content here
-                    // For this demo, we'll just show an alert
-                    const pageName = this.querySelector('span').textContent;
-                    alert(`Loading ${pageName} page...`);
                 });
             });
-            
-            // Job request buttons
-            const acceptButtons = document.querySelectorAll('.accept-btn');
-            const declineButtons = document.querySelectorAll('.decline-btn');
-            
-            acceptButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobCard = this.closest('.p-4.border');
-                    const jobTitle = jobCard.querySelector('h3').textContent;
-                    
-                    // Show confirmation
-                    if (confirm(`Accept job: ${jobTitle}?`)) {
-                        // In a real app, you would send an API request here
-                        jobCard.style.opacity = '0.5';
-                        setTimeout(() => {
-                            jobCard.remove();
-                            // Update counters
-                            updateRequestCount();
-                        }, 500);
-                    }
-                });
-            });
-            
-            declineButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobCard = this.closest('.p-4.border');
-                    const jobTitle = jobCard.querySelector('h3').textContent;
-                    
-                    // Show confirmation
-                    if (confirm(`Decline job: ${jobTitle}?`)) {
-                        // In a real app, you would send an API request here
-                        jobCard.style.opacity = '0.5';
-                        setTimeout(() => {
-                            jobCard.remove();
-                            // Update counters
-                            updateRequestCount();
-                        }, 500);
-                    }
-                });
-            });
-            
-            function updateRequestCount() {
-                const requestCount = document.querySelector('a[href="#requests"] .bg-danger');
-                const currentCount = parseInt(requestCount.textContent);
-                
-                if (currentCount > 1) {
-                    requestCount.textContent = currentCount - 1;
-                } else {
-                    requestCount.remove();
-                }
-            }
         });
     </script>
 </body>

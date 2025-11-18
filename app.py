@@ -447,6 +447,100 @@ def get_customer_dashboard_data(user_id, session_user=None):
 
     return data
 
+
+def get_professional_dashboard_data(user_id, session_user=None):
+    """Fetch dashboard data for a professional"""
+    fallback_full_name = session_user.get('full_name') if session_user else ''
+    fallback_email = session_user.get('email') if session_user else ''
+
+    data = {
+        'user': {
+            'id': user_id,
+            'first_name': '',
+            'last_name': '',
+            'full_name': fallback_full_name,
+            'email': fallback_email,
+            'phone': '',
+        },
+        'profile': {
+            'city': '',
+            'state': '',
+            'pincode': '',
+            'experience_years': '',
+            'skill_level': '',
+            'bio': '',
+        },
+        'stats': {
+            'total_earnings': 0,
+            'active_jobs': 0,
+            'new_requests': 0,
+            'rating': 0.0,
+            'reviews_count': 0,
+        },
+        'services': [],
+        'requests': [],
+        'active_jobs_list': [],
+        'completed_jobs': [],
+        'schedule': [],
+        'reviews': [],
+    }
+
+    conn = get_db_connection()
+    if not conn:
+        return data
+
+    cursor = conn.cursor(dictionary=True)
+    try:
+        # Basic user info
+        cursor.execute(
+            "SELECT id, first_name, last_name, email, phone FROM users WHERE id = %s",
+            (user_id,),
+        )
+        user_row = cursor.fetchone()
+        if user_row:
+            full_name = f"{user_row.get('first_name', '').strip()} {user_row.get('last_name', '').strip()}".strip()
+            user_row['full_name'] = full_name or fallback_full_name
+            data['user'].update(user_row)
+
+        # Professional profile (use * to be tolerant to schema differences)
+        cursor.execute(
+            "SELECT * FROM professional_profiles WHERE user_id = %s",
+            (user_id,),
+        )
+        prof_row = cursor.fetchone() or {}
+        if prof_row:
+            data['profile'].update({
+                'city': prof_row.get('city', ''),
+                'state': prof_row.get('state', ''),
+                'pincode': prof_row.get('pincode', ''),
+                'experience_years': prof_row.get('experience_years', ''),
+                'skill_level': prof_row.get('skill_level', ''),
+                'bio': prof_row.get('bio', ''),
+            })
+
+            # Services for this professional (if profile id is present)
+            prof_id = prof_row.get('id')
+            if prof_id:
+                cursor.execute(
+                    """
+                    SELECT primary_service, sub_service, base_price, price_type
+                    FROM professional_services
+                    WHERE professional_id = %s
+                    """,
+                    (prof_id,),
+                )
+                data['services'] = cursor.fetchall() or []
+
+        # NOTE: Stats, requests, jobs, schedule, and reviews are left as zeros/empty
+        # until a full job/booking model is implemented.
+
+    except mysql.connector.Error as exc:
+        print(f"Professional dashboard data fetch error: {exc}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    return data
 # ========== REGULAR USER ROUTES ==========
 
 @app.route('/')
@@ -683,8 +777,26 @@ def professional_dashboard():
     """Professional dashboard"""
     if 'user_id' not in session or session.get('user_type') != 'professional':
         return redirect(url_for('login'))
-    
-    return f"Welcome to your professional dashboard, {session['user_name']}!"
+
+    session_user = {
+        'full_name': session.get('user_name', ''),
+        'email': session.get('user_email', ''),
+    }
+
+    dashboard_data = get_professional_dashboard_data(session['user_id'], session_user=session_user)
+
+    return render_template(
+        'professional_dashboard.html',
+        user=dashboard_data['user'],
+        profile=dashboard_data['profile'],
+        stats=dashboard_data['stats'],
+        services=dashboard_data['services'],
+        requests=dashboard_data['requests'],
+        active_jobs=dashboard_data['active_jobs_list'],
+        completed_jobs=dashboard_data['completed_jobs'],
+        schedule=dashboard_data['schedule'],
+        reviews=dashboard_data['reviews'],
+    )
 
 @app.route('/logout')
 def logout():
@@ -948,6 +1060,20 @@ def complete_professional_registration(data):
         return jsonify({'success': False, 'message': 'Session expired. Please start over.'})
     
     professional_data = session['professional_data']
+
+    # Pull sections from session with safe defaults
+    personal_data = professional_data.get('personal', {})
+    services_data = professional_data.get('services', {})
+    experience_data = professional_data.get('experience', {})
+    # Documents are optional for now (verification disabled)
+    documents_data = professional_data.get('documents', {})
+
+    # We must at least have basic personal information to create the user
+    if not personal_data.get('full_name') or not personal_data.get('email') or not personal_data.get('phone') or not personal_data.get('password'):
+        return jsonify({
+            'success': False,
+            'message': 'Basic personal details are missing. Please fill the first step again.'
+        })
     
     conn = get_db_connection()
     if not conn:
@@ -960,7 +1086,6 @@ def complete_professional_registration(data):
         conn.start_transaction()
         
         # 1. Create user account
-        personal_data = professional_data['personal']
         password_hash = generate_password_hash(personal_data['password'])
         
         # Split full name into first and last name
@@ -982,31 +1107,44 @@ def complete_professional_registration(data):
         user_id = cursor.lastrowid
         
         # 2. Create professional profile
-        cursor.execute('''
-            INSERT INTO professional_profiles 
-            (user_id, gender, street_address, city, state, pincode, profile_photo, 
-             work_radius_km, bio, experience_years, skill_level)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ''', (
-            user_id,
-            personal_data['gender'],
-            personal_data['street'],
-            personal_data['city'],
-            personal_data['state'],
-            personal_data['pincode'],
-            personal_data.get('profile_photo'),
-            personal_data.get('work_radius', 10),
-            professional_data['experience']['about'],
-            professional_data['experience']['years'],
-            professional_data['services']['skill_level']
-        ))
+        # Make this INSERT compatible with your actual DB schema by checking existing columns.
+        cursor.execute("SHOW COLUMNS FROM professional_profiles")
+        existing_columns = {row[0] for row in cursor.fetchall()}
+
+        profile_data = {
+            'user_id': user_id,
+            'gender': personal_data.get('gender'),
+            'street_address': personal_data.get('street'),
+            'city': personal_data.get('city'),
+            'state': personal_data.get('state'),
+            'pincode': personal_data.get('pincode'),
+            'profile_photo': personal_data.get('profile_photo'),
+            'work_radius_km': personal_data.get('work_radius', 10),
+            'bio': experience_data.get('about', ''),
+            'experience_years': experience_data.get('years'),
+            'skill_level': services_data.get('skill_level'),
+            'is_verified': True,
+            'verification_status': 'approved'
+        }
+
+        # Only keep keys that correspond to real columns
+        insert_columns = [col for col in profile_data.keys() if col in existing_columns]
+        insert_values = [profile_data[col] for col in insert_columns]
+
+        if 'user_id' not in insert_columns:
+            raise Exception("Database schema for professional_profiles is missing required column 'user_id'.")
+
+        columns_sql = ', '.join(insert_columns)
+        placeholders_sql = ', '.join(['%s'] * len(insert_columns))
+        insert_sql = f"INSERT INTO professional_profiles ({columns_sql}) VALUES ({placeholders_sql})"
+
+        cursor.execute(insert_sql, insert_values)
         
         professional_id = cursor.lastrowid
         
         # 3. Add services
-        services_data = professional_data['services']
-        for sub_service in services_data['sub_services']:
-            pricing = professional_data['experience']['pricing'].get(sub_service, {})
+        for sub_service in services_data.get('sub_services', []):
+            pricing = experience_data.get('pricing', {}).get(sub_service, {})
             cursor.execute('''
                 INSERT INTO professional_services 
                 (professional_id, primary_service, sub_service, base_price, price_type)
@@ -1020,14 +1158,14 @@ def complete_professional_registration(data):
             ))
         
         # 4. Add languages
-        for language in services_data['languages']:
+        for language in services_data.get('languages', []):
             cursor.execute('''
                 INSERT INTO professional_languages (professional_id, language)
                 VALUES (%s, %s)
             ''', (professional_id, language))
         
         # 5. Add availability
-        availability_data = professional_data['experience']['availability']
+        availability_data = experience_data.get('availability', {})
         for day, times in availability_data.items():
             cursor.execute('''
                 INSERT INTO professional_availability 
@@ -1036,7 +1174,6 @@ def complete_professional_registration(data):
             ''', (professional_id, day, times['start'], times['end']))
         
         # 6. Add documents
-        documents_data = professional_data['documents']
         document_types = {
             'idFront': 'government_id_front',
             'idBack': 'government_id_back',
@@ -1082,7 +1219,7 @@ def complete_professional_registration(data):
         
         return jsonify({
             'success': True, 
-            'message': 'Registration completed successfully! Your application is under review.',
+            'message': 'Registration completed successfully! Redirecting to your dashboard.',
             'redirect': '/professional/dashboard'
         })
         
@@ -1090,15 +1227,17 @@ def complete_professional_registration(data):
         conn.rollback()
         cursor.close()
         conn.close()
-        print(f"Database error during registration: {e}")
-        return jsonify({'success': False, 'message': 'Database error during registration'})
+        error_message = f"Database error during registration: {str(e)}"
+        print(error_message)
+        return jsonify({'success': False, 'message': error_message})
     
     except Exception as e:
         conn.rollback()
         cursor.close()
         conn.close()
-        print(f"Unexpected error during registration: {e}")
-        return jsonify({'success': False, 'message': 'An unexpected error occurred'})
+        error_message = f"Unexpected error during registration: {str(e)}"
+        print(error_message)
+        return jsonify({'success': False, 'message': error_message})
 
 # ========== API ENDPOINTS ==========
 

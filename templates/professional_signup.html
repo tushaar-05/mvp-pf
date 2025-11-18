@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join as Professional | NAME - Blue-Collar Service Marketplace</title>
@@ -290,15 +291,15 @@
                         <label class="block text-sm font-medium text-textPrimary mb-2">Languages Spoken *</label>
                         <div class="flex flex-wrap gap-3">
                             <label class="flex items-center">
-                                <input type="checkbox" name="languages" value="english" class="sr-only">
+                                <input type="checkbox" name="languages[]" value="english" class="sr-only">
                                 <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">English</div>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" name="languages" value="hindi" class="sr-only">
+                                <input type="checkbox" name="languages[]" value="hindi" class="sr-only">
                                 <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Hindi</div>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" name="languages" value="local" class="sr-only">
+                                <input type="checkbox" name="languages[]" value="local" class="sr-only">
                                 <div class="px-4 py-2 border border-border rounded-lg service-pill cursor-pointer">Local Language</div>
                             </label>
                         </div>
@@ -359,8 +360,8 @@
             <!-- Step 4: Documents Upload -->
             <div id="step-4" class="step-content hidden">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-textPrimary">Verification Documents</h2>
-                    <p class="text-textSecondary mt-2">We verify your identity to ensure user safety.</p>
+                    <h2 class="text-2xl font-bold text-textPrimary">Upload Documents</h2>
+                    <p class="text-textSecondary mt-2">Share your ID and address proof so we can complete your profile.</p>
                 </div>
 
                 <form id="documents-form" class="space-y-8">
@@ -496,20 +497,6 @@
         </div>
     </main>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div class="bg-card rounded-2xl p-8 max-w-md w-full mx-4 text-center">
-            <div class="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-            <h3 class="text-xl font-bold text-textPrimary mb-2">Application Submitted!</h3>
-            <p class="text-textSecondary mb-6">Your application has been submitted. Verification will take approximately 24-48 hours.</p>
-            <button id="closeModal" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors w-full">Close</button>
-        </div>
-    </div>
-
     <script>
         // Service data
         const serviceData = {
@@ -585,6 +572,9 @@
             experience: {},
             documents: {}
         };
+        const apiEndpoint = '/api/professional/signup';
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -596,10 +586,15 @@
 
         function initializeEventListeners() {
             // Step navigation
-            document.getElementById('next-to-2').addEventListener('click', () => validateAndNavigate(1, 2));
-            document.getElementById('next-to-3').addEventListener('click', () => validateAndNavigate(2, 3));
-            document.getElementById('next-to-4').addEventListener('click', () => validateAndNavigate(3, 4));
-            document.getElementById('next-to-5').addEventListener('click', () => validateAndNavigate(4, 5));
+            const nextTo2Button = document.getElementById('next-to-2');
+            const nextTo3Button = document.getElementById('next-to-3');
+            const nextTo4Button = document.getElementById('next-to-4');
+            const nextTo5Button = document.getElementById('next-to-5');
+
+            nextTo2Button.addEventListener('click', () => validateAndNavigate(1, 2, nextTo2Button));
+            nextTo3Button.addEventListener('click', () => validateAndNavigate(2, 3, nextTo3Button));
+            nextTo4Button.addEventListener('click', () => validateAndNavigate(3, 4, nextTo4Button));
+            nextTo5Button.addEventListener('click', () => validateAndNavigate(4, 5, nextTo5Button));
             
             document.getElementById('back-to-1').addEventListener('click', () => navigateToStep(1));
             document.getElementById('back-to-2').addEventListener('click', () => navigateToStep(2));
@@ -612,7 +607,6 @@
             document.getElementById('about').addEventListener('input', updateAboutCount);
             document.getElementById('termsAgreement').addEventListener('change', toggleSubmitButton);
             document.getElementById('submit-application').addEventListener('click', submitApplication);
-            document.getElementById('closeModal').addEventListener('click', closeSuccessModal);
 
             // File upload previews
             initializeFileUploads();
@@ -677,7 +671,7 @@
             subServices.forEach(service => {
                 html += `
                     <label class="flex items-center">
-                        <input type="checkbox" name="subServices" value="${service}" class="sr-only">
+                        <input type="checkbox" name="subServices[]" value="${service}" class="sr-only">
                         <div class="w-full px-4 py-3 border border-border rounded-lg service-pill cursor-pointer text-textPrimary hover:border-primary transition-colors">
                             ${service}
                         </div>
@@ -721,8 +715,8 @@
 
         function initializeLanguageSelection() {
             document.addEventListener('click', function(e) {
-                if (e.target.closest('input[name="languages"]')) {
-                    const checkbox = e.target.closest('input[name="languages"]');
+                if (e.target.closest('input[name="languages[]"]')) {
+                    const checkbox = e.target.closest('input[name="languages[]"]');
                     const pill = checkbox.parentNode.querySelector('div');
                     
                     if (checkbox.checked) {
@@ -750,7 +744,7 @@
 
         function updatePricingFields() {
             const container = document.getElementById('pricingContainer');
-            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices[]"]:checked'))
                 .map(cb => cb.value);
             
             if (selectedSubServices.length === 0) {
@@ -982,7 +976,7 @@
             }
         }
 
-        function validateAndNavigate(fromStep, toStep) {
+        async function validateAndNavigate(fromStep, toStep, button) {
             // Basic validation before navigating
             let isValid = true;
             
@@ -1001,9 +995,20 @@
                     break;
             }
             
-            if (isValid) {
+            if (!isValid) {
+                return;
+            }
+
+            setButtonLoading(button, true, 'Saving...');
+
+            try {
+                await submitStepData(fromStep);
                 saveStepData(fromStep);
                 navigateToStep(toStep);
+            } catch (error) {
+                alert(error.message || 'Unable to save this step. Please try again.');
+            } finally {
+                setButtonLoading(button, false);
             }
         }
 
@@ -1066,7 +1071,7 @@
                 return false;
             }
             
-            const subServices = document.querySelectorAll('input[name="subServices"]:checked');
+            const subServices = document.querySelectorAll('input[name="subServices[]"]:checked');
             if (subServices.length === 0) {
                 alert('Please select at least one sub-service');
                 return false;
@@ -1078,7 +1083,7 @@
                 return false;
             }
             
-            const languages = document.querySelectorAll('input[name="languages"]:checked');
+            const languages = document.querySelectorAll('input[name="languages[]"]:checked');
             if (languages.length === 0) {
                 alert('Please select at least one language');
                 return false;
@@ -1101,7 +1106,7 @@
             }
             
             // Check if pricing is set for all selected services
-            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+            const selectedSubServices = Array.from(document.querySelectorAll('input[name="subServices[]"]:checked'))
                 .map(cb => cb.value);
             
             for (let service of selectedSubServices) {
@@ -1161,10 +1166,10 @@
                 case 2:
                     formData.services = {
                         primaryService: document.getElementById('primaryService').value,
-                        subServices: Array.from(document.querySelectorAll('input[name="subServices"]:checked'))
+                        subServices: Array.from(document.querySelectorAll('input[name="subServices[]"]:checked'))
                             .map(cb => cb.value),
                         skillLevel: document.querySelector('input[name="skillLevel"]:checked')?.value,
-                        languages: Array.from(document.querySelectorAll('input[name="languages"]:checked'))
+                        languages: Array.from(document.querySelectorAll('input[name="languages[]"]:checked'))
                             .map(cb => cb.value)
                     };
                     break;
@@ -1321,6 +1326,69 @@
             container.innerHTML = html;
         }
 
+        function setButtonLoading(button, isLoading, loadingText = 'Saving...') {
+            if (!button) {
+                return;
+            }
+
+            if (isLoading) {
+                if (!button.dataset.originalText) {
+                    button.dataset.originalText = button.textContent;
+                }
+                button.disabled = true;
+                button.textContent = loadingText;
+            } else {
+                button.disabled = false;
+                if (button.dataset.originalText) {
+                    button.textContent = button.dataset.originalText;
+                    delete button.dataset.originalText;
+                }
+            }
+        }
+
+        async function submitStepData(step) {
+            let formElement = null;
+            if (step === 1) {
+                formElement = document.getElementById('personal-form');
+            } else if (step === 2) {
+                formElement = document.getElementById('services-form');
+            } else if (step === 3) {
+                formElement = document.getElementById('experience-form');
+            } else if (step === 4) {
+                formElement = document.getElementById('documents-form');
+            }
+
+            const payload = formElement ? new FormData(formElement) : new FormData();
+            const stepValue = step === 'complete' ? 'complete' : step.toString();
+            payload.set('step', stepValue);
+
+            if (step === 1) {
+                payload.delete('confirmPassword');
+            }
+
+            if (csrfToken && !payload.has('csrf_token')) {
+                payload.append('csrf_token', csrfToken);
+            }
+
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                body: payload
+            });
+
+            let result;
+            try {
+                result = await response.json();
+            } catch (error) {
+                throw new Error('Unexpected response from the server.');
+            }
+
+            if (!response.ok || !result.success) {
+                throw new Error(result?.message || 'Unable to save data right now.');
+            }
+
+            return result;
+        }
+
         function toggleSubmitButton() {
             const submitButton = document.getElementById('submit-application');
             const termsChecked = document.getElementById('termsAgreement').checked;
@@ -1336,41 +1404,25 @@
             }
         }
 
-        function submitApplication() {
-            // Here you would typically send the data to your backend
-            // For now, we'll just show the success modal
-            
-            // Simulate API call
+        async function submitApplication(event) {
+            event?.preventDefault();
+
+            if (!document.getElementById('termsAgreement').checked) {
+                alert('Please agree to the terms and conditions before submitting.');
+                return;
+            }
+
             const submitButton = document.getElementById('submit-application');
-            submitButton.disabled = true;
-            submitButton.innerHTML = 'Submitting...';
-            
-            setTimeout(() => {
-                showSuccessModal();
-                submitButton.disabled = false;
-                submitButton.innerHTML = 'Submit Application';
-            }, 1500);
-        }
+            setButtonLoading(submitButton, true, 'Submitting...');
 
-        function showSuccessModal() {
-            const modal = document.getElementById('successModal');
-            modal.classList.remove('hidden');
-            
-            // Animate modal appearance
-            gsap.from(modal.querySelector('.bg-card'), {
-                duration: 0.5,
-                scale: 0.8,
-                opacity: 0,
-                ease: "back.out(1.7)"
-            });
-        }
-
-        function closeSuccessModal() {
-            const modal = document.getElementById('successModal');
-            modal.classList.add('hidden');
-            
-            // Redirect to home or login page
-            window.location.href = '/';
+            try {
+                const result = await submitStepData('complete');
+                const redirectUrl = result.redirect || '/professional/dashboard';
+                window.location.href = redirectUrl;
+            } catch (error) {
+                alert(error.message || 'Unable to complete registration. Please try again.');
+                setButtonLoading(submitButton, false);
+            }
         }
     </script>
 </body>
