@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceHub | Account Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-active {
+            background-color: rgba(79, 70, 229, 0.08);
+            border-left: 3px solid #4F46E5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex h-screen">
+    {% set initials = ((user.first_name or '')[:1] + (user.last_name or '')[:1]).upper() %}
+    <aside class="w-64 bg-white border-r border-gray-200 fixed inset-y-0">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center mr-2">
+                    <span class="text-white font-bold text-sm">SH</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">ServiceHub</span>
+            </div>
+        </div>
+        <nav class="p-4 space-y-1">
+            <a href="{{ url_for('dashboard') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-9 9l6 6m-6-6V5a2 2 0 012-2h2a2 2 0 012 2v14"></path>
+                </svg>
+                Dashboard
+            </a>
+            <a href="{{ url_for('user_settings') }}" class="flex items-center px-4 py-3 rounded-lg text-indigo-700 font-semibold sidebar-active">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Settings
+            </a>
+            <a href="{{ url_for('logout') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 11-4 0v-1m0-8V7a2 2 0 114 0v1"></path>
+                </svg>
+                Sign out
+            </a>
+        </nav>
+        <div class="p-4 border-t border-gray-200 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-semibold">
+                {{ initials if initials else (user.full_name or 'U')[:2].upper() }}
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-gray-900">{{ user.full_name or 'Your account' }}</p>
+                <p class="text-xs text-gray-500">{{ user.email }}</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 ml-64 overflow-y-auto">
+        <header class="bg-white border-b border-gray-200 px-10 py-6">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide font-semibold">Account</p>
+                    <h1 class="text-3xl font-bold text-gray-900">Settings & Preferences</h1>
+                    <p class="text-gray-600 mt-1">Manage your personal details, security, and communication preferences from one place.</p>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+                    Back to Dashboard
+                </a>
+            </div>
+        </header>
+
+        <section class="px-10 py-8 space-y-8">
+            {% if success_message %}
+            <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            <span>{{ success_message }}</span>
+            </div>
+            {% endif %}
+            {% if error_message %}
+            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.455 19h13.09c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.723 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <span>{{ error_message }}</span>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <div class="xl:col-span-2 space-y-8">
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Profile</p>
+                                <h2 class="text-xl font-semibold text-gray-900">Personal information</h2>
+                                <p class="text-sm text-gray-500 mt-1">These details are visible to professionals when you post a gig.</p>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{ url_for('update_user_profile') }}" class="px-6 py-6 space-y-4">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700">First name</span>
+                                    <input type="text" name="first_name" value="{{ user.first_name }}" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g. Priya" required>
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700">Last name</span>
+                                    <input type="text" name="last_name" value="{{ user.last_name }}" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g. Sharma" required>
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700">Email address</span>
+                                    <input type="email" name="email" value="{{ user.email }}" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="name@email.com" required>
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700">Mobile number</span>
+                                    <input type="tel" name="phone" value="{{ user.phone }}" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="+91 9876543210" required>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-end gap-3 pt-2">
+                                <a href="{{ url_for('dashboard') }}" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">Cancel</a>
+                                <button type="submit" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Security</p>
+                                <h2 class="text-xl font-semibold text-gray-900">Password & authentication</h2>
+                                <p class="text-sm text-gray-500 mt-1">Use a strong password that you don’t reuse elsewhere.</p>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{ url_for('update_user_password') }}" class="px-6 py-6 space-y-4">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                <label class="block md:col-span-1">
+                                    <span class="text-sm font-medium text-gray-700">Current password</span>
+                                    <input type="password" name="current_password" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                </label>
+                                <label class="block md:col-span-1">
+                                    <span class="text-sm font-medium text-gray-700">New password</span>
+                                    <input type="password" name="new_password" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required minlength="8">
+                                </label>
+                                <label class="block md:col-span-1">
+                                    <span class="text-sm font-medium text-gray-700">Confirm password</span>
+                                    <input type="password" name="confirm_password" class="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required minlength="8">
+                                </label>
+                            </div>
+                            <div class="rounded-lg bg-indigo-50 text-indigo-800 text-sm px-4 py-3 border border-indigo-100">
+                                Passwords must be at least 8 characters and include letters and numbers.
+                            </div>
+                            <div class="flex items-center justify-end gap-3 pt-2">
+                                <button type="submit" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Update password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="px-6 py-5 border-b border-gray-100">
+                            <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Summary</p>
+                            <h2 class="text-xl font-semibold text-gray-900">Account overview</h2>
+                        </div>
+                        <div class="px-6 py-5 space-y-4 text-sm text-gray-600">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500">Full name</span>
+                                <span class="font-medium text-gray-900 text-right">{{ user.full_name or 'Not provided' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500">Email</span>
+                                <span class="font-medium text-gray-900 text-right">{{ user.email }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500">Mobile</span>
+                                <span class="font-medium text-gray-900 text-right">{{ user.phone or 'Add number' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500">Joined</span>
+                                <span class="font-medium text-gray-900 text-right">{{ user.created_at_display if user.created_at_display else '—' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm" id="addresses">
+                        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Addresses</p>
+                                <h2 class="text-xl font-semibold text-gray-900">Saved service locations</h2>
+                                <p class="text-sm text-gray-500 mt-1">Defaults speed up booking and scheduling.</p>
+                            </div>
+                            <button type="button" id="toggle-address-form" class="px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+                                Add
+                            </button>
+                        </div>
+                        <div class="px-6 py-5 space-y-5">
+                            <div id="new-address-form" class="hidden border border-dashed border-indigo-200 rounded-xl p-4 bg-indigo-50/40">
+                                <form method="POST" action="{{ url_for('create_customer_address') }}" class="space-y-4">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <label class="block text-sm">
+                                            <span class="font-medium text-gray-700">Label</span>
+                                            <select name="label" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                                                <option value="home">Home</option>
+                                                <option value="work">Work</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </label>
+                                        <label class="block text-sm">
+                                            <span class="font-medium text-gray-700">Postal code</span>
+                                            <input type="text" name="pincode" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                        </label>
+                                    </div>
+                                    <label class="block text-sm">
+                                        <span class="font-medium text-gray-700">Address line 1</span>
+                                        <input type="text" name="address_line1" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                    </label>
+                                    <label class="block text-sm">
+                                        <span class="font-medium text-gray-700">Address line 2 (optional)</span>
+                                        <input type="text" name="address_line2" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                                    </label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <label class="block text-sm">
+                                            <span class="font-medium text-gray-700">City</span>
+                                            <input type="text" name="city" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                        </label>
+                                        <label class="block text-sm">
+                                            <span class="font-medium text-gray-700">State</span>
+                                            <input type="text" name="state" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                        </label>
+                                    </div>
+                                    <label class="inline-flex items-center gap-2 text-sm text-gray-700">
+                                        <input type="checkbox" name="is_default" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                        <span>Make this my default address</span>
+                                    </label>
+                                    <div class="flex items-center justify-end gap-3 pt-2">
+                                        <button type="button" id="cancel-address-form" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">Cancel</button>
+                                        <button type="submit" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Save address</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {% if addresses %}
+                                <div class="space-y-4">
+                                {% for address in addresses %}
+                                    <div class="border border-gray-200 rounded-xl p-4" id="address-card-{{ address.id }}">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <div>
+                                                <p class="text-sm font-semibold text-gray-900 capitalize">{{ address.label }}</p>
+                                                {% if address.is_default %}
+                                                <span class="text-xs text-gray-500">Primary address</span>
+                                                {% endif %}
+                                            </div>
+                                            {% if address.is_default %}
+                                                <span class="px-2 py-0.5 text-xs font-semibold bg-green-50 text-green-700 rounded-full">Default</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-sm text-gray-600">
+                                            {{ address.address_line1 or 'No address line' }}{% if address.address_line2 %}, {{ address.address_line2 }}{% endif %}
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            {{ address.city or '' }}{% if address.city and address.state %}, {% endif %}{{ address.state or '' }} {{ address.pincode or '' }}
+                                        </p>
+                                        <div class="flex flex-wrap items-center gap-3 text-sm mt-4">
+                                            <form method="POST" action="{{ url_for('update_customer_address', address_id=address.id) }}">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="action" value="default">
+                                                <button type="submit" class="text-indigo-700 font-medium hover:underline disabled:text-gray-400" {% if address.is_default %}disabled{% endif %}>
+                                                    Set default
+                                                </button>
+                                            </form>
+                                            <button type="button" class="text-indigo-700 font-medium hover:underline" data-address-toggle="{{ address.id }}">
+                                                Edit
+                                            </button>
+                                            <form method="POST" action="{{ url_for('update_customer_address', address_id=address.id) }}" onsubmit="return confirm('Remove this address?');">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="action" value="delete">
+                                                <button type="submit" class="text-rose-600 font-medium hover:underline">Delete</button>
+                                            </form>
+                                        </div>
+                                        <div class="mt-4 hidden" data-address-form="{{ address.id }}">
+                                            <form method="POST" action="{{ url_for('update_customer_address', address_id=address.id) }}" class="space-y-3 bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="action" value="update">
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                    <label class="block text-sm">
+                                                        <span class="font-medium text-gray-700">Label</span>
+                                                        <select name="label" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                                                            <option value="home" {% if address.label == 'home' %}selected{% endif %}>Home</option>
+                                                            <option value="work" {% if address.label == 'work' %}selected{% endif %}>Work</option>
+                                                            <option value="other" {% if address.label == 'other' %}selected{% endif %}>Other</option>
+                                                        </select>
+                                                    </label>
+                                                    <label class="block text-sm">
+                                                        <span class="font-medium text-gray-700">Postal code</span>
+                                                        <input type="text" name="pincode" value="{{ address.pincode }}" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                                    </label>
+                                                </div>
+                                                <label class="block text-sm">
+                                                    <span class="font-medium text-gray-700">Address line 1</span>
+                                                    <input type="text" name="address_line1" value="{{ address.address_line1 }}" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                                </label>
+                                                <label class="block text-sm">
+                                                    <span class="font-medium text-gray-700">Address line 2</span>
+                                                    <input type="text" name="address_line2" value="{{ address.address_line2 }}" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                                                </label>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                    <label class="block text-sm">
+                                                        <span class="font-medium text-gray-700">City</span>
+                                                        <input type="text" name="city" value="{{ address.city }}" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                                    </label>
+                                                    <label class="block text-sm">
+                                                        <span class="font-medium text-gray-700">State</span>
+                                                        <input type="text" name="state" value="{{ address.state }}" class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-indigo-500" required>
+                                                    </label>
+                                                </div>
+                                                <label class="inline-flex items-center gap-2 text-sm text-gray-700">
+                                                    <input type="checkbox" name="is_default" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" {% if address.is_default %}checked{% endif %}>
+                                                    <span>Set as default</span>
+                                                </label>
+                                                <div class="flex items-center justify-end gap-3">
+                                                    <button type="button" class="text-sm font-medium text-gray-600 hover:underline" data-address-toggle="{{ address.id }}">Cancel</button>
+                                                    <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-sm text-gray-500 text-center py-6">
+                                    You haven’t saved any addresses yet. Add your home or work location to schedule services faster.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="px-6 py-5 border-b border-gray-100">
+                            <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Preferences</p>
+                            <h2 class="text-xl font-semibold text-gray-900">Notifications</h2>
+                        </div>
+                        <div class="px-6 py-5 space-y-4 text-sm text-gray-600">
+                            <label class="flex items-center justify-between py-3">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Booking updates</p>
+                                    <p class="text-gray-500 text-sm">Gig confirmations, reminders, and schedule changes.</p>
+                                </div>
+                                <input type="checkbox" checked class="h-5 w-10 rounded-full bg-indigo-600 appearance-none cursor-pointer border border-indigo-600">
+                            </label>
+                            <label class="flex items-center justify-between py-3 border-t border-gray-100">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Promotions</p>
+                                    <p class="text-gray-500 text-sm">Discounts, seasonal offers, and feature updates.</p>
+                                </div>
+                                <input type="checkbox" class="h-5 w-10 rounded-full bg-gray-200 appearance-none cursor-pointer border border-gray-300">
+                            </label>
+                            <label class="flex items-center justify-between py-3 border-t border-gray-100">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Service reminders</p>
+                                    <p class="text-gray-500 text-sm">Periodic reminders to renew preferred services.</p>
+                                </div>
+                                <input type="checkbox" checked class="h-5 w-10 rounded-full bg-indigo-600 appearance-none cursor-pointer border border-indigo-600">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        const toggleAddressFormButton = document.getElementById('toggle-address-form');
+        const cancelAddressFormButton = document.getElementById('cancel-address-form');
+        const newAddressForm = document.getElementById('new-address-form');
+
+        function toggleNewAddressForm(show) {
+            if (!newAddressForm) return;
+            if (show) {
+                newAddressForm.classList.remove('hidden');
+            } else {
+                newAddressForm.classList.add('hidden');
+            }
+        }
+
+        if (toggleAddressFormButton) {
+            toggleAddressFormButton.addEventListener('click', () => {
+                toggleNewAddressForm(newAddressForm.classList.contains('hidden'));
+            });
+        }
+
+        if (cancelAddressFormButton) {
+            cancelAddressFormButton.addEventListener('click', () => toggleNewAddressForm(false));
+        }
+
+        document.querySelectorAll('[data-address-toggle]').forEach(button => {
+            const targetId = button.getAttribute('data-address-toggle');
+            const form = document.querySelector(`[data-address-form="${targetId}"]`);
+            if (!form) return;
+            button.addEventListener('click', () => {
+                form.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+

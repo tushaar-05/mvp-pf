@@ -249,6 +249,14 @@ def validate_phone(phone):
     
     return True, "Phone number is valid"
 
+
+def normalize_address_label(label):
+    """Normalize address label to allowed values"""
+    allowed_labels = {'home', 'work', 'other'}
+    normalized = (label or 'home').strip().lower()
+    return normalized if normalized in allowed_labels else 'other'
+
+
 def allowed_file(filename):
     """Check if file type is allowed"""
     return '.' in filename and \
@@ -444,6 +452,59 @@ def get_customer_dashboard_data(user_id, session_user=None):
             data['user'].get('last_name'),
             fallback_name=data['user'].get('full_name', '')
         )
+
+    return data
+
+
+def get_user_settings_data(user_id, session_user=None):
+    """Fetch data required for the user settings page"""
+    fallback_full_name = session_user.get('full_name') if session_user else ''
+    fallback_email = session_user.get('email') if session_user else ''
+
+    data = {
+        'user': {
+            'id': user_id,
+            'first_name': '',
+            'last_name': '',
+            'full_name': fallback_full_name,
+            'email': fallback_email,
+            'phone': '',
+        },
+        'addresses': []
+    }
+
+    conn = get_db_connection()
+    if not conn:
+        return data
+
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute(
+            "SELECT id, first_name, last_name, email, phone, created_at FROM users WHERE id = %s",
+            (user_id,)
+        )
+        user_row = cursor.fetchone()
+        if user_row:
+            full_name = f"{user_row.get('first_name', '').strip()} {user_row.get('last_name', '').strip()}".strip()
+            user_row['full_name'] = full_name or fallback_full_name
+            user_row['created_at_display'] = format_datetime_display(user_row.get('created_at'))
+            data['user'].update(user_row)
+
+        cursor.execute("""
+            SELECT id, label, address_line1, address_line2, city, state, pincode, is_default, created_at
+            FROM customer_addresses
+            WHERE user_id = %s
+            ORDER BY is_default DESC, created_at DESC
+        """, (user_id,))
+        data['addresses'] = cursor.fetchall() or []
+    except mysql.connector.Error as exc:
+        print(f"Settings data fetch error: {exc}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    if not data['user'].get('full_name'):
+        data['user']['full_name'] = fallback_full_name
 
     return data
 
@@ -771,6 +832,397 @@ def dashboard():
         status_counts=dashboard_data['status_counts'],
         status_config=STATUS_CONFIG
     )
+
+
+@app.route('/settings')
+def user_settings():
+    """User settings page"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    session_user = {
+        'full_name': session.get('user_name', ''),
+        'email': session.get('user_email', '')
+    }
+
+    settings_data = get_user_settings_data(session['user_id'], session_user=session_user)
+
+    return render_template(
+        'user_settings.html',
+        user=settings_data['user'],
+        addresses=settings_data['addresses'],
+        success_message=request.args.get('success'),
+        error_message=request.args.get('error')
+    )
+
+
+@app.route('/settings/profile', methods=['POST'])
+def update_user_profile():
+    """Handle profile updates from settings page"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    first_name = request.form.get('first_name', '').strip()
+    last_name = request.form.get('last_name', '').strip()
+    email = request.form.get('email', '').strip().lower()
+    phone = request.form.get('phone', '').strip()
+
+    if not all([first_name, last_name, email, phone]):
+        return redirect(url_for('user_settings', error='All profile fields are required.'))
+
+    # Basic validation
+    if not re.match(r"^[a-zA-Z\s\-']+$", first_name):
+        return redirect(url_for('user_settings', error='Please enter a valid first name.'))
+    if not re.match(r"^[a-zA-Z\s\-']+$", last_name):
+        return redirect(url_for('user_settings', error='Please enter a valid last name.'))
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+        return redirect(url_for('user_settings', error='Please enter a valid email address.'))
+
+    phone_valid, phone_message = validate_phone(phone)
+    if not phone_valid:
+        return redirect(url_for('user_settings', error=phone_message))
+
+    conn = get_db_connection()
+    if not conn:
+        return redirect(url_for('user_settings', error='Unable to update profile right now. Please try again later.'))
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT id FROM users WHERE email = %s AND id != %s",
+            (email, session['user_id'])
+        )
+        existing = cursor.fetchone()
+        if existing:
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', error='Another account already uses this email.'))
+
+        cursor.execute("""
+            UPDATE users
+            SET first_name = %s,
+                last_name = %s,
+                email = %s,
+                phone = %s,
+                updated_at = NOW()
+            WHERE id = %s
+        """, (first_name, last_name, email, phone, session['user_id']))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        session['user_name'] = f"{first_name} {last_name}".strip()
+        session['user_email'] = email
+
+        return redirect(url_for('user_settings', success='Profile updated successfully.'))
+
+    except mysql.connector.Error as exc:
+        print(f"Profile update error: {exc}")
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
+        return redirect(url_for('user_settings', error='Unable to save changes due to a database error.'))
+
+
+@app.route('/settings/password', methods=['POST'])
+def update_user_password():
+    """Handle password updates from settings page"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    current_password = request.form.get('current_password', '')
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if not all([current_password, new_password, confirm_password]):
+        return redirect(url_for('user_settings', error='Please fill out all password fields.'))
+
+    if new_password != confirm_password:
+        return redirect(url_for('user_settings', error='New passwords do not match.'))
+
+    valid_password, password_message = validate_password(new_password)
+    if not valid_password:
+        return redirect(url_for('user_settings', error=password_message))
+
+    conn = get_db_connection()
+    if not conn:
+        return redirect(url_for('user_settings', error='Unable to update password right now. Please try again later.'))
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT password_hash FROM users WHERE id = %s", (session['user_id'],))
+        user_row = cursor.fetchone()
+
+        if not user_row or not check_password_hash(user_row['password_hash'], current_password):
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', error='Current password is incorrect.'))
+
+        new_password_hash = generate_password_hash(new_password)
+        cursor.execute(
+            "UPDATE users SET password_hash = %s, updated_at = NOW() WHERE id = %s",
+            (new_password_hash, session['user_id'])
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for('user_settings', success='Password updated successfully.'))
+
+    except mysql.connector.Error as exc:
+        print(f"Password update error: {exc}")
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
+        return redirect(url_for('user_settings', error='Unable to change password due to a database error.'))
+
+
+@app.route('/settings/address', methods=['POST'])
+def create_customer_address():
+    """Create a new saved address"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    label = normalize_address_label(request.form.get('label', 'home'))
+    address_line1 = request.form.get('address_line1', '').strip()
+    address_line2 = request.form.get('address_line2', '').strip()
+    city = request.form.get('city', '').strip()
+    state = request.form.get('state', '').strip()
+    pincode = request.form.get('pincode', '').strip()
+    is_default = request.form.get('is_default') == 'on'
+
+    if not all([address_line1, city, state, pincode]):
+        return redirect(url_for('user_settings', error='Please complete all required address fields.'))
+
+    if len(pincode) < 4 or len(pincode) > 12:
+        return redirect(url_for('user_settings', error='Please enter a valid postal code.'))
+
+    conn = get_db_connection()
+    if not conn:
+        return redirect(url_for('user_settings', error='Unable to save address right now. Please try later.'))
+
+    try:
+        cursor = conn.cursor()
+        if is_default:
+            cursor.execute(
+                "UPDATE customer_addresses SET is_default = FALSE WHERE user_id = %s",
+                (session['user_id'],)
+            )
+
+        cursor.execute(
+            """
+            INSERT INTO customer_addresses (
+                user_id, label, address_line1, address_line2, city, state, pincode, is_default
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                session['user_id'],
+                label,
+                address_line1,
+                address_line2,
+                city,
+                state,
+                pincode,
+                is_default
+            )
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('user_settings', success='Address added successfully.'))
+    except mysql.connector.Error as exc:
+        print(f"Address creation error: {exc}")
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
+        return redirect(url_for('user_settings', error='Unable to add address due to a database error.'))
+
+
+@app.route('/settings/address/<int:address_id>', methods=['POST'])
+def update_customer_address(address_id):
+    """Update, delete, or set default for an address"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    action = request.form.get('action', 'update')
+    conn = get_db_connection()
+    if not conn:
+        return redirect(url_for('user_settings', error='Unable to update address right now. Please try later.'))
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        if action == 'delete':
+            cursor.execute(
+                "DELETE FROM customer_addresses WHERE id = %s AND user_id = %s",
+                (address_id, session['user_id'])
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', success='Address removed successfully.'))
+
+        if action == 'default':
+            cursor.execute(
+                "SELECT id FROM customer_addresses WHERE id = %s AND user_id = %s",
+                (address_id, session['user_id'])
+            )
+            address = cursor.fetchone()
+            if not address:
+                cursor.close()
+                conn.close()
+                return redirect(url_for('user_settings', error='Address not found.'))
+
+            cursor.execute(
+                "UPDATE customer_addresses SET is_default = FALSE WHERE user_id = %s",
+                (session['user_id'],)
+            )
+            cursor.execute(
+                "UPDATE customer_addresses SET is_default = TRUE WHERE id = %s AND user_id = %s",
+                (address_id, session['user_id'])
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', success='Default address updated.'))
+
+        # Update flow
+        label = normalize_address_label(request.form.get('label', 'home'))
+        address_line1 = request.form.get('address_line1', '').strip()
+        address_line2 = request.form.get('address_line2', '').strip()
+        city = request.form.get('city', '').strip()
+        state = request.form.get('state', '').strip()
+        pincode = request.form.get('pincode', '').strip()
+        is_default = request.form.get('is_default') == 'on'
+
+        if not all([address_line1, city, state, pincode]):
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', error='Please complete all required address fields.'))
+
+        if len(pincode) < 4 or len(pincode) > 12:
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', error='Please enter a valid postal code.'))
+
+        cursor.execute(
+            "SELECT id FROM customer_addresses WHERE id = %s AND user_id = %s",
+            (address_id, session['user_id'])
+        )
+        address = cursor.fetchone()
+        if not address:
+            cursor.close()
+            conn.close()
+            return redirect(url_for('user_settings', error='Address not found.'))
+
+        if is_default:
+            cursor.execute(
+                "UPDATE customer_addresses SET is_default = FALSE WHERE user_id = %s",
+                (session['user_id'],)
+            )
+
+        cursor.execute(
+            """
+            UPDATE customer_addresses
+            SET label = %s,
+                address_line1 = %s,
+                address_line2 = %s,
+                city = %s,
+                state = %s,
+                pincode = %s,
+                is_default = %s,
+                updated_at = NOW()
+            WHERE id = %s AND user_id = %s
+            """,
+            (
+                label,
+                address_line1,
+                address_line2,
+                city,
+                state,
+                pincode,
+                is_default,
+                address_id,
+                session['user_id']
+            )
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('user_settings', success='Address updated successfully.'))
+
+    except mysql.connector.Error as exc:
+        print(f"Address update error: {exc}")
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
+        return redirect(url_for('user_settings', error='Unable to update address due to a database error.'))
+
+
+@app.route('/gigs/new', methods=['GET', 'POST'])
+def create_gig():
+    """Create a new customer gig"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'GET':
+        return render_template('create_gig.html')
+
+    # POST: handle gig creation
+    title = request.form.get('title', '').strip()
+    description = request.form.get('description', '').strip()
+    category = request.form.get('category', '').strip()
+
+    if not title or not category:
+        # For now, just reload the form with a simple error message
+        error = 'Title and category are required.'
+        return render_template('create_gig.html', error=error, form=request.form)
+
+    conn = get_db_connection()
+    if not conn:
+        error = 'Database connection error. Please try again.'
+        return render_template('create_gig.html', error=error, form=request.form)
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            '''
+            INSERT INTO customer_gigs (user_id, title, description, category)
+            VALUES (%s, %s, %s, %s)
+            ''',
+            (session['user_id'], title, description, category),
+        )
+        gig_id = cursor.lastrowid
+
+        # Optional: log activity
+        cursor.execute(
+            '''
+            INSERT INTO gig_activity_logs (gig_id, user_id, message)
+            VALUES (%s, %s, %s)
+            ''',
+            (gig_id, session['user_id'], f'Gig "{title}" created'),
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for('dashboard') + '#gigs')
+
+    except mysql.connector.Error as e:
+        print(f"Gig creation DB error: {e}")
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+        error = 'Unable to create gig due to a database error.'
+        return render_template('create_gig.html', error=error, form=request.form)
 
 @app.route('/professional/dashboard')
 def professional_dashboard():

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Gig | ServiceHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Create a New Gig</h1>
+                <p class="text-gray-600 mt-1 text-sm">Describe the work you need done so professionals can respond.</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}#gigs" class="text-sm text-gray-600 hover:text-indigo-600">Back to dashboard</a>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            {% if error %}
+                <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('create_gig') }}" class="space-y-5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Gig Title *</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        maxlength="120"
+                        value="{{ (form.title or '') if form is defined else '' }}"
+                        placeholder="e.g. Need plumber for kitchen sink leak"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                    >
+                </div>
+
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                    >
+                        {% set selected_category = (form.category or '') if form is defined else '' %}
+                        <option value="">Select a category</option>
+                        <option value="Plumbing" {% if selected_category == 'Plumbing' %}selected{% endif %}>Plumbing</option>
+                        <option value="Electrical" {% if selected_category == 'Electrical' %}selected{% endif %}>Electrical</option>
+                        <option value="AC Repair" {% if selected_category == 'AC Repair' %}selected{% endif %}>AC Repair</option>
+                        <option value="Carpentry" {% if selected_category == 'Carpentry' %}selected{% endif %}>Carpentry</option>
+                        <option value="Cleaning" {% if selected_category == 'Cleaning' %}selected{% endif %}>Cleaning</option>
+                        <option value="Painting" {% if selected_category == 'Painting' %}selected{% endif %}>Painting</option>
+                        <option value="Other" {% if selected_category == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Describe the work</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="4"
+                        placeholder="Share details like the issue, location (room/area), preferred time, and any photos you might share later."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                    >{{ (form.description or '') if form is defined else '' }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500">Adding more detail helps professionals give accurate responses.</p>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-3 border-t border-gray-100">
+                    <a href="{{ url_for('dashboard') }}#gigs" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800">Cancel</a>
+                    <button
+                        type="submit"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        Post Gig
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
