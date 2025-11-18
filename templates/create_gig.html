@@ -5,87 +5,298 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Gig | ServiceHub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-active {
+            background-color: rgba(79, 70, 229, 0.05);
+            border-left: 3px solid #4F46E5;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-3xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Create a New Gig</h1>
-                <p class="text-gray-600 mt-1 text-sm">Describe the work you need done so professionals can respond.</p>
+<body class="bg-gray-50 flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center mr-2">
+                    <span class="text-white font-bold text-sm">SH</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">ServiceHub</span>
             </div>
-            <a href="{{ url_for('dashboard') }}#gigs" class="text-sm text-gray-600 hover:text-indigo-600">Back to dashboard</a>
         </div>
 
-        <!-- Card -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            {% if error %}
-                <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                    {{ error }}
+        <nav class="flex-1 p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="{{ url_for('dashboard') }}" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011 1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#gigs" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        My Gigs
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('create_gig') }}" class="flex items-center px-4 py-3 sidebar-active text-indigo-700 font-medium rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Gig
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#activity" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}#payments" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Payments
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('user_settings') }}" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-gray-600 text-sm font-medium">{{ user.initials }}</span>
                 </div>
-            {% endif %}
-
-            <form method="POST" action="{{ url_for('create_gig') }}" class="space-y-5">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
                 <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Gig Title *</label>
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        required
-                        maxlength="120"
-                        value="{{ (form.title or '') if form is defined else '' }}"
-                        placeholder="e.g. Need plumber for kitchen sink leak"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                    >
+                    <p class="text-sm font-medium text-gray-800">{{ user.full_name or 'Your Account' }}</p>
+                    <p class="text-xs text-gray-500">{{ user.email }}</p>
                 </div>
-
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                    <select
-                        id="category"
-                        name="category"
-                        required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
-                    >
-                        {% set selected_category = (form.category or '') if form is defined else '' %}
-                        <option value="">Select a category</option>
-                        <option value="Plumbing" {% if selected_category == 'Plumbing' %}selected{% endif %}>Plumbing</option>
-                        <option value="Electrical" {% if selected_category == 'Electrical' %}selected{% endif %}>Electrical</option>
-                        <option value="AC Repair" {% if selected_category == 'AC Repair' %}selected{% endif %}>AC Repair</option>
-                        <option value="Carpentry" {% if selected_category == 'Carpentry' %}selected{% endif %}>Carpentry</option>
-                        <option value="Cleaning" {% if selected_category == 'Cleaning' %}selected{% endif %}>Cleaning</option>
-                        <option value="Painting" {% if selected_category == 'Painting' %}selected{% endif %}>Painting</option>
-                        <option value="Other" {% if selected_category == 'Other' %}selected{% endif %}>Other</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Describe the work</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows="4"
-                        placeholder="Share details like the issue, location (room/area), preferred time, and any photos you might share later."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                    >{{ (form.description or '') if form is defined else '' }}</textarea>
-                    <p class="mt-1 text-xs text-gray-500">Adding more detail helps professionals give accurate responses.</p>
-                </div>
-
-                <div class="flex items-center justify-end space-x-3 pt-3 border-t border-gray-100">
-                    <a href="{{ url_for('dashboard') }}#gigs" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800">Cancel</a>
-                    <button
-                        type="submit"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Post Gig
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="ml-64 flex-1 overflow-y-auto bg-gray-50">
+        <div class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+            <div>
+                <p class="text-xs uppercase tracking-widest text-gray-500 font-semibold">Create gig</p>
+                <h1 class="text-2xl font-bold text-gray-900 mt-1">Let us know what you need</h1>
+                <p class="text-gray-600 text-sm mt-1">Pick a saved address or add your first service location.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ url_for('user_settings') }}#addresses" class="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">Manage addresses</a>
+                <a href="{{ url_for('dashboard') }}#gigs" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Back to dashboard</a>
+            </div>
+        </div>
+
+        <div class="px-8 py-8">
+            <div class="max-w-3xl">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    {% if error %}
+                        <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST" action="{{ url_for('create_gig') }}" class="space-y-6">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <div class="space-y-1">
+                            <label for="title" class="block text-sm font-medium text-gray-900">Gig title *</label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                required
+                                maxlength="120"
+                                value="{{ (form.title or '') if form is defined else '' }}"
+                                placeholder="e.g. Need plumber for kitchen sink leak"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                            >
+                        </div>
+
+                        <div class="space-y-1">
+                            <label for="category" class="block text-sm font-medium text-gray-900">Category *</label>
+                            <select
+                                id="category"
+                                name="category"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                            >
+                                {% set selected_category = (form.category or '') if form is defined else '' %}
+                                <option value="">Select a category</option>
+                                <option value="Plumbing" {% if selected_category == 'Plumbing' %}selected{% endif %}>Plumbing</option>
+                                <option value="Electrical" {% if selected_category == 'Electrical' %}selected{% endif %}>Electrical</option>
+                                <option value="AC Repair" {% if selected_category == 'AC Repair' %}selected{% endif %}>AC Repair</option>
+                                <option value="Carpentry" {% if selected_category == 'Carpentry' %}selected{% endif %}>Carpentry</option>
+                                <option value="Cleaning" {% if selected_category == 'Cleaning' %}selected{% endif %}>Cleaning</option>
+                                <option value="Painting" {% if selected_category == 'Painting' %}selected{% endif %}>Painting</option>
+                                <option value="Other" {% if selected_category == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        {% if addresses %}
+                        {% set selected_id = (selected_address_id|string) if selected_address_id is defined and selected_address_id is not none else '' %}
+                        <div class="space-y-4 border border-gray-200 rounded-xl p-4 bg-gray-50/60">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900">Service location</h3>
+                                    <p class="text-xs text-gray-500">Pick an address you saved earlier.</p>
+                                </div>
+                                <span class="text-xs text-gray-500">{{ addresses|length }} saved {{ 'address' if addresses|length == 1 else 'addresses' }}</span>
+                            </div>
+                            <div class="space-y-3">
+                                {% for address in addresses %}
+                                {% set address_id_str = address.id|string %}
+                                {% set is_checked = (selected_id and selected_id == address_id_str) or (not selected_id and address.is_default) or (not selected_id and not address.is_default and loop.first) %}
+                                <label class="flex items-start gap-3 border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-indigo-400 {{ 'border-indigo-500 ring-2 ring-indigo-100 bg-white' if is_checked else 'bg-white' }}">
+                                    <input
+                                        type="radio"
+                                        name="address_id"
+                                        value="{{ address.id }}"
+                                        class="mt-1 text-indigo-600 focus:ring-indigo-500"
+                                        {% if is_checked %}checked{% endif %}
+                                    >
+                                    <div class="text-sm text-gray-700">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-semibold capitalize">{{ address.label }}</span>
+                                            {% if address.is_default %}
+                                            <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">Default</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-gray-600">
+                                            {{ address.address_line1 }}
+                                            {% if address.address_line2 %}, {{ address.address_line2 }}{% endif %}
+                                        </p>
+                                        <p class="text-gray-500 text-xs">
+                                            {{ address.city }}, {{ address.state }} {{ address.pincode }}
+                                        </p>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="space-y-3 border border-dashed border-indigo-200 rounded-xl p-4 bg-indigo-50/40">
+                            <h3 class="text-sm font-semibold text-gray-900">Add your first address</h3>
+                            <p class="text-xs text-gray-600 mb-2">We’ll store this as your default service location for faster booking next time.</p>
+
+                            <div>
+                                <label for="address_line1" class="block text-sm font-medium text-gray-900 mb-1">Address line 1 *</label>
+                                <input
+                                    type="text"
+                                    id="address_line1"
+                                    name="address_line1"
+                                    required
+                                    value="{{ (form.address_line1 or '') if form is defined else '' }}"
+                                    placeholder="House/Flat no, Building name, Street"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="address_line2" class="block text-sm font-medium text-gray-900 mb-1">Address line 2</label>
+                                <input
+                                    type="text"
+                                    id="address_line2"
+                                    name="address_line2"
+                                    value="{{ (form.address_line2 or '') if form is defined else '' }}"
+                                    placeholder="Area, Landmark (optional)"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                                >
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-900 mb-1">City *</label>
+                                    <input
+                                        type="text"
+                                        id="city"
+                                        name="city"
+                                        required
+                                        value="{{ (form.city or '') if form is defined else '' }}"
+                                        placeholder="City"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                                    >
+                                </div>
+                                <div>
+                                    <label for="state" class="block text-sm font-medium text-gray-900 mb-1">State *</label>
+                                    <input
+                                        type="text"
+                                        id="state"
+                                        name="state"
+                                        required
+                                        value="{{ (form.state or '') if form is defined else '' }}"
+                                        placeholder="State"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                                    >
+                                </div>
+                                <div>
+                                    <label for="pincode" class="block text-sm font-medium text-gray-900 mb-1">Pincode *</label>
+                                    <input
+                                        type="text"
+                                        id="pincode"
+                                        name="pincode"
+                                        required
+                                        pattern="\d{4,12}"
+                                        title="Please enter a valid pincode"
+                                        value="{{ (form.pincode or '') if form is defined else '' }}"
+                                        placeholder="Pincode"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="space-y-1">
+                            <label for="description" class="block text-sm font-medium text-gray-900">Describe the work</label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="4"
+                                placeholder="Share details like the issue, location (room/area), preferred time, and any photos you might share later."
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                            >{{ (form.description or '') if form is defined else '' }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">Adding detail helps professionals respond accurately.</p>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                            <a href="{{ url_for('dashboard') }}#gigs" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800">Cancel</a>
+                            <button
+                                type="submit"
+                                class="inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Post gig
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
 

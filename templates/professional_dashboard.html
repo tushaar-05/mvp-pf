@@ -6,6 +6,96 @@
     <title>Professional Dashboard - Blue Collar Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(59, 130, 246, 0.2);
+        }
+        
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            transform: translateX(4px);
+        }
+        
+        .nav-link.active {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .job-card {
+            transition: all 0.3s ease;
+        }
+        
+        .job-card:hover {
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+        
+        .btn-primary {
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .icon-wrapper {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .review-card {
+            transition: all 0.2s ease;
+        }
+        
+        .review-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .schedule-item {
+            transition: all 0.2s ease;
+        }
+        
+        .schedule-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+    </style>
     <script>
         tailwind.config = {
             theme: {
@@ -31,62 +121,69 @@
     <!-- Main Layout -->
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-card border-r border-border flex flex-col">
+        <div class="w-64 bg-card border-r border-border flex flex-col shadow-sm">
             <!-- Logo -->
             <div class="p-6 border-b border-border">
-                <h1 class="text-xl font-bold text-primary">BlueCollar Pro</h1>
-                <p class="text-sm text-textSecondary">Professional Dashboard</p>
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-tools text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">BlueCollar Pro</h1>
+                        <p class="text-xs text-textSecondary font-medium">Professional Dashboard</p>
+                    </div>
+                </div>
             </div>
             
             <!-- Navigation -->
-            <nav class="flex-1 p-4">
-                <ul class="space-y-2">
+            <nav class="flex-1 p-4 overflow-y-auto">
+                <ul class="space-y-1">
                     <li>
-                        <a href="#dashboard" class="nav-link active flex items-center p-3 rounded-lg bg-primary text-white">
+                        <a href="#dashboard" class="nav-link active flex items-center p-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium">
                             <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#requests" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#requests" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-bell w-5 mr-3"></i>
                             <span>New Requests</span>
-                            <span class="ml-auto bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ requests|length }}</span>
+                            <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">{{ requests|length }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#active-jobs" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#active-jobs" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-tools w-5 mr-3"></i>
                             <span>Active Jobs</span>
-                            <span class="ml-auto bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ active_jobs|length }}</span>
+                            <span class="ml-auto bg-blue-500 text-white text-xs rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center font-semibold shadow-sm">{{ active_jobs|length }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#completed" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#completed" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-check-circle w-5 mr-3"></i>
                             <span>Completed Jobs</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#earnings" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#earnings" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-wallet w-5 mr-3"></i>
                             <span>Earnings</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#schedule" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#schedule" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-calendar-alt w-5 mr-3"></i>
                             <span>Schedule</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#reviews" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#reviews" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-star w-5 mr-3"></i>
                             <span>Ratings & Reviews</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#settings" class="nav-link flex items-center p-3 rounded-lg text-textPrimary hover:bg-background">
+                        <a href="#settings" class="nav-link flex items-center p-3 rounded-xl text-textPrimary hover:bg-blue-50 font-medium">
                             <i class="fas fa-cog w-5 mr-3"></i>
                             <span>Settings</span>
                         </a>
@@ -95,17 +192,17 @@
             </nav>
             
             <!-- User Profile -->
-            <div class="p-4 border-t border-border">
-                <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-medium">
+            <div class="p-4 border-t border-border bg-gradient-to-br from-slate-50 to-white">
+                <div class="flex items-center mb-3">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold text-lg shadow-md">
                         {{ (user.full_name or 'U')[0] if user.full_name else 'U' }}
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-textPrimary">{{ user.full_name or 'Professional' }}</p>
-                        <p class="text-xs text-textSecondary">Professional</p>
+                        <p class="text-sm font-semibold text-textPrimary">{{ user.full_name or 'Professional' }}</p>
+                        <p class="text-xs text-textSecondary font-medium">Professional Account</p>
                     </div>
                 </div>
-                <a href="{{ url_for('logout') }}" class="mt-4 flex items-center text-textSecondary hover:text-primary text-sm">
+                <a href="{{ url_for('logout') }}" class="flex items-center justify-center text-textSecondary hover:text-red-500 text-sm font-medium py-2 px-3 rounded-lg hover:bg-red-50 transition-all">
                     <i class="fas fa-sign-out-alt w-4 mr-2"></i>
                     <span>Logout</span>
                 </a>
@@ -113,19 +210,27 @@
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-auto bg-slate-50">
             <!-- Header -->
-            <header class="bg-card border-b border-border p-4">
+            <header class="bg-card border-b border-border px-6 py-4 shadow-sm sticky top-0 z-10">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-textPrimary">Dashboard</h1>
+                    <div>
+                        <h1 class="text-2xl font-bold text-textPrimary">Dashboard</h1>
+                        <p class="text-sm text-textSecondary mt-0.5">Welcome back! Here's your overview</p>
+                    </div>
                     <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <i class="fas fa-bell text-textSecondary text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">5</span>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-medium text-textPrimary">{{ user.full_name or 'Professional' }}</p>
-                            <p class="text-xs text-textSecondary">Professional</p>
+                        <button class="relative hover:bg-slate-100 p-2.5 rounded-xl transition-all">
+                            <i class="fas fa-bell text-textSecondary text-lg"></i>
+                            <span class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold shadow-md">5</span>
+                        </button>
+                        <div class="flex items-center space-x-3 pl-4 border-l border-border">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-textPrimary">{{ user.full_name or 'Professional' }}</p>
+                                <p class="text-xs text-textSecondary font-medium">Professional</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold shadow-md">
+                                {{ (user.full_name or 'U')[0] if user.full_name else 'U' }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -135,58 +240,58 @@
             <main class="p-6">
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-card rounded-xl p-6 border border-border">
+                    <div class="stat-card bg-gradient-to-br from-white to-blue-50 rounded-2xl p-6 border border-blue-100 shadow-sm">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">Total Earnings</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">₹{{ stats.total_earnings or 0 }}</h3>
+                                <p class="text-textSecondary text-sm font-medium">Total Earnings</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-2">₹{{ stats.total_earnings or 0 }}</h3>
                             </div>
-                            <div class="bg-primary/10 p-3 rounded-lg">
-                                <i class="fas fa-wallet text-primary text-xl"></i>
+                            <div class="icon-wrapper bg-blue-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-wallet text-white text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">Track your payouts in the Earnings tab</p>
+                        <p class="text-textSecondary text-xs mt-3 font-medium">Track payouts in Earnings</p>
                     </div>
                     
-                    <div class="bg-card rounded-xl p-6 border border-border">
+                    <div class="stat-card bg-gradient-to-br from-white to-amber-50 rounded-2xl p-6 border border-amber-100 shadow-sm">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">Active Jobs</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.active_jobs or active_jobs|length }}</h3>
+                                <p class="text-textSecondary text-sm font-medium">Active Jobs</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-2">{{ stats.active_jobs or active_jobs|length }}</h3>
                             </div>
-                            <div class="bg-warning/10 p-3 rounded-lg">
-                                <i class="fas fa-tools text-warning text-xl"></i>
+                            <div class="icon-wrapper bg-amber-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-tools text-white text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">
-                            {{ active_jobs|length }} job{{ '' if active_jobs|length == 1 else 's' }} scheduled or in progress
+                        <p class="text-textSecondary text-xs mt-3 font-medium">
+                            {{ active_jobs|length }} job{{ '' if active_jobs|length == 1 else 's' }} in progress
                         </p>
                     </div>
                     
-                    <div class="bg-card rounded-xl p-6 border border-border">
+                    <div class="stat-card bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 border border-red-100 shadow-sm">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">New Requests</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.new_requests or requests|length }}</h3>
+                                <p class="text-textSecondary text-sm font-medium">New Requests</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-2">{{ stats.new_requests or requests|length }}</h3>
                             </div>
-                            <div class="bg-danger/10 p-3 rounded-lg">
-                                <i class="fas fa-bell text-danger text-xl"></i>
+                            <div class="icon-wrapper bg-red-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-bell text-white text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">Respond quickly to secure new work</p>
+                        <p class="text-textSecondary text-xs mt-3 font-medium">Respond quickly to secure work</p>
                     </div>
                     
-                    <div class="bg-card rounded-xl p-6 border border-border">
+                    <div class="stat-card bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-6 border border-emerald-100 shadow-sm">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-textSecondary text-sm">Rating</p>
-                                <h3 class="text-2xl font-bold text-textPrimary mt-1">{{ stats.rating or '-' }}</h3>
+                                <p class="text-textSecondary text-sm font-medium">Rating</p>
+                                <h3 class="text-3xl font-bold text-textPrimary mt-2">{{ stats.rating or '-' }}</h3>
                             </div>
-                            <div class="bg-success/10 p-3 rounded-lg">
-                                <i class="fas fa-star text-success text-xl"></i>
+                            <div class="icon-wrapper bg-emerald-500 p-3.5 rounded-xl shadow-lg">
+                                <i class="fas fa-star text-white text-xl"></i>
                             </div>
                         </div>
-                        <p class="text-textSecondary text-sm mt-2">Based on {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}</p>
+                        <p class="text-textSecondary text-xs mt-3 font-medium">Based on {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}</p>
                     </div>
                 </div>
                 
@@ -195,18 +300,18 @@
                     <!-- Left Column -->
                     <div class="space-y-6">
                         <!-- Services Offered -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <div class="flex justify-between items-center mb-4">
+                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
                                 <h2 class="text-xl font-bold text-textPrimary">Services</h2>
-                                <a href="#settings" class="text-primary text-sm font-medium">Manage</a>
+                                <a href="#settings" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Manage →</a>
                             </div>
                             {% if services %}
                                 <div class="space-y-3">
                                     {% for service in services %}
-                                        <div class="flex justify-between items-start p-3 border border-border rounded-lg">
+                                        <div class="flex justify-between items-start p-4 border border-border rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all">
                                             <div>
-                                                <p class="font-medium text-textPrimary">{{ service.sub_service or service.primary_service }}</p>
-                                                <p class="text-xs text-textSecondary">
+                                                <p class="font-semibold text-textPrimary">{{ service.sub_service or service.primary_service }}</p>
+                                                <p class="text-xs text-textSecondary mt-1 font-medium">
                                                     {{ service.primary_service }}
                                                     {% if service.price_type %}
                                                         • {{ service.price_type|replace('_', ' ')|title }}
@@ -214,116 +319,137 @@
                                                 </p>
                                             </div>
                                             {% if service.base_price %}
-                                                <span class="text-sm font-medium text-textPrimary">₹{{ service.base_price }}</span>
+                                                <span class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">₹{{ service.base_price }}</span>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <div class="p-4 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
-                                    You have not added any services yet.
+                                <div class="p-6 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                    <i class="fas fa-briefcase text-3xl text-slate-300 mb-2"></i>
+                                    <p class="font-medium">No services added yet</p>
                                 </div>
                             {% endif %}
                         </div>
 
                         <!-- New Customer Requests -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-textPrimary">New Customer Requests</h2>
-                                <a href="#requests" class="text-primary text-sm font-medium">View All</a>
+                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">New Customer Requests</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">Respond quickly to win jobs</p>
+                                </div>
+                                <a href="#requests" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
                             <div class="space-y-4">
                                 {% if requests %}
                                     {% for req in requests %}
-                                        <div class="p-4 border border-border rounded-lg">
-                                            <div class="flex justify-between items-start">
-                                                <div>
-                                                    <h3 class="font-medium text-textPrimary">{{ req.title or 'Service Request' }}</h3>
-                                                    <p class="text-textSecondary text-sm mt-1">
-                                                        {{ req.customer_name or 'Customer' }}
+                                        <div class="job-card p-5 border border-border rounded-xl bg-gradient-to-br from-white to-slate-50">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-textPrimary text-base">{{ req.title or 'Service Request' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1 font-medium">
+                                                        <i class="fas fa-user text-xs mr-1"></i>{{ req.customer_name or 'Customer' }}
                                                         {% if req.distance_km %}
-                                                            • {{ req.distance_km }} km away
+                                                            <span class="mx-1">•</span>
+                                                            <i class="fas fa-map-marker-alt text-xs mr-1"></i>{{ req.distance_km }} km
                                                         {% endif %}
                                                     </p>
-                                                    <div class="flex items-center mt-2 text-xs text-textSecondary">
-                                                        {% if req.category %}
-                                                            <span class="bg-background text-textSecondary px-2 py-1 rounded">{{ req.category }}</span>
-                                                        {% endif %}
-                                                        {% if req.requested_at_relative or req.requested_at_display %}
-                                                            <span class="ml-2 flex items-center">
-                                                                <i class="fas fa-clock mr-1"></i>
-                                                                {{ req.requested_at_relative or req.requested_at_display }}
-                                                            </span>
-                                                        {% endif %}
-                                                    </div>
                                                 </div>
                                                 {% if req.budget %}
-                                                    <span class="text-sm font-medium text-textPrimary">₹{{ req.budget }}</span>
+                                                    <span class="text-base font-bold text-blue-600 bg-blue-100 px-3 py-1.5 rounded-lg ml-3">₹{{ req.budget }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex items-center gap-2 mb-3">
+                                                {% if req.category %}
+                                                    <span class="badge bg-slate-100 text-textSecondary px-2.5 py-1 rounded-lg text-xs">{{ req.category }}</span>
+                                                {% endif %}
+                                                {% if req.requested_at_relative or req.requested_at_display %}
+                                                    <span class="flex items-center text-xs text-textSecondary font-medium">
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        {{ req.requested_at_relative or req.requested_at_display }}
+                                                    </span>
                                                 {% endif %}
                                             </div>
                                             {% if req.notes %}
-                                                <p class="text-sm text-textSecondary mt-2">{{ req.notes }}</p>
+                                                <p class="text-sm text-textSecondary mb-4 font-medium">{{ req.notes }}</p>
                                             {% endif %}
-                                            <div class="flex space-x-2 mt-4">
-                                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex-1">Accept</button>
-                                                <button class="bg-background text-textSecondary px-4 py-2 rounded-lg text-sm font-medium flex-1">Decline</button>
-                                            </div>
+                                            <p class="text-xs text-textSecondary font-medium mb-4 flex items-center">
+                                                <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i>
+                                                {{ req.city or 'City' }}, {{ req.state or 'State' }} {{ req.pincode or '' }}
+                                            </p>
+                                            <form method="POST" action="{{ url_for('accept_customer_gig', gig_id=req.id) }}" class="flex gap-3">
+                                                <button type="submit" class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex-1">
+                                                    <i class="fas fa-check mr-1"></i> Accept
+                                                </button>
+                                                <button type="button" class="btn-secondary bg-slate-100 text-textSecondary px-5 py-2.5 rounded-xl text-sm font-semibold flex-1 hover:bg-slate-200">
+                                                    Skip
+                                                </button>
+                                            </form>
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
-                                        No new customer requests right now. Keep your availability up to date to get more matches.
+                                    <div class="p-8 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                        <i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
+                                        <p class="font-semibold mb-1">No new requests</p>
+                                        <p class="text-xs">Keep your availability updated to get matched</p>
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                         
                         <!-- Active Jobs -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-textPrimary">Active Jobs</h2>
-                                <a href="#active-jobs" class="text-primary text-sm font-medium">View All</a>
+                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">Active Jobs</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">Jobs in progress</p>
+                                </div>
+                                <a href="#active-jobs" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
                             <div class="space-y-4">
                                 {% if active_jobs %}
                                     {% for job in active_jobs %}
-                                        <div class="p-4 border border-border rounded-lg">
-                                            <div class="flex justify-between items-start">
-                                                <div>
-                                                    <h3 class="font-medium text-textPrimary">{{ job.title or 'Job' }}</h3>
-                                                    <p class="text-textSecondary text-sm mt-1">
-                                                        {{ job.customer_name or 'Customer' }}
+                                        <div class="job-card p-5 border border-border rounded-xl bg-gradient-to-br from-white to-amber-50/30">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-textPrimary text-base">{{ job.title or 'Job' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-1 font-medium">
+                                                        <i class="fas fa-user text-xs mr-1"></i>{{ job.customer_name or 'Customer' }}
                                                         {% if job.scheduled_for_display %}
-                                                            • {{ job.scheduled_for_display }}
+                                                            <span class="mx-1">•</span>
+                                                            <i class="fas fa-calendar text-xs mr-1"></i>{{ job.scheduled_for_display }}
                                                         {% endif %}
                                                     </p>
-                                                    <div class="flex items-center mt-2 text-xs text-textSecondary space-x-2">
-                                                        {% if job.status_label %}
-                                                            <span class="{% if job.status_badge_class %}{{ job.status_badge_class }}{% else %}bg-warning/10 text-warning{% endif %} px-2 py-1 rounded">
-                                                                {{ job.status_label }}
-                                                            </span>
-                                                        {% endif %}
-                                                        {% if job.distance_km %}
-                                                            <span><i class="fas fa-map-marker-alt mr-1"></i>{{ job.distance_km }} km away</span>
-                                                        {% endif %}
-                                                    </div>
                                                 </div>
                                                 {% if job.budget %}
-                                                    <span class="text-sm font-medium text-textPrimary">₹{{ job.budget }}</span>
+                                                    <span class="text-base font-bold text-amber-600 bg-amber-100 px-3 py-1.5 rounded-lg ml-3">₹{{ job.budget }}</span>
                                                 {% endif %}
                                             </div>
-                                            <div class="mt-4">
-                                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full">
-                                                    Update Status
-                                                </button>
+                                            <div class="flex items-center gap-2 mb-4">
+                                                {% if job.status_label %}
+                                                    <span class="badge {% if job.status_badge_class %}{{ job.status_badge_class }}{% else %}bg-amber-100 text-amber-700{% endif %} px-2.5 py-1 rounded-lg text-xs">
+                                                        {{ job.status_label }}
+                                                    </span>
+                                                {% endif %}
+                                                {% if job.distance_km %}
+                                                    <span class="text-xs text-textSecondary font-medium">
+                                                        <i class="fas fa-map-marker-alt mr-1"></i>{{ job.distance_km }} km
+                                                    </span>
+                                                {% endif %}
                                             </div>
+                                            <button class="btn-primary bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold w-full">
+                                                <i class="fas fa-sync-alt mr-1"></i> Update Status
+                                            </button>
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
-                                        You have no active jobs. Accept requests to fill your schedule.
+                                    <div class="p-8 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                        <i class="fas fa-tasks text-4xl text-slate-300 mb-3"></i>
+                                        <p class="font-semibold mb-1">No active jobs</p>
+                                        <p class="text-xs">Accept requests to fill your schedule</p>
                                     </div>
                                 {% endif %}
                             </div>
@@ -333,28 +459,31 @@
                     <!-- Right Column -->
                     <div class="space-y-6">
                         <!-- Upcoming Schedule -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-textPrimary">Today's Schedule</h2>
-                                <a href="#schedule" class="text-primary text-sm font-medium">View Calendar</a>
+                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">Today's Schedule</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">Your upcoming appointments</p>
+                                </div>
+                                <a href="#schedule" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">Calendar →</a>
                             </div>
                             
-                            <div class="space-y-4">
+                            <div class="space-y-3">
                                 {% if schedule %}
                                     {% for slot in schedule %}
-                                        <div class="p-4 border-l-4 border-primary bg-background rounded-r-lg">
-                                            <div class="flex justify-between items-start">
-                                                <div>
-                                                    <h3 class="font-medium text-textPrimary">{{ slot.title or 'Job' }}</h3>
-                                                    <p class="text-textSecondary text-sm mt-1">{{ slot.customer_name or '' }}</p>
+                                        <div class="schedule-item p-4 border-l-4 border-blue-500 bg-blue-50/50 rounded-r-xl">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-textPrimary">{{ slot.title or 'Job' }}</h3>
+                                                    <p class="text-textSecondary text-sm mt-0.5 font-medium">{{ slot.customer_name or '' }}</p>
                                                 </div>
                                                 {% if slot.time_display %}
-                                                    <span class="text-sm font-medium text-textPrimary">{{ slot.time_display }}</span>
+                                                    <span class="text-sm font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-lg ml-2">{{ slot.time_display }}</span>
                                                 {% endif %}
                                             </div>
-                                            <div class="flex items-center mt-2 text-xs text-textSecondary space-x-3">
+                                            <div class="flex items-center gap-3 text-xs text-textSecondary font-medium">
                                                 {% if slot.distance_km %}
-                                                    <span><i class="fas fa-map-marker-alt mr-1"></i>{{ slot.distance_km }} km away</span>
+                                                    <span><i class="fas fa-map-marker-alt mr-1"></i>{{ slot.distance_km }} km</span>
                                                 {% endif %}
                                                 {% if slot.estimated_duration %}
                                                     <span><i class="fas fa-clock mr-1"></i>{{ slot.estimated_duration }}</span>
@@ -363,53 +492,58 @@
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
-                                        No jobs scheduled for today.
+                                    <div class="p-8 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                        <i class="fas fa-calendar-day text-4xl text-slate-300 mb-3"></i>
+                                        <p class="font-semibold mb-1">No jobs scheduled today</p>
+                                        <p class="text-xs">Your schedule is clear</p>
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                         
                         <!-- Ratings & Reviews -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-textPrimary">Ratings & Reviews</h2>
-                                <a href="#reviews" class="text-primary text-sm font-medium">View All</a>
+                        <div class="bg-card rounded-2xl p-6 border border-border shadow-sm">
+                            <div class="flex justify-between items-center mb-5">
+                                <div>
+                                    <h2 class="text-xl font-bold text-textPrimary">Ratings & Reviews</h2>
+                                    <p class="text-xs text-textSecondary mt-0.5 font-medium">What customers say</p>
+                                </div>
+                                <a href="#reviews" class="text-primary text-sm font-semibold hover:text-blue-700 transition-colors">View All →</a>
                             </div>
                             
-                            <div class="flex items-center mb-4">
-                                <div class="text-3xl font-bold text-textPrimary mr-4">{{ stats.rating or '-' }}</div>
-                                <div>
-                                    <div class="flex items-center">
-                                        <div class="flex text-warning">
+                            <div class="flex items-center mb-5 p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
+                                <div class="text-4xl font-bold text-emerald-600 mr-5">{{ stats.rating or '-' }}</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center mb-1">
+                                        <div class="flex text-amber-400">
                                             {% set rounded_rating = (stats.rating or 0)|round(0, 'floor') %}
                                             {% for i in range(rounded_rating|int) %}
-                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star text-lg"></i>
                                             {% endfor %}
                                             {% if rounded_rating == 0 %}
-                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star text-lg"></i>
                                             {% endif %}
                                         </div>
-                                        <span class="ml-2 text-sm text-textSecondary">
-                                            {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}
-                                        </span>
                                     </div>
-                                    <p class="text-sm text-textSecondary mt-1">Keep delighting customers to grow your rating</p>
+                                    <p class="text-sm text-textSecondary font-semibold">
+                                        {{ stats.reviews_count or reviews|length }} review{{ '' if (stats.reviews_count or reviews|length) == 1 else 's' }}
+                                    </p>
+                                    <p class="text-xs text-textSecondary mt-1 font-medium">Keep delighting customers!</p>
                                 </div>
                             </div>
                             
-                            <div class="space-y-4">
+                            <div class="space-y-3">
                                 {% if reviews %}
                                     {% for review in reviews %}
-                                        <div class="p-4 border border-border rounded-lg">
-                                            <div class="flex justify-between">
+                                        <div class="review-card p-4 border border-border rounded-xl bg-gradient-to-br from-white to-slate-50">
+                                            <div class="flex justify-between mb-2">
                                                 <div class="flex items-center">
-                                                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium">
+                                                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center text-sm font-semibold shadow-md">
                                                         {{ (review.reviewer_name or 'U')[0] }}
                                                     </div>
-                                                    <div class="ml-2">
-                                                        <p class="text-sm font-medium text-textPrimary">{{ review.reviewer_name or 'Customer' }}</p>
-                                                        <div class="flex text-warning text-xs">
+                                                    <div class="ml-3">
+                                                        <p class="text-sm font-semibold text-textPrimary">{{ review.reviewer_name or 'Customer' }}</p>
+                                                        <div class="flex text-amber-400 text-xs mt-0.5">
                                                             {% for i in range((review.rating or 0)|int) %}
                                                                 <i class="fas fa-star"></i>
                                                             {% endfor %}
@@ -419,46 +553,50 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span class="text-xs text-textSecondary">
+                                                <span class="text-xs text-textSecondary font-medium">
                                                     {{ review.created_at_relative or review.created_at_display or '' }}
                                                 </span>
                                             </div>
-                                            <p class="text-sm text-textPrimary mt-2">{{ review.comment or 'No review text provided.' }}</p>
+                                            <p class="text-sm text-textPrimary font-medium leading-relaxed">{{ review.comment or 'No review text provided.' }}</p>
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <div class="p-6 border border-dashed border-border rounded-lg text-center text-textSecondary text-sm">
-                                        You have not received any reviews yet.
+                                    <div class="p-8 border-2 border-dashed border-border rounded-xl text-center text-textSecondary text-sm bg-slate-50">
+                                        <i class="fas fa-star text-4xl text-slate-300 mb-3"></i>
+                                        <p class="font-semibold mb-1">No reviews yet</p>
+                                        <p class="text-xs">Complete jobs to receive feedback</p>
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                         
                         <!-- Earnings Summary -->
-                        <div class="bg-card rounded-xl p-6 border border-border">
-                            <h2 class="text-xl font-bold text-textPrimary mb-4">Earnings Summary</h2>
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+                            <h2 class="text-xl font-bold mb-5">Earnings Summary</h2>
                             
                             <div class="space-y-4">
-                                <div class="flex justify-between">
-                                    <span class="text-textSecondary">This Week</span>
-                                    <span class="font-medium text-textPrimary">₹{{ stats.this_week_earnings or 0 }}</span>
+                                <div class="flex justify-between items-center pb-3 border-b border-blue-400/30">
+                                    <span class="text-blue-100 font-medium">This Week</span>
+                                    <span class="font-bold text-lg">₹{{ stats.this_week_earnings or 0 }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-textSecondary">This Month</span>
-                                    <span class="font-medium text-textPrimary">₹{{ stats.this_month_earnings or 0 }}</span>
+                                <div class="flex justify-between items-center pb-3 border-b border-blue-400/30">
+                                    <span class="text-blue-100 font-medium">This Month</span>
+                                    <span class="font-bold text-lg">₹{{ stats.this_month_earnings or 0 }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-textSecondary">Last Month</span>
-                                    <span class="font-medium text-textPrimary">₹{{ stats.last_month_earnings or 0 }}</span>
+                                <div class="flex justify-between items-center pb-3 border-b border-blue-400/30">
+                                    <span class="text-blue-100 font-medium">Last Month</span>
+                                    <span class="font-bold text-lg">₹{{ stats.last_month_earnings or 0 }}</span>
                                 </div>
-                                <div class="flex justify-between pt-3 border-t border-border">
-                                    <span class="text-textSecondary font-medium">Total Earnings</span>
-                                    <span class="font-bold text-textPrimary">₹{{ stats.total_earnings or 0 }}</span>
+                                <div class="flex justify-between items-center pt-2">
+                                    <span class="font-semibold text-lg">Total Earnings</span>
+                                    <span class="font-bold text-2xl">₹{{ stats.total_earnings or 0 }}</span>
                                 </div>
                             </div>
                             
                             <div class="mt-6">
-                                <a href="#earnings" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-full block text-center">View Detailed Report</a>
+                                <a href="#earnings" class="bg-white text-blue-600 px-5 py-3 rounded-xl text-sm font-bold w-full block text-center hover:bg-blue-50 transition-all shadow-md">
+                                    <i class="fas fa-chart-line mr-2"></i>View Detailed Report
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -473,10 +611,12 @@
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    navLinks.forEach(l => l.classList.remove('active', 'bg-primary', 'text-white'));
-                    navLinks.forEach(l => l.classList.add('text-textPrimary', 'hover:bg-background'));
-                    this.classList.remove('text-textPrimary', 'hover:bg-background');
-                    this.classList.add('active', 'bg-primary', 'text-white');
+                    navLinks.forEach(l => {
+                        l.classList.remove('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
+                        l.classList.add('text-textPrimary', 'hover:bg-blue-50');
+                    });
+                    this.classList.remove('text-textPrimary', 'hover:bg-blue-50');
+                    this.classList.add('active', 'bg-gradient-to-r', 'from-blue-500', 'to-blue-600', 'text-white');
                 });
             });
         });

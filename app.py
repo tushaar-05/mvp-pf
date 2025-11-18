@@ -180,11 +180,49 @@ def init_database():
                     title VARCHAR(255) NOT NULL,
                     description TEXT,
                     category VARCHAR(100),
+                    address_line1 VARCHAR(255),
+                    address_line2 VARCHAR(255),
+                    city VARCHAR(100),
+                    state VARCHAR(100),
+                    pincode VARCHAR(12),
+                    assigned_professional_id INT NULL,
+                    accepted_at TIMESTAMP NULL,
                     status ENUM('new', 'waiting', 'assigned', 'progress', 'completed', 'cancelled') DEFAULT 'new',
                     posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                    FOREIGN KEY (assigned_professional_id) REFERENCES professional_profiles(id) ON DELETE SET NULL
                 )
+            ''')
+
+            # Ensure legacy tables have address columns
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS address_line1 VARCHAR(255) AFTER category
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS address_line2 VARCHAR(255) AFTER address_line1
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS city VARCHAR(100) AFTER address_line2
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS state VARCHAR(100) AFTER city
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS pincode VARCHAR(12) AFTER state
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS assigned_professional_id INT NULL AFTER pincode
+            ''')
+            cursor.execute('''
+                ALTER TABLE customer_gigs
+                ADD COLUMN IF NOT EXISTS accepted_at TIMESTAMP NULL AFTER assigned_professional_id
             ''')
 
             # Gig activity timeline
@@ -255,6 +293,36 @@ def normalize_address_label(label):
     allowed_labels = {'home', 'work', 'other'}
     normalized = (label or 'home').strip().lower()
     return normalized if normalized in allowed_labels else 'other'
+
+
+def get_user_addresses(user_id, limit=None):
+    """Return saved addresses for a user"""
+    conn = get_db_connection()
+    if not conn:
+        return []
+
+    cursor = conn.cursor(dictionary=True)
+    try:
+        query = """
+            SELECT id, label, address_line1, address_line2, city, state, pincode, is_default, created_at
+            FROM customer_addresses
+            WHERE user_id = %s
+            ORDER BY is_default DESC, created_at DESC
+        """
+        params = [user_id]
+        if limit:
+            query += " LIMIT %s"
+            params.append(limit)
+
+        cursor.execute(query, tuple(params))
+        rows = cursor.fetchall() or []
+        return rows
+    except mysql.connector.Error as exc:
+        print(f"Address fetch error: {exc}")
+        return []
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def allowed_file(filename):
@@ -569,6 +637,7 @@ def get_professional_dashboard_data(user_id, session_user=None):
             (user_id,),
         )
         prof_row = cursor.fetchone() or {}
+        prof_id = prof_row.get('id')
         if prof_row:
             data['profile'].update({
                 'city': prof_row.get('city', ''),
@@ -579,8 +648,6 @@ def get_professional_dashboard_data(user_id, session_user=None):
                 'bio': prof_row.get('bio', ''),
             })
 
-            # Services for this professional (if profile id is present)
-            prof_id = prof_row.get('id')
             if prof_id:
                 cursor.execute(
                     """
@@ -592,8 +659,98 @@ def get_professional_dashboard_data(user_id, session_user=None):
                 )
                 data['services'] = cursor.fetchall() or []
 
-        # NOTE: Stats, requests, jobs, schedule, and reviews are left as zeros/empty
-        # until a full job/booking model is implemented.
+        if prof_id:
+            # Stats derived from gigs
+            cursor.execute(
+                """
+                SELECT
+                    COALESCE(SUM(CASE WHEN assigned_professional_id = %s AND status IN ('assigned', 'progress') THEN 1 ELSE 0 END), 0) AS active_jobs,
+                    COALESCE(SUM(CASE WHEN status IN ('new', 'waiting') AND (assigned_professional_id IS NULL OR assigned_professional_id = 0) THEN 1 ELSE 0 END), 0) AS new_requests,
+                    COALESCE(SUM(CASE WHEN assigned_professional_id = %s AND status = 'completed' THEN 1 ELSE 0 END), 0) AS completed_jobs
+                FROM customer_gigs
+                """,
+                (prof_id, prof_id),
+            )
+            stats_row = cursor.fetchone() or {}
+            data['stats']['active_jobs'] = int(stats_row.get('active_jobs', 0) or 0)
+            data['stats']['new_requests'] = int(stats_row.get('new_requests', 0) or 0)
+            data['stats']['completed_jobs'] = int(stats_row.get('completed_jobs', 0) or 0)
+
+            # Open requests (unassigned gigs)
+            cursor.execute(
+                """
+                SELECT
+                    cg.id,
+                    cg.title,
+                    cg.description,
+                    cg.category,
+                    cg.posted_at,
+                    cg.address_line1,
+                    cg.address_line2,
+                    cg.city,
+                    cg.state,
+                    cg.pincode,
+                    CONCAT(u.first_name, ' ', u.last_name) AS customer_name
+                FROM customer_gigs cg
+                JOIN users u ON u.id = cg.user_id
+                WHERE cg.status IN ('new', 'waiting') AND (cg.assigned_professional_id IS NULL OR cg.assigned_professional_id = 0)
+                ORDER BY cg.posted_at DESC
+                LIMIT 10
+                """
+            )
+            request_rows = cursor.fetchall() or []
+            for req in request_rows:
+                req['requested_at_display'] = format_datetime_display(req.get('posted_at'))
+                req['requested_at_relative'] = format_relative_time(req.get('posted_at'))
+            data['requests'] = request_rows
+
+            # Active jobs for this professional
+            cursor.execute(
+                """
+                SELECT
+                    cg.id,
+                    cg.title,
+                    cg.description,
+                    cg.category,
+                    cg.status,
+                    cg.updated_at,
+                    cg.address_line1,
+                    cg.city,
+                    cg.state,
+                    CONCAT(u.first_name, ' ', u.last_name) AS customer_name
+                FROM customer_gigs cg
+                JOIN users u ON u.id = cg.user_id
+                WHERE cg.assigned_professional_id = %s AND cg.status IN ('assigned', 'progress')
+                ORDER BY cg.updated_at DESC
+                """,
+                (prof_id,),
+            )
+            active_jobs = cursor.fetchall() or []
+            for job in active_jobs:
+                status_meta = STATUS_CONFIG.get(job.get('status', 'assigned'), STATUS_CONFIG['new'])
+                job['status_label'] = status_meta.get('label', job.get('status', '').title())
+                job['status_badge_class'] = status_meta.get('badge_class')
+                job['scheduled_for_display'] = format_datetime_display(job.get('updated_at'))
+            data['active_jobs_list'] = active_jobs
+
+            # Completed jobs history
+            cursor.execute(
+                """
+                SELECT
+                    cg.id,
+                    cg.title,
+                    cg.category,
+                    cg.updated_at,
+                    CONCAT(u.first_name, ' ', u.last_name) AS customer_name
+                FROM customer_gigs cg
+                JOIN users u ON u.id = cg.user_id
+                WHERE cg.assigned_professional_id = %s AND cg.status = 'completed'
+                ORDER BY cg.updated_at DESC
+                LIMIT 5
+                """,
+                (prof_id,),
+            )
+            data['completed_jobs'] = cursor.fetchall() or []
 
     except mysql.connector.Error as exc:
         print(f"Professional dashboard data fetch error: {exc}")
@@ -1171,32 +1328,167 @@ def create_gig():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
+    user_id = session['user_id']
+    addresses = get_user_addresses(user_id)
+    session_user = {
+        'full_name': session.get('user_name', ''),
+        'email': session.get('user_email', '')
+    }
+    user_context = {
+        'full_name': session_user['full_name'],
+        'email': session_user['email'],
+        'initials': build_initials(fallback_name=session_user['full_name'])
+    }
+
+    def pick_default_address_id():
+        for addr in addresses:
+            if addr.get('is_default'):
+                return str(addr['id'])
+        return str(addresses[0]['id']) if addresses else ''
+
     if request.method == 'GET':
-        return render_template('create_gig.html')
+        return render_template(
+            'create_gig.html',
+            addresses=addresses,
+            selected_address_id=pick_default_address_id(),
+            user=user_context
+        )
 
     # POST: handle gig creation
     title = request.form.get('title', '').strip()
     description = request.form.get('description', '').strip()
     category = request.form.get('category', '').strip()
+    selected_address_id = request.form.get('address_id', '').strip()
 
     if not title or not category:
-        # For now, just reload the form with a simple error message
         error = 'Title and category are required.'
-        return render_template('create_gig.html', error=error, form=request.form)
+        return render_template(
+            'create_gig.html',
+            error=error,
+            form=request.form,
+            addresses=addresses,
+            selected_address_id=selected_address_id or pick_default_address_id(),
+            user=user_context
+        )
+
+    selected_address = None
+    if selected_address_id:
+        selected_address = next(
+            (addr for addr in addresses if str(addr['id']) == selected_address_id),
+            None
+        )
+
+    allow_new_address = len(addresses) == 0
+    if not selected_address and not allow_new_address:
+        error = 'Please select one of your saved service addresses.'
+        return render_template(
+            'create_gig.html',
+            error=error,
+            form=request.form,
+            addresses=addresses,
+            selected_address_id=selected_address_id or pick_default_address_id(),
+            user=user_context
+        )
+
+    new_address_data = None
+    if not selected_address:
+        address_line1 = request.form.get('address_line1', '').strip()
+        address_line2 = request.form.get('address_line2', '').strip()
+        city = request.form.get('city', '').strip()
+        state = request.form.get('state', '').strip()
+        pincode = request.form.get('pincode', '').strip()
+
+        if not all([address_line1, city, state, pincode]):
+            error = 'Please add your service address details to continue.'
+            return render_template(
+                'create_gig.html',
+                error=error,
+                form=request.form,
+                addresses=addresses,
+                selected_address_id=selected_address_id,
+                user=user_context
+            )
+
+        if len(pincode) < 4 or len(pincode) > 12:
+            error = 'Please enter a valid postal code.'
+            return render_template(
+                'create_gig.html',
+                error=error,
+                form=request.form,
+                addresses=addresses,
+                selected_address_id=selected_address_id,
+                user=user_context
+            )
+
+        new_address_data = {
+            'label': 'home',
+            'address_line1': address_line1,
+            'address_line2': address_line2,
+            'city': city,
+            'state': state,
+            'pincode': pincode,
+            'is_default': True
+        }
 
     conn = get_db_connection()
     if not conn:
         error = 'Database connection error. Please try again.'
-        return render_template('create_gig.html', error=error, form=request.form)
+        return render_template(
+            'create_gig.html',
+            error=error,
+            form=request.form,
+            addresses=addresses,
+            selected_address_id=selected_address_id or pick_default_address_id(),
+            user=user_context
+        )
 
     try:
         cursor = conn.cursor()
+        if new_address_data:
+            cursor.execute(
+                '''
+                INSERT INTO customer_addresses (
+                    user_id, label, address_line1, address_line2, city, state, pincode, is_default
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                ''',
+                (
+                    user_id,
+                    new_address_data['label'],
+                    new_address_data['address_line1'],
+                    new_address_data['address_line2'],
+                    new_address_data['city'],
+                    new_address_data['state'],
+                    new_address_data['pincode'],
+                    new_address_data['is_default']
+                )
+            )
+            new_address_id = cursor.lastrowid
+            selected_address = {
+                'id': new_address_id,
+                'address_line1': new_address_data['address_line1'],
+                'address_line2': new_address_data['address_line2'],
+                'city': new_address_data['city'],
+                'state': new_address_data['state'],
+                'pincode': new_address_data['pincode']
+            }
+
         cursor.execute(
             '''
-            INSERT INTO customer_gigs (user_id, title, description, category)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO customer_gigs (
+                user_id, title, description, category,
+                address_line1, address_line2, city, state, pincode
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             ''',
-            (session['user_id'], title, description, category),
+            (
+                user_id, title, description, category,
+                selected_address['address_line1'],
+                selected_address.get('address_line2'),
+                selected_address['city'],
+                selected_address['state'],
+                selected_address['pincode']
+            ),
         )
         gig_id = cursor.lastrowid
 
@@ -1222,7 +1514,14 @@ def create_gig():
         if 'conn' in locals():
             conn.close()
         error = 'Unable to create gig due to a database error.'
-        return render_template('create_gig.html', error=error, form=request.form)
+        return render_template(
+            'create_gig.html',
+            error=error,
+            form=request.form,
+            addresses=addresses,
+            selected_address_id=selected_address_id or pick_default_address_id(),
+            user=user_context
+        )
 
 @app.route('/professional/dashboard')
 def professional_dashboard():
@@ -1249,6 +1548,85 @@ def professional_dashboard():
         schedule=dashboard_data['schedule'],
         reviews=dashboard_data['reviews'],
     )
+
+
+@app.route('/professional/gigs/<int:gig_id>/accept', methods=['POST'])
+def accept_customer_gig(gig_id):
+    """Allow a professional to accept an open customer gig"""
+    if 'user_id' not in session or session.get('user_type') != 'professional':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    if not conn:
+        return redirect(url_for('professional_dashboard'))
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT id FROM professional_profiles WHERE user_id = %s",
+            (session['user_id'],)
+        )
+        prof_row = cursor.fetchone()
+        if not prof_row:
+            cursor.close()
+            conn.close()
+            return redirect(url_for('professional_dashboard'))
+
+        prof_id = prof_row['id']
+        cursor.execute(
+            """
+            SELECT id, user_id, title, status, assigned_professional_id
+            FROM customer_gigs
+            WHERE id = %s
+            """,
+            (gig_id,)
+        )
+        gig_row = cursor.fetchone()
+        if not gig_row:
+            cursor.close()
+            conn.close()
+            return redirect(url_for('professional_dashboard'))
+
+        cursor.execute(
+            """
+            UPDATE customer_gigs
+            SET assigned_professional_id = %s,
+                status = 'assigned',
+                accepted_at = NOW(),
+                updated_at = NOW()
+            WHERE id = %s
+              AND status IN ('new', 'waiting')
+              AND (assigned_professional_id IS NULL OR assigned_professional_id = 0)
+            """,
+            (prof_id, gig_id)
+        )
+
+        if cursor.rowcount == 0:
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect(url_for('professional_dashboard'))
+
+        cursor.execute(
+            """
+            INSERT INTO gig_activity_logs (gig_id, user_id, message)
+            VALUES (%s, %s, %s)
+            """,
+            (gig_id, session['user_id'], f'Gig "{gig_row.get("title", "")}" accepted by professional')
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('professional_dashboard') + '#active-jobs')
+
+    except mysql.connector.Error as exc:
+        print(f"Gig acceptance error: {exc}")
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
+        return redirect(url_for('professional_dashboard'))
 
 @app.route('/logout')
 def logout():

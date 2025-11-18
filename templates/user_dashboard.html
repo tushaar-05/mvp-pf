@@ -78,6 +78,11 @@
             background-color: #CBD5E1;
             border-radius: 3px;
         }
+        .filter-btn.active {
+            color: #4338CA;
+            background-color: #E0E7FF;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex h-screen">
@@ -116,22 +121,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Create New Gig
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('dashboard') }}#activity" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                        </svg>
-                        Messages
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('dashboard') }}#payments" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                        </svg>
-                        Payments
                     </a>
                 </li>
                 <li>
@@ -194,14 +183,10 @@
         </div>
 
         <div class="px-8 py-6">
-            <!-- Stats Cards -->
-            
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!-- Left Column: Stats + Active Gigs -->
-    <div class="lg:col-span-2 space-y-8">
-        <!-- Stats Cards (unchanged) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Stats + Active Gigs -->
+                <div class="lg:col-span-2 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.active_gigs }}</h3>
                 <p class="text-gray-600">Active Gigs</p>
@@ -232,12 +217,11 @@
             </div>
         </div>
 
-        <!-- Active Gigs Section (unchanged) -->
         <div id="gigs" class="gig-section bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900">Your Active Gigs</h2>
                 <div class="flex space-x-2">
-                    <button class="filter-btn active px-3 py-1 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg" data-filter="all">
+                    <button class="filter-btn active px-3 py-1 text-sm font-medium rounded-lg" data-filter="all">
                         All ({{ status_counts['all'] }})
                     </button>
                     <button class="filter-btn px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg" data-filter="new">
@@ -254,7 +238,7 @@
             <div class="divide-y divide-gray-200">
                 {% if gigs %}
                     {% for gig in gigs %}
-                    <div class="gig-item p-6" data-status="{{ gig.status }}">
+                    <div class="gig-item p-6" data-status="{{ gig.status }}" data-search="{{ (gig.title ~ ' ' ~ (gig.category or '') ~ ' ' ~ (gig.description or ''))|lower }}">
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="flex items-center mb-2">
@@ -276,6 +260,9 @@
                         </div>
                     </div>
                     {% endfor %}
+                    <div id="gig-filter-empty" class="hidden p-6 text-center text-gray-500">
+                        No gigs match your current filter. Try a different status or clear the search.
+                    </div>
                 {% else %}
                     <div class="p-6 text-center text-gray-500">
                         You haven’t posted any gigs yet.
@@ -288,10 +275,10 @@
                 <a href="{{ url_for('create_gig') }}" class="flex-1 text-center py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">Create New Gig</a>
             </div>
         </div>
-    </div>
+                </div>
 
-    <!-- Right Column: Recent Activity + Expanded Support -->
-    <div class="space-y-8">
+                <!-- Right Column -->
+                <div class="space-y-8">
         <!-- Recent Activity -->
         <div id="activity" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -320,41 +307,6 @@
                         </div>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-
-        <!-- Payments Overview -->
-        <div id="payments" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Payments & Billing</h2>
-                <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">Secure</span>
-            </div>
-            <div class="p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-500">Completed gigs</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ stats.completed_gigs }}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm text-gray-500">Pending approvals</p>
-                        <p class="text-xl font-semibold text-amber-600">{{ stats.pending_approvals }}</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 gap-3 text-sm text-gray-600">
-                    <div class="flex items-center justify-between">
-                        <span>Next payout window</span>
-                        <span class="font-medium text-gray-900">Within 2 business days</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span>Preferred method</span>
-                        <span class="font-medium text-gray-900">UPI / Bank transfer</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span>Recent amount</span>
-                        <span class="font-medium text-gray-900">₹{{ (stats.completed_gigs * 500)|int }}</span>
-                    </div>
-                </div>
-                <a href="{{ url_for('dashboard') }}#payments" class="block text-center py-2.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">View payment history</a>
             </div>
         </div>
 
@@ -447,9 +399,64 @@
         </div>
     </div>
 </div>
+            </div>
         </div>
     </div>
 
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const gigItems = document.querySelectorAll('.gig-item');
+            const searchInput = document.getElementById('searchInput');
+            const emptyState = document.getElementById('gig-filter-empty');
+
+            const statusMatchers = {
+                all: () => true,
+                new: (status) => ['new', 'waiting'].includes(status),
+                progress: (status) => ['assigned', 'progress'].includes(status),
+                completed: (status) => status === 'completed'
+            };
+
+            let activeFilter = 'all';
+
+            function applyFilters() {
+                const searchTerm = (searchInput?.value || '').trim().toLowerCase();
+                let visibleCount = 0;
+
+                gigItems.forEach(item => {
+                    const status = item.dataset.status || '';
+                    const searchBlob = item.dataset.search || '';
+                    const matchesFilter = (statusMatchers[activeFilter] || statusMatchers.all)(status);
+                    const matchesSearch = !searchTerm || searchBlob.includes(searchTerm);
+                    const shouldShow = matchesFilter && matchesSearch;
+                    item.style.display = shouldShow ? '' : 'none';
+                    if (shouldShow) {
+                        visibleCount += 1;
+                    }
+                });
+
+                if (emptyState) {
+                    emptyState.classList.toggle('hidden', visibleCount !== 0);
+                }
+            }
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeFilter = btn.dataset.filter || 'all';
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyFilters();
+                });
+            });
+
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    applyFilters();
+                });
+            }
+
+            applyFilters();
+        });
+    </script>
 </body>
 </html>
